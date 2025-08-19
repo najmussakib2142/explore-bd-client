@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+@import "tailwindcss";
+@plugin "daisyui";
+
+.font-roboto {
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+}
+
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+@layer base {
+  html {
+    @apply transition-colors duration-300;
+  }
+}
+
+body {
+  @apply min-h-screen text-gray-900 dark:text-gray-100 transition-colors duration-300;
+}
+
+/* 🌞 Light Theme */
+[data-theme="light"] {
+  --color-primary: #1E88E5;
+  /* Sky Blue - rivers, sky */
+  --color-secondary: #F59E0B;
+  /* Golden - heritage, warmth */
+  --color-accent: #10B981;
+  /* Green - nature, forests */
+  --color-base-100: #F9FAFB;
+  /* Clean light background */
+  --color-neutral: #1F2937;
+  /* Neutral dark text */
+  --color-error: #DC2626;
+  /* Error red */
+}
+
+[data-theme="light"] body {
+  background: linear-gradient(to bottom right,
+      #dbeafe,
+      /* light blue */
+      #f0fdf4,
+      /* light green */
+      #fef9c3
+      /* soft yellow */
+    );
+}
+
+/* 🌙 Dark Theme */
+[data-theme="dark"] {
+  --color-primary: #0EA5E9;
+  /* Bright cyan-blue */
+  --color-secondary: #F472B6;
+  /* Pink accent */
+  --color-accent: #34D399;
+  /* Emerald green */
+  --color-base-100: #0f172a;
+  /* Deep navy background */
+  --color-neutral: #E5E7EB;
+  /* Light text */
+  --color-error: #EF4444;
+  /* Error red */
+}
+
+[data-theme="dark"] body {
+  background: linear-gradient(to bottom right,
+      #0f172a,
+      /* dark navy */
+      #1e293b,
+      /* slate */
+      #065f46
+      /* deep green accent */
+    );
+}
+
+/* 🌍 Global Font */
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Buttons */
+.btn-primary {
+  background-color: var(--color-primary);
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1669c1;
+  /* darker blue */
+}
+
+.btn-secondary {
+  background-color: var(--color-secondary);
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #d97706;
+  /* darker golden */
+}
+
+.accent {
+  background-color: var(--color-accent);
+  color: #fff;
+}
+
+.error {
+  color: var(--color-error);
+}
