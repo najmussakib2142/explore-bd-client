@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link } from 'react-router';
 import { useForm } from "react-hook-form"
+import SocialLogin from '../SocialLogin/SocialLogin';
 
 
 const Login = () => {
@@ -62,8 +63,7 @@ const Login = () => {
 
                         <button className="btn  mt-4">Sign In</button>
 
-                        <div className="divider">OR</div>
-
+                        <SocialLogin></SocialLogin>
 
                         <p className='text-center pt-3'>Dont’t Have An Account ?
                             <Link className='text-blue-600 hover:underline' to="/register"> Register </Link>
