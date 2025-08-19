@@ -1,5 +1,6 @@
 import React from "react";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
+import { motion } from "motion/react"
 import video from '../../../assets/video.mp4';
 
 const Overview = () => {
