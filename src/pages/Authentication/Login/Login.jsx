@@ -1,19 +1,43 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { Link } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useForm } from "react-hook-form"
 import SocialLogin from '../SocialLogin/SocialLogin';
+import useAuth from '../../../hooks/useAuth';
+import Swal from 'sweetalert2';
 
 
 const Login = () => {
-
-    // const [error, setError] = useState("")
+    const { signIn } = useAuth()
+    const navigate = useNavigate()
+    const [error, setError] = useState("")
     const [showPassword, setShowPassword] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm()
 
     const onSubmit = data => {
         console.log(data);
+        signIn(data.email, data.password)
+            .then(result => {
+                const user = result.user;
+                // console.log(user);
+                Swal.fire({
+                    icon: "success",
+                    title: "Login Successful!",
+                    text: `Welcome back, ${user.displayName || user.email}`,
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+navigate('/')
+                // navigate(from)
+            })
+            .catch(error => {
+                const errorCode = error.code;
+                // const errorMessage = error.message;
+                setError(errorCode)
+
+            })
     }
+
 
     return (
         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
@@ -59,7 +83,7 @@ const Login = () => {
 
                         <div><a className="link link-hover">Forgot password?</a></div>
 
-                        {/* {error && <p className='text-red-500 text-sm'>{error}</p>} */}
+                        {error && <p className='text-red-500 text-sm'>{error}</p>}
 
                         <button className="btn  mt-4">Sign In</button>
 

@@ -19,15 +19,16 @@ const SocialLogin = () => {
                 console.log(result.user);
 
                 // update userinfo in database
-                // const userinfo = {
-                //     email: user.email,
-                //     role: 'user',
-                //     created_at: new Date().toISOString(),
-                //     last_log_in: new Date().toISOString(),
-                // }
+                const userinfo = {
+                    email: user.email,
+                    role: 'user',
+                    created_at: new Date().toISOString(),
+                    last_log_in: new Date().toISOString(),
+                }
 
                 // const res = await axiosInstance.post('/users', userinfo)
-                console.log("user update info", res.data);
+                // console.log("user update info", res.data);
+                console.log(userinfo);
 
                 navigate(from)
             })

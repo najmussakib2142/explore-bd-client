@@ -34,7 +34,7 @@ const Banner = () => {
     }, []);
 
     return (
-        <div className="relative w-full h-[50vh] md:h-[70vh] overflow-hidden">
+        <div className="relative w-full h-[70vh] md:h-[80vh] overflow-hidden">
             <AnimatePresence>
                 {slides.map((slide, index) =>
                     index === current ? (

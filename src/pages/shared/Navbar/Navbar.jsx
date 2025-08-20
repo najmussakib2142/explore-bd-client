@@ -1,11 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { NavLink } from 'react-router';
+import { Link, NavLink } from 'react-router';
 import Logo from '../Logo/Logo';
 import { useTheme } from '../../../provider/ThemeContext';
+import useAuth from '../../../hooks/useAuth';
+import Swal from 'sweetalert2';
+import toast from 'react-hot-toast';
+import { FaMoon, FaSun } from "react-icons/fa";
+
+
 
 const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
-
+    const { user, logOut } = useAuth()
     const [showNavbar, setShowNavbar] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -28,6 +34,33 @@ const Navbar = () => {
 
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]);
+
+    const handleSignOut = () => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You want to log out?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#1471e3",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, log me out!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                logOut()
+                    .then(() => {
+                        Swal.fire({
+                            title: "Logged out!",
+                            text: "You have been successfully logged out.",
+                            icon: "success"
+                        });
+                    })
+                    .catch((error) => {
+                        toast.error(error.message);
+                    })
+            }
+        })
+    }
+
     const navItems = <>
         <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary'><NavLink to="/">Home</NavLink></li>
         <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/about">Community</NavLink></li>
@@ -36,21 +69,23 @@ const Navbar = () => {
     </>
     return (
         <div>
-            <div className={`fixed dark:bg-[#0f172a]   top-0 w-full bg-white z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'
-                } shadow`}>
-                <div className="navbar  py-0  z-50 md:px-8 lg:px-12 bg-base-100/80 dark:bg-[#0f172a]  backdrop-blur transition-all duration-300 shadow-md">
+            <div className={`fixed dark:bg-[#0f172a] max-w-7xl mx-auto  top-0 w-full bg-white z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} shadow`}>
+                <div className="navbar   py-0  z-50 md:pr-7 bg-base-100/80 dark:bg-[#0f172a]  backdrop-blur transition-all duration-300 shadow-md">
                     <div className="navbar-start">
                         <div className="dropdown">
-                            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+                            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden -mr-4">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /> </svg>
                             </div>
                             <ul
                                 tabIndex={0}
-                                className="menu menu-sm left-0 text-[#101828] dropdown-content bg-base-100  z-1 w-[80vw] p-2 shadow">
+                                className="menu menu-sm left-0 text-[#101828] dropdown-content bg-base-100  z-1 w-[40vw] p-2 shadow">
                                 {navItems}
                             </ul>
                         </div>
-                        <Logo></Logo>
+                        <div >
+                            <Logo></Logo>
+                        </div>
+
                     </div>
                     <div className="navbar-center hidden lg:flex">
                         <ul className="menu text-[#101828] menu-horizontal px-1">
@@ -58,7 +93,7 @@ const Navbar = () => {
                         </ul>
                     </div>
 
-                    <div className="navbar-end md:gap-3 gap-1">
+                    <div className="navbar-end md:gap-3 gap-2">
                         <div>
                             <div className='hidden md:block'>
                                 <div className="flex items-center space-x-1 md:space-x-2">
@@ -90,22 +125,63 @@ const Navbar = () => {
                             <div className="block md:hidden">
                                 <button
                                     onClick={toggleTheme}
-                                    aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-                                    className='p-1 md:p-2 rounded-full bg-gray-300 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors'
+                                    aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+                                    className="p-2 rounded-full border border-gray-300 dark:border-gray-600  bg-white dark:bg-gray-800  hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
                                 >
-                                    {
-                                        theme === 'dark' ?
-                                            (
-                                                <span className='text-yellow-600 text-xl' > ☀️</span>
-                                            ) :
-                                            (
-                                                <span className='text-gray-700 text-xl'>🌙</span>
-                                            )
-                                    }
+                                    {theme === "dark" ? (
+                                        <FaSun className="text-yellow-500 text-lg" />
+                                    ) : (
+                                        <FaMoon className="text-gray-800 dark:text-gray-200 text-lg" />
+                                    )}
                                 </button>
                             </div>
 
                         </div>
+
+                        {
+                            user && (
+                                <div className="dropdown dropdown-end group relative">
+                                    {/* Dropdown button */}
+                                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                        <img
+                                            className="w-12 dark:border dark:border-gray-500 h-12 rounded-full object-cover"
+                                            src={`${user ? user.photoURL : "https://i.ibb.co/VWqpdVpB/user.pngs"}`}
+                                            alt="User"
+                                        />
+                                    </div>
+
+                                    {/* Tooltip on hover */}
+                                    <div className="absolute bottom-[-30px] left-1/2 -translate-x-1/2 w-max bg-gray-700 text-white text-xs font-medium py-1.5 px-3 rounded-xl opacity-0 group-hover:opacity-100 transition duration-200 whitespace-nowrap z-20">
+                                        {user?.displayName || user?.email}
+                                    </div>
+
+                                    {/* Dropdown menu items */}
+                                    <ul tabIndex={0} className="menu dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                                        <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/about">Community</NavLink></li>
+                                        <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/about">About Us</NavLink></li>
+                                    </ul>
+                                </div>
+                            )
+                        }
+
+
+                        {
+                            user ? (
+                                <button
+                                    onClick={handleSignOut}
+                                    className="btn border border-primary text-primary bg-transparent hover:bg-primary hover:text-white"
+                                >
+                                    Sign Out
+                                </button>
+                            ) : (
+                                <Link
+                                    to="/login"
+                                    className="btn bg-primary text-white border border-primary hover:bg-transparent hover:text-primary"
+                                >
+                                    Sign In
+                                </Link>
+                            )
+                        }
 
 
                     </div>
