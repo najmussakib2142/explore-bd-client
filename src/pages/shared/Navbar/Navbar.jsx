@@ -5,7 +5,7 @@ import { useTheme } from '../../../provider/ThemeContext';
 import useAuth from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
-import { FaMoon, FaSun } from "react-icons/fa";
+import { FaMoon, FaSun, FaUserCircle } from "react-icons/fa";
 
 
 
@@ -142,12 +142,23 @@ const Navbar = () => {
                             user && (
                                 <div className="dropdown dropdown-end group relative">
                                     {/* Dropdown button */}
-                                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                    {/* <div tabIndex={0} role="button" className="btn btn-ghost  btn-circle avatar">
                                         <img
-                                            className="w-12 dark:border dark:border-gray-500 h-12 rounded-full object-cover"
-                                            src={`${user ? user.photoURL : "https://i.ibb.co/VWqpdVpB/user.pngs"}`}
+                                            className="w-12 dark:border dark:border-primary  h-12 rounded-full object-cover"
+                                            // src={`${user ? user.photoURL : "https://i.ibb.co/VWqpdVpB/user.pngs"}`}
+                                            src={user?.photoURL || "https://i.ibb.co/VWqpdVpB/user.png"}
                                             alt="User"
                                         />
+                                    </div> */}
+                                    <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
+                                        {user?.photoURL ? (
+                                            <img
+                                                className="w-12 h-12 rounded-full object-cover dark:border dark:border-primary"
+                                                src={user.photoURL}
+                                                alt="User"
+                                            />
+                                        ) : (
+                                            <FaUserCircle className="w-12 h-12 text-gray-600 dark:text-primary transition-colors" />)}
                                     </div>
 
                                     {/* Tooltip on hover */}
@@ -155,10 +166,30 @@ const Navbar = () => {
                                         {user?.displayName || user?.email}
                                     </div>
 
-                                    {/* Dropdown menu items */}
-                                    <ul tabIndex={0} className="menu dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
-                                        <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/about">Community</NavLink></li>
-                                        <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/about">About Us</NavLink></li>
+                                    {/* Dropdown menu */}
+                                    <ul
+                                        tabIndex={0}
+                                        className="menu dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 dark:bg-gray-800 rounded-box w-60"
+                                    >
+                                        {/* Profile info (not clickable) */}
+                                        <li className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 cursor-default">
+                                            <div className="flex flex-col">
+                                                <span className="font-semibold text-gray-800 dark:text-gray-200">
+                                                    {user?.displayName || "User"}
+                                                </span>
+                                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                                    {user?.email}
+                                                </span>
+                                            </div>
+                                        </li>
+
+                                        {/* Navigation links */}
+                                        <li className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary">
+                                            <NavLink to="/dashboard">Dashboard</NavLink>
+                                        </li>
+                                        <li className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary">
+                                            <NavLink to="/offers">Offer Announcements</NavLink>
+                                        </li>
                                     </ul>
                                 </div>
                             )

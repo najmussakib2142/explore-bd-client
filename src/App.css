@@ -1,0 +1,16 @@
+/* Light theme active link */
+.active {
+  text-decoration: underline;
+  text-decoration-color: #1F1A70; /* Indigo highlight */
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+  font-weight: 600;
+  color: #1F1A70; /* Indigo text */
+  transition: all 0.3s ease;
+}
+
+/* Dark theme active link */
+html[data-theme='dark'] .active {
+  text-decoration-color: #f43098; /* Primary accent */
+  color: #f43098; /* Accent text */
+}
