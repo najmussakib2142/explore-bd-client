@@ -6,7 +6,7 @@ import { FcPackage } from 'react-icons/fc';
 
 const DashBoardLayout = () => {
     return (
-        <div className="min-h-screen flex bg-base-100">
+        <div className="min-h-screen flex ">
             <div className="drawer lg:drawer-open">
                 <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
                 <div className="drawer-content flex flex-col p-4">
@@ -26,7 +26,7 @@ const DashBoardLayout = () => {
                     </div>
 
                     {/* Page Content */}
-                    <div className="p-4 bg-base-100 rounded-xl ">
+                    <div className="p-4  rounded-xl ">
                         <Outlet />
                     </div>
                 </div>
@@ -34,7 +34,7 @@ const DashBoardLayout = () => {
                 {/* Sidebar */}
                 <div className="drawer-side">
                     <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-                    <ul className="menu bg-base-200 text-base-content min-h-full w-80 p-4 space-y-2">
+                    <ul className="menu bg-base-100 text-base-content min-h-full w-80 p-4 space-y-2">
                         {/* <ProFastLog /> */}
                         <Logo></Logo>
 

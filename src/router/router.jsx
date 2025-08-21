@@ -9,6 +9,7 @@ import Register from "../pages/Authentication/Register/Register";
 import DashBoardLayout from "../layouts/DashBoardLayout";
 import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
 import AddPackage from "../pages/Dashboard/AddPackage/AddPackage";
+import PackageDetailsPage from "../pages/PackageDetailsPage/PackageDetailsPage";
 
 export const router = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ export const router = createBrowserRouter([
             {
                 index: true,
                 Component: Home,
+            },
+            {
+                path: "packageDetailsPage/:id",
+                Component: PackageDetailsPage
             }
         ]
     },

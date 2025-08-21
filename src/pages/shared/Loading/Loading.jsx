@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 
 const Loading = () => {
     return (
-        <div className="flex flex-col items-center justify-center h-[80vh] bg-base-200">
+        <div className="flex flex-col items-center justify-center h-[80vh]">
             {/* Spinner */}
             <motion.div
                 className="text-primary"
@@ -16,10 +16,10 @@ const Loading = () => {
 
             {/* Text Animation */}
             <motion.h2
-                className="mt-6 text-2xl font-bold text-gray-700 flex items-center gap-2"
+                className="mt-6 text-2xl font-bold text-primary flex items-center gap-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }}
             >
                 <FaGlobeAsia className="text-primary" />
                 Loading ExploreBD...
