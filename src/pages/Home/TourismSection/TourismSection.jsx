@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { useNavigate } from "react-router";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+// import useAxiosSecure from "../../../hooks/useAxiosSecure";
 import { FaSpinner } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import useAxios from "../../../hooks/useAxios";
 
 const TourismSection = () => {
   const [packages, setPackages] = useState([]);
@@ -13,12 +14,12 @@ const TourismSection = () => {
   const [loadingPackages, setLoadingPackages] = useState(false);
   const [loadingGuides, setLoadingGuides] = useState(false);
   const navigate = useNavigate();
-  const axiosSecure = useAxiosSecure();
+  const axiosInstance = useAxios();
 
   const fetchRandomPackages = async () => {
     try {
       setLoadingPackages(true);
-      const res = await axiosSecure.get("/packages/random");
+      const res = await axiosInstance.get("/packages/random");
       if (Array.isArray(res.data)) setPackages(res.data);
       else setPackages([]);
     } catch (err) {
@@ -32,7 +33,7 @@ const TourismSection = () => {
   const fetchRandomGuides = async () => {
     try {
       setLoadingGuides(true);
-      const res = await axiosSecure.get("/guides/random");
+      const res = await axiosInstance.get("/guides/random");
       if (Array.isArray(res.data)) setGuides(res.data);
       else setGuides([]);
     } catch (err) {
@@ -117,7 +118,7 @@ const TourismSection = () => {
               {guides.map((guide) => (
                 <div
                   key={guide._id}
-                  className="bg-white shadow-lg rounded-xl overflow-hidden transform hover:scale-105 hover:shadow-2xl transition duration-300"
+                  className="bg-base-100 shadow-lg rounded-xl overflow-hidden transform hover:scale-105 hover:shadow-2xl transition duration-300"
                   data-aos="fade-up"
                 >
                   <img
@@ -127,8 +128,8 @@ const TourismSection = () => {
                   />
                   <div className="p-4">
                     <h3 className="text-xl font-semibold mb-1">{guide.name}</h3>
-                    <p className="text-sm text-gray-500 mb-1">Region: {guide.region}</p>
-                    <p className="text-sm text-gray-500 mb-3">
+                    <p className="text-sm text-gray-400 mb-1">Region: {guide.district}</p>
+                    <p className="text-sm text-gray-400 mb-3">
                       Experience: {guide.experience || "N/A"} yrs
                     </p>
                     <button

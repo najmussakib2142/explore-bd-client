@@ -1,23 +1,93 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import useAuth from '../../../hooks/useAuth';
 import SocialLogin from '../SocialLogin/SocialLogin';
+import useAxios from '../../../hooks/useAxios';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const Register = () => {
 
     const { register, handleSubmit, formState: { errors } } = useForm()
-    const { createUser } = useAuth()
+    const { createUser, updateUserProfile } = useAuth();
+    const [profilePic, setProfilePic] = useState('')
+    const axiosInstance = useAxios();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const from = location.state?.from || '/'
 
-    const onSubmit = data => {
+    const onSubmit = (data) => {
         console.log(data);
-        createUser(data.email, data.password)
-            .then(result => {
-                console.log(result.user);
-            })
-            .catch(error => {
-                console.error(error)
-            })
+
+        // Confirmation before creating user
+        Swal.fire({
+            title: "Are you sure?",
+            text: "Do you want to create this account?",
+            icon: "question",
+            showCancelButton: true,
+            confirmButtonText: "Yes, Create",
+            cancelButtonText: "Cancel",
+        }).then((result) => {
+            if (!result.isConfirmed) return;
+
+            createUser(data.email, data.password)
+                .then(async (result) => {
+                    console.log(result.user);
+
+                    // update user info in database
+                    const userInfo = {
+                        email: data.email,
+                        role: "user",
+                        created_at: new Date().toISOString(),
+                        last_log_in: new Date().toISOString(),
+                    };
+                    const userRes = await axiosInstance.post("/users", userInfo);
+                    console.log(userRes.data);
+
+                    // update in firebase
+                    const userProfile = {
+                        displayName: data.name,
+                        photoURL: profilePic
+                    }
+                    updateUserProfile(userProfile)
+                        .then(() => {
+                            console.log("profile name pic updated");
+
+                            // Auto success message
+                            Swal.fire({
+                                title: "Success!",
+                                text: "Account created successfully 🎉",
+                                icon: "success",
+                                timer: 2000,
+                                showConfirmButton: false,
+                            });
+
+                            navigate(from);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                            Swal.fire("Error!", err?.message || "Profile update failed", "error");
+                        });
+                })
+                .catch((error) => {
+                    console.error(error);
+                    Swal.fire("Error!", error?.message || "Account creation failed", "error");
+                });
+        });
+    };
+
+    const handleImageUpload = async (e) => {
+        const image = e.target.files[0];
+        // console.log(image);
+
+        const formData = new FormData();
+        formData.append('image', image)
+
+        const imagUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`
+        const res = await axios.post(imagUploadUrl, formData)
+        // console.log(res.data.data.url);
+        setProfilePic(res.data.data.url);
     }
 
     return (
@@ -39,7 +109,7 @@ const Register = () => {
                             {/* photo */}
                             <label className="label">Your Profile Picture</label>
                             <input type="file"
-                                // onChange={handleImageUpload}
+                                onChange={handleImageUpload}
                                 className="input" placeholder="Your Profile Picture"
                             />
                             {/* {

@@ -1,23 +1,30 @@
 import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from "react-hook-form"
 import SocialLogin from '../SocialLogin/SocialLogin';
 import useAuth from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
+import useAxios from '../../../hooks/useAxios';
+// import useAxios from '../../../hooks/useAxios';
 
 
 const Login = () => {
     const { signIn } = useAuth()
-    const navigate = useNavigate()
     const [error, setError] = useState("")
     const [showPassword, setShowPassword] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm()
+    const location = useLocation();
+    const navigate = useNavigate()
+    const from = location.state?.from || '/'
+    const axiosInstance = useAxios()
+    console.log(location);
+
 
     const onSubmit = data => {
         console.log(data);
         signIn(data.email, data.password)
-            .then(result => {
+            .then(async (result) => {
                 const user = result.user;
                 // console.log(user);
                 Swal.fire({
@@ -27,8 +34,15 @@ const Login = () => {
                     showConfirmButton: false,
                     timer: 2000
                 });
-navigate('/')
-                // navigate(from)
+                const userInfo = {
+                    email: data.email,
+                    last_log_in: new Date().toISOString()
+                }
+
+                const userRes = await axiosInstance.post('/users', userInfo);
+                console.log(userRes.data);
+
+                navigate(from)
             })
             .catch(error => {
                 const errorCode = error.code;

@@ -103,6 +103,17 @@ const AddPackage = () => {
                     .map((s) => s.trim())
                     .filter(Boolean);
             }
+            // Confirmation before submit
+            const confirm = await Swal.fire({
+                title: "Are you sure?",
+                text: "Do you want to add this package?",
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonText: "Yes, Add it",
+                cancelButtonText: "Cancel",
+            });
+
+            if (!confirm.isConfirmed) return;
 
             // Guard: require at least one image?
             if (!data.images?.length) {
@@ -127,11 +138,14 @@ const AddPackage = () => {
                     timer: 1800,
                     showConfirmButton: false,
                 });
-                reset({
-                    plan: [{ day: "Day 1", activity: "" }],
-                    inclusions: [],
-                    exclusions: [],
-                });
+
+                // reset({
+                //     plan: [{ day: "Day 1", activity: "" }],
+                //     inclusions: [],
+                //     exclusions: [],
+                // });
+                reset()
+                
                 setPictures([]);
                 setStartDate(null);
                 setEndDate(null);
@@ -182,6 +196,15 @@ const AddPackage = () => {
                         type="text"
                         placeholder="e.g. Bandarban, Bangladesh"
                         {...register("location", { required: true })}
+                        className="input input-bordered w-full"
+                    />
+                </div>
+                <div>
+                    <label className="font-semibold mb-1 block">Meeting Point</label>
+                    <input
+                        type="text"
+                        placeholder="e.g. Kalabagan, Dhaka"
+                        {...register("meetingPoint", { required: true })}
                         className="input input-bordered w-full"
                     />
                 </div>
@@ -271,42 +294,55 @@ const AddPackage = () => {
                 </div>
 
                 {/* Inclusions (multi-select dropdown) */}
-                <div>
-                    <label className="font-semibold mb-1 block">Inclusions</label>
-                    <select
-                        multiple
-                        {...register("inclusions")}
-                        className="select select-bordered w-full h-30"
-                    >
-                        <option value="Hotel Stay">Accommodation</option>
-                        <option value="Meals">Meals</option>
-                        <option value="Transport">Transport</option>
-                        <option value="Tour Guide">Tour Guide</option>
-                        <option value="Entry Tickets">Entry Tickets</option>
-                        <option value="Photography">Photography</option>
-                    </select>
-                    <p className="text-xs opacity-70 mt-1">
-                        Hold <b>Ctrl</b> (Windows) or <b>Cmd</b> (Mac) to select multiple.
-                    </p>
-                </div>
+                <div className="grid md:grid-cols-3 gap-5">
+                    <div>
+                        <label className="font-semibold mb-1 block">Inclusions</label>
+                        <div className="space-y-2">
+                            {[
+                                "Accommodation",
+                                "Meals",
+                                "Transport",
+                                "Tour Guide",
+                                "Entry Tickets",
+                                "Photography",
+                            ].map((item) => (
+                                <label key={item} className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        value={item}
+                                        {...register("inclusions")}
+                                        className="checkbox"
+                                    />
+                                    <span>{item}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
 
-                {/* Exclusions (multi-select dropdown) */}
-                <div>
-                    <label className="font-semibold mb-1 block">Exclusions</label>
-                    <select
-                        multiple
-                        {...register("exclusions")}
-                        className="select select-bordered w-full h-25"
-                    >
-                        <option value="Personal Expenses">Personal Expenses</option>
-                        <option value="Tips">Tips</option>
-                        <option value="Insurance">Insurance</option>
-                        <option value="Visa Fees">Restaurant Bills</option>
-                        <option value="Visa Fees">Visa</option>
-                    </select>
-                    <p className="text-xs opacity-70 mt-1">
-                        Hold <b>Ctrl</b> (Windows) or <b>Cmd</b> (Mac) to select multiple.
-                    </p>
+
+                    {/* Exclusions (multi-select dropdown) */}
+                    <div>
+                        <label className="font-semibold mb-1 block">Exclusions</label>
+                        <div className="space-y-2">
+                            {[
+                                "Personal Expenses",
+                                "Tips",
+                                "Insurance",
+                                "Restaurant Bills",
+                                "Visa",
+                            ].map((item) => (
+                                <label key={item} className="flex items-center gap-2">
+                                    <input
+                                        type="checkbox"
+                                        value={item}
+                                        {...register("exclusions")}
+                                        className="checkbox"
+                                    />
+                                    <span>{item}</span>
+                                </label>
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
                 {/* Itinerary (Plan) */}

@@ -1,6 +1,7 @@
 import React from 'react';
 import useAuth from '../../../hooks/useAuth';
 import { useLocation, useNavigate } from 'react-router';
+import useAxios from '../../../hooks/useAxios';
 // import useAxios from '../../../hooks/useAxios';
 
 const SocialLogin = () => {
@@ -9,7 +10,7 @@ const SocialLogin = () => {
     const location = useLocation();
     const navigate = useNavigate()
     const from = location.state?.from || '/'
-    // const axiosInstance = useAxios()
+    const axiosInstance = useAxios()
 
 
     const handleGoogleSignIn = () => {
@@ -26,8 +27,8 @@ const SocialLogin = () => {
                     last_log_in: new Date().toISOString(),
                 }
 
-                // const res = await axiosInstance.post('/users', userinfo)
-                // console.log("user update info", res.data);
+                const res = await axiosInstance.post('/users', userinfo)
+                console.log("user update info", res.data);
                 console.log(userinfo);
 
                 navigate(from)

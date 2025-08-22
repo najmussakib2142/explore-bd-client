@@ -10,6 +10,12 @@ import DashBoardLayout from "../layouts/DashBoardLayout";
 import DashboardHome from "../pages/Dashboard/DashboardHome/DashboardHome";
 import AddPackage from "../pages/Dashboard/AddPackage/AddPackage";
 import PackageDetailsPage from "../pages/PackageDetailsPage/PackageDetailsPage";
+import PrivateRoute from "../routes/PrivateRoute";
+import BookingForm from "../pages/PackageDetailsPage/BookingForm";
+import BeAGuide from "../pages/Dashboard/DashboardHome/BeAGuide";
+import PendingGuides from "../pages/Dashboard/PendingGuides/PendingGuides";
+import GuideProfilePage from "../pages/shared/GuideProfilePage/GuideProfilePage";
+import MyBookings from "../pages/Dashboard/TouristDashboard/MyBookings/MyBookings";
 
 export const router = createBrowserRouter([
     {
@@ -22,8 +28,17 @@ export const router = createBrowserRouter([
             },
             {
                 path: "packageDetailsPage/:id",
-                Component: PackageDetailsPage
+                element: <PrivateRoute><PackageDetailsPage></PackageDetailsPage></PrivateRoute>
+            },
+            {
+                path: 'bookingForm',
+                element: <BookingForm></BookingForm>
+            },
+            {
+                path: '/guides/:id',
+                element: <GuideProfilePage></GuideProfilePage>
             }
+
         ]
     },
     {
@@ -42,7 +57,7 @@ export const router = createBrowserRouter([
     },
     {
         path: '/dashboard',
-        element: <DashBoardLayout></DashBoardLayout>,
+        element: <PrivateRoute><DashBoardLayout></DashBoardLayout></PrivateRoute>,
         children: [
             {
                 index: true,
@@ -51,6 +66,18 @@ export const router = createBrowserRouter([
             {
                 path: 'addPackage',
                 Component: AddPackage,
+            },
+            {
+                path: 'beAGuide',
+                element: <BeAGuide></BeAGuide>
+            },
+            {
+                path: 'pendingGuides',
+                element: <PendingGuides></PendingGuides>
+            },
+            {
+                path: 'myBookings',
+                element: <MyBookings></MyBookings>
             }
         ]
     }
