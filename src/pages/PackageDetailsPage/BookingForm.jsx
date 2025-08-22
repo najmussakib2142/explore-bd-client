@@ -33,6 +33,7 @@ const BookingForm = ({ packageData, guides }) => {
 
         // Booking info
         const bookingData = {
+            userId: user.uid,
             packageId: packageData._id,
             packageName: packageData.title,
             price: packageData.price,

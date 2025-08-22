@@ -61,7 +61,7 @@ const DashBoardLayout = () => {
                                 </NavLink>
                             </li>
                             <NavLink
-                                to="/myBookings"
+                                to="/dashboard/myBookings"
                                 className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
                             >
                                 <FaClipboardList /> My Bookings
