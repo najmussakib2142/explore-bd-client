@@ -130,7 +130,7 @@ const MyBookings = () => {
                                             whileTap={{ scale: 0.9 }}
                                             className="btn btn-xs btn-primary"
                                             onClick={() =>
-                                                handlePay(b._id)
+                                                handlePay(b.packageId)
                                                 // console.log("Pay", b._id)
                                             }
                                         >
