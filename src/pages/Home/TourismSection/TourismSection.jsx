@@ -56,11 +56,15 @@ const TourismSection = () => {
       <h2 className="text-3xl font-bold mb-6 text-center">Tourism & Travel Guide</h2>
 
       <Tabs>
-        <TabList className="flex justify-center gap-4 mb-6 border-b-2">
-          <Tab className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-blue-600 transition">
+        <TabList className="flex justify-center gap-4 mb-6  dark:border-b-2 dark:border-white border-b-2 border-primary">
+          <Tab
+            selectedClassName="bg-primary text-white dark:bg-white dark:text-black rounded-t-md"
+            className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-blue-600 transition">
             Our Packages
           </Tab>
-          <Tab className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-green-600 transition">
+          <Tab
+            selectedClassName="bg-primary text-white dark:bg-white dark:text-black rounded-t-md"
+            className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-green-600 transition">
             Meet Our Tour Guides
           </Tab>
         </TabList>

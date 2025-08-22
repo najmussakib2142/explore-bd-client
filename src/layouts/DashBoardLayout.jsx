@@ -51,7 +51,7 @@ const DashBoardLayout = () => {
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink to="/dashboard/active-riders" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                <NavLink to="/dashboard/active-guides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
                                     <FaUserCheck /> Active Guides
                                 </NavLink>
                             </li>

@@ -19,7 +19,7 @@ const Loading = () => {
                 className="mt-6 text-2xl font-bold text-primary flex items-center gap-2"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ repeat: Infinity, duration: 1, ease: "easeInOut" }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
             >
                 <FaGlobeAsia className="text-primary" />
                 Loading ExploreBD...
