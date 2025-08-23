@@ -5,19 +5,33 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Loading from "../shared/Loading/Loading";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import BookingForm from "./BookingForm";
+// import useAxios from "../../hooks/useAxios";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAuth from "../../hooks/useAuth";
 
 
 const PackageDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
+    const { user } = useAuth()
     // const [selectedDate, setSelectedDate] = useState(null);
     // const [selectedGuide, setSelectedGuide] = useState("");
     const axiosSecure = useAxiosSecure()
+    // const axiosInstance = useAxios()
 
+
+    const { data: guides = [], isLoading: guidesLoading, error: guidesError } = useQuery({
+        queryKey: ["guides"],
+        queryFn: async () => {
+            if (!user?.accessToken) throw new Error("No access token");
+            const res = await axiosSecure.get("/guides/approved");
+            return res.data;
+        },
+        enabled: !!user?.accessToken,
+    });
 
     // Fetch package data
     const { data: packageData, isLoading: packageLoading, error: packageError } = useQuery({
@@ -28,13 +42,6 @@ const PackageDetailsPage = () => {
         },
     });
 
-    const { data: guides = [], isLoading: guidesLoading, error: guidesError } = useQuery({
-        queryKey: ["guides"],
-        queryFn: async () => {
-            const res = await axiosSecure.get("/guides/approved");
-            return res.data;
-        },
-    });
 
 
     React.useEffect(() => {
@@ -42,12 +49,16 @@ const PackageDetailsPage = () => {
     }, []);
 
     if (packageLoading) return <Loading />;
-    if (packageError) return <p>Error loading package!</p>;
+    if (packageError) return <p className="text-red-500 text-center py-7">Error loading package!</p>;
 
-    {
-        guidesError && (
-            <p className="text-red-500">Failed to load guides: {guidesError.message}</p>
-        )
+    // {
+    //     guidesError && (
+    //         <p className="text-red-500">Failed to load guides: {guidesError.message}</p>
+    //     )
+    // }
+
+    if (guidesError) {
+        console.error("Failed to fetch guides:", guidesError.response?.data || guidesError.message);
     }
 
 

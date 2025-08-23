@@ -22,6 +22,7 @@ import TourismSection from "../pages/Home/TourismSection/TourismSection";
 import TouristStorySection from "../pages/Home/TouristStorySection/TouristStorySection";
 import AddStory from "../pages/Dashboard/AddStory/AddStory";
 import CommunityPage from "../pages/CommunityPage/CommunityPage";
+import ErrorPage from "../pages/shared/ErrorPage/ErrorPage";
 
 export const router = createBrowserRouter([
     {
@@ -54,6 +55,10 @@ export const router = createBrowserRouter([
             }
 
         ]
+    },
+    {
+        path: "*",
+        element: <ErrorPage></ErrorPage>
     },
     {
         path: '/',

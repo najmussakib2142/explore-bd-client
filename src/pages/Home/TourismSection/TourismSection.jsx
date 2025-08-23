@@ -7,6 +7,7 @@ import { FaSpinner } from "react-icons/fa";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import useAxios from "../../../hooks/useAxios";
+// import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const TourismSection = () => {
   const [packages, setPackages] = useState([]);
@@ -15,6 +16,7 @@ const TourismSection = () => {
   const [loadingGuides, setLoadingGuides] = useState(false);
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+  // const axiosSecure = useAxiosSecure()
 
   const fetchRandomPackages = async () => {
     try {
@@ -29,6 +31,8 @@ const TourismSection = () => {
       setLoadingPackages(false);
     }
   };
+
+  
 
   const fetchRandomGuides = async () => {
     try {

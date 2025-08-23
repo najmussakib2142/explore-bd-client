@@ -1,11 +1,12 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router";
 import { useState } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { FaSpinner, FaTimes } from "react-icons/fa";
 import useAxios from "../../../hooks/useAxios";
 import useAuth from "../../../hooks/useAuth";
+import Loading from "../../shared/Loading/Loading";
 
 const AddStory = () => {
     const { register, handleSubmit, reset } = useForm();
@@ -14,6 +15,39 @@ const AddStory = () => {
     const { user } = useAuth();
     const [pictures, setPictures] = useState([]); // uploaded image URLs
     const [uploading, setUploading] = useState(false);
+    const email = user?.email
+
+
+    // ✅ mutation for saving story
+    const { mutate, isLoading } = useMutation({
+        mutationFn: async (newStory) => {
+            const res = await axiosInstance.post("/stories", newStory);
+            return res.data;
+        },
+        onSuccess: () => {
+            Swal.fire("Success!", "Your story has been added!", "success");
+            reset();
+            setPictures([]);
+            navigate("/communityPage");
+        },
+        onError: (error) => {
+            Swal.fire("Error", error?.message || "Something went wrong", "error");
+        },
+    });
+
+
+    const { data: userInfo = [], isLoading: loadingUsers } = useQuery({
+        queryKey: ["user", "email"],
+        queryFn: async () => {
+            const res = await axiosInstance.get(`/users/${email}`);
+            return res.data;
+        },
+    });
+
+    if (loadingUsers) {
+        return <Loading></Loading>
+    }
+
 
     // ✅ handle image upload
     const handleImageUpload = async (e) => {
@@ -54,22 +88,6 @@ const AddStory = () => {
         setPictures((prev) => prev.filter((_, i) => i !== index));
     };
 
-    // ✅ mutation for saving story
-    const { mutate, isLoading } = useMutation({
-        mutationFn: async (newStory) => {
-            const res = await axiosInstance.post("/stories", newStory);
-            return res.data;
-        },
-        onSuccess: () => {
-            Swal.fire("Success!", "Your story has been added!", "success");
-            reset();
-            setPictures([]);
-            navigate("/dashboard");
-        },
-        onError: (error) => {
-            Swal.fire("Error", error?.message || "Something went wrong", "error");
-        },
-    });
 
     const onSubmit = (data) => {
         if (!pictures.length) {
@@ -85,7 +103,7 @@ const AddStory = () => {
             createdBy: {
                 name: user.displayName || "Anonymous",
                 email: user.email,
-                role: user.role || "user",
+                role: userInfo?.role || "user",
                 photo: user.photoURL || "",
             },
         };

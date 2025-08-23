@@ -187,7 +187,7 @@ const Navbar = () => {
 
                                         {/* Navigation links */}
                                         <li className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary">
-                                            <NavLink to="/dashboard">Dashboard</NavLink>
+                                            <NavLink to="/dashboard/">Dashboard</NavLink>
                                         </li>
                                         <li className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary">
                                             <NavLink to="/offers">Offer Announcements</NavLink>

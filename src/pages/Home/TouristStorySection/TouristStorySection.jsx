@@ -53,7 +53,7 @@ export default function TouristStorySection() {
                                 {story.description}
                             </p>
 
-                            <div className="flex items-center gap-3 mt-2">
+                            {/* <div className="flex items-center gap-3 mt-2">
                                 <img
                                     src={story.createdBy?.photo}
                                     alt={story.createdBy?.name}
@@ -62,7 +62,25 @@ export default function TouristStorySection() {
                                 <span className="text-sm text-gray-700 dark:text-gray-400">
                                     {story.createdBy?.name}
                                 </span>
+                            </div> */}
+
+                            <div className="flex items-center gap-3 mt-2">
+                                {story.createdBy?.photo ? (
+                                    <img
+                                        src={story.createdBy.photo}
+                                        alt={story.createdBy?.name || "User"}
+                                        className="w-8 h-8 rounded-full border"
+                                    />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full border bg-gray-300 dark:bg-gray-600 flex items-center justify-center text-gray-700 dark:text-gray-200 font-semibold">
+                                        {story.createdBy?.name?.[0] || "?"}
+                                    </div>
+                                )}
+                                <span className="text-sm text-gray-700 dark:text-gray-400">
+                                    {story.createdBy?.name || "Unknown"}
+                                </span>
                             </div>
+
 
                             <div className="flex justify-between items-center mt-3">
                                 {user ? (
