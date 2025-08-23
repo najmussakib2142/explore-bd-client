@@ -18,6 +18,9 @@ import GuideProfilePage from "../pages/shared/GuideProfilePage/GuideProfilePage"
 import MyBookings from "../pages/Dashboard/TouristDashboard/MyBookings/MyBookings";
 import ActiveGuides from "../pages/Dashboard/ActiveGuides/ActiveGuides";
 import Payment from "../pages/Dashboard/Payment/Payment";
+import TourismSection from "../pages/Home/TourismSection/TourismSection";
+import TouristStorySection from "../pages/Home/TouristStorySection/TouristStorySection";
+import AddStory from "../pages/Dashboard/AddStory/AddStory";
 
 export const router = createBrowserRouter([
     {
@@ -39,6 +42,10 @@ export const router = createBrowserRouter([
             {
                 path: '/guides/:id',
                 element: <GuideProfilePage></GuideProfilePage>
+            },
+            {
+                path: 'touristStorySection',
+                Component: TouristStorySection,
             }
 
         ]
@@ -88,7 +95,11 @@ export const router = createBrowserRouter([
             {
                 path: 'payment/:packageId/:bookingId',
                 Component: Payment,
-            }
+            },
+            {
+                path: "addStory",
+                Component: AddStory
+            },
         ]
     }
 ]);

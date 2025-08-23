@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaBoxOpen, FaClipboardList, FaHome, FaUserCheck, FaUserClock } from 'react-icons/fa';
+import { FaBoxOpen, FaClipboardList, FaHome, FaPlusCircle, FaUserCheck, FaUserClock } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router';
 import Logo from '../pages/shared/Logo/Logo';
 import { FcPackage } from 'react-icons/fc';
@@ -60,12 +60,19 @@ const DashBoardLayout = () => {
                                     <FaUserClock /> Pending Guides
                                 </NavLink>
                             </li>
-                            <NavLink
-                                to="/dashboard/myBookings"
-                                className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
-                            >
-                                <FaClipboardList /> My Bookings
-                            </NavLink>
+                            <li>
+                                <NavLink to="/dashboard/myBookings" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                    <FaClipboardList /> My Bookings
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    to="/dashboard/addStory"
+                                    className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                >
+                                    <FaPlusCircle /> Add Story
+                                </NavLink>
+                            </li>
                         </ul>
                     </div>
                 </div>

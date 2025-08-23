@@ -11,13 +11,6 @@ import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import BookingForm from "./BookingForm";
 
 
-
-// const placeholderGuides = [
-//     { _id: "1", name: "John Doe", photoURL: "https://via.placeholder.com/150" },
-//     { _id: "2", name: "Jane Smith", photoURL: "https://via.placeholder.com/150" },
-//     { _id: "3", name: "Ali Khan", photoURL: "https://via.placeholder.com/150" },
-// ];
-
 const PackageDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -51,15 +44,6 @@ const PackageDetailsPage = () => {
     if (packageLoading) return <Loading />;
     if (packageError) return <p>Error loading package!</p>;
 
-    // {
-    //     guidesLoading ? (
-    //         <Loading />
-    //     ) : guides.length === 0 ? (
-    //         <p>No guides available</p>
-    //     ) : (
-    //         guides.map(guide => <div key={guide._id}>{guide.name}</div>)
-    //     )
-    // }
     {
         guidesError && (
             <p className="text-red-500">Failed to load guides: {guidesError.message}</p>
