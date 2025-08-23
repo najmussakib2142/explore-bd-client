@@ -13,22 +13,20 @@ const MyBookings = () => {
     const [selectedBooking, setSelectedBooking] = useState(null);
     const navigate = useNavigate()
 
-    const {
-        data: bookings = [],
-        isLoading,
-        refetch,
-    } = useQuery({
+    const { data: bookings = [], isLoading, refetch, } = useQuery({
         queryKey: ["my-bookings", user?.uid],
+        // queryKey: ["my-bookings", user?.email],
         queryFn: async () => {
+            // const res = await axiosInstance.get(`/bookings/user/${user.email}`);
             const res = await axiosInstance.get(`/bookings/user/${user.uid}`);
             return res.data;
         },
         enabled: !!user,
     });
 
-    const handlePay = (id) => {
-        console.log("Proceed to payment for", id);
-        navigate(`/dashboard/payment/${id}`)
+    const handlePay = (packageId, bookingId) => {
+        console.log("Proceed to payment for", packageId, bookingId);
+        navigate(`/dashboard/payment/${packageId}/${bookingId}`)
     };
 
 
@@ -94,10 +92,10 @@ const MyBookings = () => {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, x: -50 }}
                                 transition={{ duration: 0.3, delay: idx * 0.05 }}
-                                className="hover:bg-base-100/50"
+                                className="hover:bg-base-100/50 transition"
                             >
                                 <td>{idx + 1}</td>
-                                <td className="font-medium">{b.packageName}</td>
+                                <td className="max-w-[180px] truncate">{b.packageName}</td>
                                 <td>
                                     {new Date(b.tourDate.start).toLocaleDateString()} - {new Date(b.tourDate.end).toLocaleDateString()}
                                 </td>
@@ -112,8 +110,8 @@ const MyBookings = () => {
                                         {b.payment_status}
                                     </span>
                                 </td>
-                                
-                                <td>${b.price}</td>
+
+                                <td >${b.price}</td>
                                 <td className="flex gap-2 justify-center">
                                     <motion.button
                                         whileHover={{ scale: 1.1 }}
@@ -130,7 +128,7 @@ const MyBookings = () => {
                                             whileTap={{ scale: 0.9 }}
                                             className="btn btn-xs btn-primary"
                                             onClick={() =>
-                                                handlePay(b.packageId)
+                                                handlePay(b.packageId, b._id)
                                                 // console.log("Pay", b._id)
                                             }
                                         >

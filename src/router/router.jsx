@@ -86,7 +86,7 @@ export const router = createBrowserRouter([
                 element: <ActiveGuides></ActiveGuides>
             },
             {
-                path: 'payment/:packageId',
+                path: 'payment/:packageId/:bookingId',
                 Component: Payment,
             }
         ]

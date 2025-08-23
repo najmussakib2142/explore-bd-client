@@ -48,6 +48,8 @@ const Navbar = () => {
             if (result.isConfirmed) {
                 logOut()
                     .then(() => {
+                        localStorage.removeItem("access-token");
+                        // console.log(localStorage.getItem("access-token"));
                         Swal.fire({
                             title: "Logged out!",
                             text: "You have been successfully logged out.",
