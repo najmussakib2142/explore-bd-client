@@ -2,17 +2,17 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { FacebookShareButton, FacebookIcon } from "react-share";
 import useAuth from "../../../hooks/useAuth";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAxios from "../../../hooks/useAxios";
 
 export default function TouristStorySection() {
-    const axiosSecure = useAxiosSecure();
+    const axiosInstance = useAxios();
     const { user } = useAuth();
     const navigate = useNavigate();
 
     const { data: stories = [] } = useQuery({
         queryKey: ["stories", "random"],
         queryFn: async () => {
-            const res = await axiosSecure.get("/stories/random");
+            const res = await axiosInstance.get("/stories/random");
             return res.data;
         },
     });
@@ -41,50 +41,50 @@ export default function TouristStorySection() {
                         key={story._id}
                         className="bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition"
                     >
+                        {/* Show the first image as cover */}
                         <img
-                            src={story.coverImage}
+                            src={story.images?.[0]}
                             alt={story.title}
                             className="w-full h-40 object-cover"
                         />
                         <div className="p-4 space-y-3">
                             <h3 className="text-lg font-semibold">{story.title}</h3>
                             <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
-                                {story.content}
+                                {story.description}
                             </p>
+
                             <div className="flex items-center gap-3 mt-2">
                                 <img
-                                    src={story.authorImage}
-                                    alt={story.author}
+                                    src={story.createdBy?.photo}
+                                    alt={story.createdBy?.name}
                                     className="w-8 h-8 rounded-full border"
                                 />
                                 <span className="text-sm text-gray-700 dark:text-gray-400">
-                                    {story.author}
+                                    {story.createdBy?.name}
                                 </span>
                             </div>
 
                             <div className="flex justify-between items-center mt-3">
-                                <button
-                                    onClick={() => handleShare(story)}
-                                    className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-indigo-600 hover:text-white transition"
-                                >
-                                    {user ? (
-                                        <FacebookShareButton
-                                            url={window.location.origin + "/story/" + story._id}
-                                            quote={story.title}
-                                            hashtag="#TravelStory"
-                                        >
-                                            <div className="flex items-center gap-2">
-                                                <FacebookIcon size={22} round />
-                                                <span>Share</span>
-                                            </div>
-                                        </FacebookShareButton>
-                                    ) : (
-                                        <>
+                                {user ? (
+                                    <FacebookShareButton
+                                        url={window.location.origin + "/story/" + story._id}
+                                        quote={story.title}
+                                        hashtag="#TravelStory"
+                                    >
+                                        <div className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-indigo-600 hover:text-white transition">
                                             <FacebookIcon size={22} round />
                                             <span>Share</span>
-                                        </>
-                                    )}
-                                </button>
+                                        </div>
+                                    </FacebookShareButton>
+                                ) : (
+                                    <button
+                                        onClick={() => handleShare(story)}
+                                        className="flex items-center gap-2 px-3 py-1.5 text-sm rounded-md bg-gray-100 dark:bg-gray-800 hover:bg-indigo-600 hover:text-white transition"
+                                    >
+                                        <FacebookIcon size={22} round />
+                                        <span>Share</span>
+                                    </button>
+                                )}
                             </div>
                         </div>
                     </div>
