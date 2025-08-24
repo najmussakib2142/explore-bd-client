@@ -63,7 +63,7 @@ const Register = () => {
                                 showConfirmButton: false,
                             });
 
-                            navigate(from);
+                            navigate(from, { replace: true });
                         })
                         .catch((err) => {
                             console.log(err);

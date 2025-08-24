@@ -151,7 +151,7 @@ const PaymentForm = () => {
                     <span className="font-semibold">👥 Total Members:</span> {bookingInfo.totalMembers}
                 </p>
                 <p className="text-gray-700 dark:text-gray-200 mb-2">
-                    <span className="font-semibold">📅 Tour Dates:</span> {bookingInfo.tourDate.start} → {bookingInfo.tourDate.end}
+                    <span className="font-semibold">📅 Tour Dates:</span> {bookingInfo?.tourDate?.start} → {bookingInfo?.tourDate?.end}
                 </p>
                 <p className="text-lg font-bold text-indigo-600 dark:text-pink-400">
                     💰 Price: ${bookingInfo.price}

@@ -61,10 +61,10 @@ export default function CommunityStories() {
     if (loadingStories) return <Loading></Loading>
 
     return (
-        <section className="max-w-7xl mx-auto py-10 px-4">
-            <h2 className="text-2xl font-bold mb-6">Community Stories</h2>
+        <section className="max-w-7xl mx-auto py-10 px-7">
+            <h2 className="text-3xl font-bold mb-6">Community Stories</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {stories.map((story) => (
                     <div
                         key={story._id}
@@ -116,6 +116,7 @@ export default function CommunityStories() {
                                     </span>
                                 </div>
                             </div> */}
+                            <div className="flex items-center justify-between">
                             <div className="flex items-center justify-between mt-2">
                                 <div className="flex items-center gap-2">
                                     {story.createdBy?.photo ? (
@@ -136,7 +137,7 @@ export default function CommunityStories() {
                             </div>
 
 
-                            <div className="flex justify-end mt-3">
+                            <div className="flex pb-2 justify-end mt-3">
                                 <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm hover:bg-indigo-600 hover:text-white transition-all duration-300 cursor-pointer">
                                     {user ? (
                                         <FacebookShareButton
@@ -155,6 +156,7 @@ export default function CommunityStories() {
                                         </div>
                                     )}
                                 </div>
+                            </div>
                             </div>
                         </div>
                     </div>

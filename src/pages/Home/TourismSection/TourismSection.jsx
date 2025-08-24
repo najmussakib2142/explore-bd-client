@@ -32,7 +32,7 @@ const TourismSection = () => {
     }
   };
 
-  
+
 
   const fetchRandomGuides = async () => {
     try {
@@ -62,12 +62,12 @@ const TourismSection = () => {
       <Tabs>
         <TabList className="flex justify-center gap-4 mb-6  dark:border-b-2 dark:border-white border-b-2 border-primary">
           <Tab
-            selectedClassName="bg-primary text-white dark:bg-white dark:text-black rounded-t-md"
+            selectedClassName="bg-primary border-b-none text-white dark:bg-white dark:text-black rounded-t-md"
             className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-blue-600 transition">
             Our Packages
           </Tab>
           <Tab
-            selectedClassName="bg-primary text-white dark:bg-white dark:text-black rounded-t-md"
+            selectedClassName="bg-primary border-b-none text-white dark:bg-white dark:text-black rounded-t-md"
             className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-green-600 transition">
             Meet Our Tour Guides
           </Tab>
@@ -96,8 +96,8 @@ const TourismSection = () => {
                     className="w-full h-48 object-cover"
                   />
                   <div className="p-4">
-                    <p className="text-sm text-gray-500 mb-1">{pkg.tourType}</p>
-                    <h3 className="text-xl font-semibold mb-2">{pkg.title}</h3>
+                    <p className="px-3 py-1 rounded-full w-fit text-sm font-medium bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100 shadow-sm">{pkg.tourType}</p>
+                    <h3 className="text-xl mt-2 font-semibold mb-2">{pkg.title}</h3>
                     <p className="text-lg font-bold mb-3">BDT {pkg.price}</p>
                     <button
                       onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}

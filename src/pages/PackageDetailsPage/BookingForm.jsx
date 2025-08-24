@@ -2,8 +2,9 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAuth from "../../hooks/useAuth";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+// import useAxiosSecure from "../../hooks/useAxiosSecure";
 import { FaUserCircle } from "react-icons/fa";
+import useAxios from "../../hooks/useAxios";
 
 const generateTrackingID = () => {
     const date = new Date();
@@ -15,7 +16,8 @@ const generateTrackingID = () => {
 
 const BookingForm = ({ packageData, guides }) => {
     const { user } = useAuth();
-    const axiosSecure = useAxiosSecure();
+    // const axiosSecure = useAxiosSecure();
+    const axiosInstance = useAxios()
     const navigate = useNavigate();
 
     const [selectedGuide, setSelectedGuide] = useState("");
@@ -30,7 +32,7 @@ const BookingForm = ({ packageData, guides }) => {
                 title: "Login Required",
                 text: "You need to login to book this package",
                 confirmButtonText: "Login",
-            }).then(() => navigate("/login"));
+            }).then(() => navigate("/login", { state: { from: location.pathname } }));
         }
 
         if (!selectedGuide || !totalMembers) {
@@ -91,7 +93,7 @@ const BookingForm = ({ packageData, guides }) => {
                 };
 
                 try {
-                    const res = await axiosSecure.post("/bookings", bookingData);
+                    const res = await axiosInstance.post("/bookings", bookingData);
                     if (res.data.insertedId) {
                         Swal.fire({
                             title: "Booking Confirmed",
@@ -101,6 +103,7 @@ const BookingForm = ({ packageData, guides }) => {
                         }).then(() => navigate("/dashboard/myBookings"));
                     }
                 } catch (err) {
+                    console.log(err);
                     Swal.fire("Error!", err.message || "Something went wrong", "error");
                 }
             }

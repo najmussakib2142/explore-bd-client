@@ -1,0 +1,19 @@
+.testimonialSwiper .swiper-slide {
+    opacity: 0.3;
+    filter: blur(2px);
+    transform: scale(0.9);
+    transition: all 0.4s ease;
+}
+
+.testimonialSwiper .swiper-button-next,
+.testimonialSwiper .swiper-button-prev {
+    color: #03373D;
+    font-size: 24px;
+}
+
+.testimonialSwiper .swiper-slide-active {
+    opacity: 1 !important;
+    filter: blur(0) !important;
+    transform: scale(1) !important;
+}
+

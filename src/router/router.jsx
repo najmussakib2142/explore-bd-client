@@ -23,6 +23,10 @@ import TouristStorySection from "../pages/Home/TouristStorySection/TouristStoryS
 import AddStory from "../pages/Dashboard/AddStory/AddStory";
 import CommunityPage from "../pages/CommunityPage/CommunityPage";
 import ErrorPage from "../pages/shared/ErrorPage/ErrorPage";
+import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
+import GuidesList from "../pages/PackageDetailsPage/GuidesList";
+import AllPackages from "../pages/AllPackages/AllPackages";
+import MakeAdmin from "../pages/Dashboard/MakeAdmin/MakeAdmin";
 
 export const router = createBrowserRouter([
     {
@@ -35,14 +39,18 @@ export const router = createBrowserRouter([
             },
             {
                 path: "packageDetailsPage/:id",
-                element: <PrivateRoute><PackageDetailsPage></PackageDetailsPage></PrivateRoute>
+                element: <PackageDetailsPage></PackageDetailsPage>
             },
             {
                 path: 'bookingForm',
                 element: <BookingForm></BookingForm>
             },
             {
-                path: '/guides/:id',
+                path: 'guidesList',
+                Component: <GuidesList></GuidesList>
+            },
+            {
+                path: "/guides/:id",
                 element: <GuideProfilePage></GuideProfilePage>
             },
             {
@@ -52,7 +60,11 @@ export const router = createBrowserRouter([
             {
                 path: 'communityPage',
                 Component: CommunityPage,
-            }
+            },
+            {
+                path: 'allTrips',
+                Component: AllPackages,
+            },
 
         ]
     },
@@ -110,6 +122,14 @@ export const router = createBrowserRouter([
                 path: "addStory",
                 Component: AddStory
             },
+            {
+                path: "paymentHistory",
+                Component: PaymentHistory,
+            },
+            {
+                path: "makeAdmin",
+                element: <MakeAdmin></MakeAdmin>
+            }
         ]
     }
 ]);

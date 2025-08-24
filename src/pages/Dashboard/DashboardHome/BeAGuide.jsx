@@ -20,6 +20,7 @@ const BeAGuide = () => {
     age: "",
     status: "pending",
     bio: "",
+    cv: "",
     created_at: new Date().toISOString(),
   });
 
@@ -90,7 +91,7 @@ const BeAGuide = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto bg-base-100 p-6 rounded-lg shadow-lg mt-10">
+    <div className="max-w-xl mx-auto bg-base-100 p-6 rounded-lg shadow-lg mt-10">
       <h2 className="text-2xl font-bold mb-4">Apply as a Tour Guide</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -224,10 +225,23 @@ const BeAGuide = () => {
             placeholder="Optional"
           />
         </div>
+        <div>
+          <label className="block font-semibold">Your CV link</label>
+          <input
+            type="url"
+            required
+            name="cv"
+            value={formData.cv}
+            onChange={handleChange}
+            className="input input-bordered w-full"
+            placeholder="CV link"
+          />
+        </div>
 
         <div>
-          <label className="block font-semibold">Bio / Introduction</label>
+          <label className="block font-semibold">Why wants to be a Tour Guide?</label>
           <textarea
+            required
             name="bio"
             value={formData.bio}
             onChange={handleChange}

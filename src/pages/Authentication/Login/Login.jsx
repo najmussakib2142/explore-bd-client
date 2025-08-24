@@ -42,7 +42,7 @@ const Login = () => {
                 const userRes = await axiosInstance.post('/users', userInfo);
                 console.log(userRes.data);
 
-                navigate(from)
+                navigate(from, { replace: true })
             })
             .catch(error => {
                 const errorCode = error.code;
@@ -104,7 +104,7 @@ const Login = () => {
                         <SocialLogin></SocialLogin>
 
                         <p className='text-center pt-3'>Dont’t Have An Account ?
-                            <Link className='text-blue-600 hover:underline' to="/register"> Register </Link>
+                            <Link state={{ from }} className='text-blue-600 hover:underline' to="/register"> Register </Link>
                         </p>
 
                     </fieldset>

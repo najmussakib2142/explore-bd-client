@@ -9,35 +9,46 @@ import Loading from "../shared/Loading/Loading";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import BookingForm from "./BookingForm";
 // import useAxios from "../../hooks/useAxios";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
-import useAuth from "../../hooks/useAuth";
+// import useAxiosSecure from "../../hooks/useAxiosSecure";
+// import useAuth from "../../hooks/useAuth";
+import useAxios from "../../hooks/useAxios";
+import GuidesList from "./GuidesList";
 
 
 const PackageDetailsPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { user } = useAuth()
+    // const { user } = useAuth()
     // const [selectedDate, setSelectedDate] = useState(null);
     // const [selectedGuide, setSelectedGuide] = useState("");
-    const axiosSecure = useAxiosSecure()
-    // const axiosInstance = useAxios()
+    // const axiosSecure = useAxiosSecure()
+    const axiosInstance = useAxios()
 
+
+    // const { data: guides = [], isLoading: guidesLoading, error: guidesError } = useQuery({
+    //     queryKey: ["guides"],
+    //     queryFn: async () => {
+    //         if (!user?.accessToken) throw new Error("No access token");
+    //         const res = await axiosInstance.get("/guides/approved");
+    //         return res.data;
+    //     },
+    //     // enabled: !!user?.accessToken,
+    //     enabled: true,
+    // });
 
     const { data: guides = [], isLoading: guidesLoading, error: guidesError } = useQuery({
         queryKey: ["guides"],
         queryFn: async () => {
-            if (!user?.accessToken) throw new Error("No access token");
-            const res = await axiosSecure.get("/guides/approved");
+            const res = await axiosInstance.get("/guides/approved");
             return res.data;
         },
-        enabled: !!user?.accessToken,
     });
 
     // Fetch package data
     const { data: packageData, isLoading: packageLoading, error: packageError } = useQuery({
         queryKey: ["package", id],
         queryFn: async () => {
-            const res = await axiosSecure.get(`/packages/${id}`);
+            const res = await axiosInstance.get(`/packages/${id}`);
             return res.data;
         },
     });
@@ -130,7 +141,7 @@ const PackageDetailsPage = () => {
                     {/* Inclusions */}
                     {packageData.inclusions?.length > 0 && (
                         <div>
-                            <h3 className="text-lg font-semibold mb-2">Inclusions:</h3>
+                            <h3 className="text-lg font-semibold mb-">Inclusions:</h3>
                             <ul className="list-disc list-inside space-y-1 text-gray-400">
                                 {packageData.inclusions.map((item, idx) => (
                                     <li key={idx}>{item}</li>
@@ -141,7 +152,7 @@ const PackageDetailsPage = () => {
 
                     {/* Exclusions */}
                     {packageData.exclusions?.length > 0 && (
-                        <div>
+                        <div className="mt-2">
                             <h3 className="text-lg font-semibold mb-2">Exclusions:</h3>
                             <ul className="list-disc list-inside space-y-1 text-gray-400">
                                 {packageData.exclusions.map((item, idx) => (
@@ -156,8 +167,8 @@ const PackageDetailsPage = () => {
 
 
             {/* Tour Plan */}
-            <div className="bg-base-100 p-6 rounded-lg shadow-lg" data-aos="fade-up">
-                <h3 className="text-xl font-semibold mb-4">Tour Plan</h3>
+            <div className="bg-base-100  p-6 rounded-lg shadow-lg" data-aos="fade-up">
+                <h3 className="text-xl text-primary font-semibold mb-4">Tour Plan</h3>
                 <ul className="space-y-2">
                     {packageData.plan.map((day, idx) => (
                         <li key={idx} className="border-l-4 border-primary pl-4">
@@ -169,8 +180,8 @@ const PackageDetailsPage = () => {
             </div>
 
             {/* Guides */}
-
-            <div className="bg-base-100 p-6 rounded-lg shadow-lg" data-aos="fade-up">
+            <GuidesList guides={guides} guidesLoading={guidesLoading} guidesError={guidesError}></GuidesList>
+            {/* <div className="bg-base-100 p-6 rounded-lg shadow-lg" data-aos="fade-up">
                 <h3 className="text-2xl font-semibold mb-6 text-center">Available Tour Guides</h3>
 
                 {guidesLoading ? (
@@ -208,7 +219,7 @@ const PackageDetailsPage = () => {
                         ))}
                     </div>
                 )}
-            </div>
+            </div> */}
 
 
             {/* Booking Form */}

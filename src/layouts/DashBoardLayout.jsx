@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaBoxOpen, FaClipboardList, FaHome, FaPlusCircle, FaUserCheck, FaUserClock } from 'react-icons/fa';
+import { FaBoxOpen, FaClipboardList, FaHome, FaMoneyCheckAlt, FaPlusCircle, FaUserCheck, FaUserClock, FaUserShield, FaUserTie } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router';
 import Logo from '../pages/shared/Logo/Logo';
 import { FcPackage } from 'react-icons/fc';
@@ -61,7 +61,7 @@ const DashBoardLayout = () => {
                                 </NavLink>
                             </li>
                             <li>
-                                <NavLink to="/dashboard/myBookings" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                <NavLink to="/dashboard/myBookings/" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
                                     <FaClipboardList /> My Bookings
                                 </NavLink>
                             </li>
@@ -73,6 +73,25 @@ const DashBoardLayout = () => {
                                     <FaPlusCircle /> Add Story
                                 </NavLink>
                             </li>
+                            <li>
+                                <NavLink to="/dashboard/paymentHistory" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                    <FaMoneyCheckAlt /> Payment History
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    to="/dashboard/beAGuide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                >
+                                    <FaUserTie /> Be a Guide
+                                </NavLink>
+
+                            </li>
+                            <li>
+                                <NavLink to="/dashboard/makeAdmin" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                    <FaUserShield /> Make Admin
+                                </NavLink>
+                            </li>
+
                         </ul>
                     </div>
                 </div>

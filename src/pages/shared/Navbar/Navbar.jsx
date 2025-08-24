@@ -67,7 +67,7 @@ const Navbar = () => {
         <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary'><NavLink to="/">Home</NavLink></li>
         <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/communityPage">Community</NavLink></li>
         <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/about">About Us</NavLink></li>
-        <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/about">Trips</NavLink></li>
+        <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/allTrips">Trips</NavLink></li>
     </>
     return (
         <div>
