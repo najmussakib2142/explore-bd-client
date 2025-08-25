@@ -1,11 +1,16 @@
 import React from 'react';
-import { FaBoxOpen, FaClipboardList, FaHome, FaMoneyCheckAlt, FaPlusCircle, FaUserCheck, FaUserClock, FaUserShield, FaUserTie } from 'react-icons/fa';
+import { FaBoxOpen, FaClipboardList, FaCompass, FaHome, FaMoneyCheckAlt, FaMotorcycle, FaPlusCircle, FaUserCheck, FaUserClock, FaUserShield, FaUserTie } from 'react-icons/fa';
 import { NavLink, Outlet } from 'react-router';
 import Logo from '../pages/shared/Logo/Logo';
 import { FcPackage } from 'react-icons/fc';
 import Footer from '../pages/shared/Footer/Footer';
+import useUserRole from '../hooks/useUserRole';
 
 const DashBoardLayout = () => {
+
+    const { role, roleLoading } = useUserRole();
+    console.log(role, roleLoading);
+
     return (
         <div>
             <div className=" flex ">
@@ -45,53 +50,89 @@ const DashBoardLayout = () => {
                                     <FaHome /> Home
                                 </NavLink>
                             </li>
-                            <li>
-                                <NavLink to="/dashboard/addPackage" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
-                                    <FaBoxOpen className="text-lg" /> Add Package
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/active-guides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
-                                    <FaUserCheck /> Active Guides
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/pendingGuides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
-                                    <FaUserClock /> Pending Guides
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/myBookings/" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
-                                    <FaClipboardList /> My Bookings
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    to="/dashboard/addStory"
-                                    className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
-                                >
-                                    <FaPlusCircle /> Add Story
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/paymentHistory" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
-                                    <FaMoneyCheckAlt /> Payment History
-                                </NavLink>
-                            </li>
-                            <li>
-                                <NavLink
-                                    to="/dashboard/beAGuide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
-                                >
-                                    <FaUserTie /> Be a Guide
-                                </NavLink>
 
-                            </li>
-                            <li>
-                                <NavLink to="/dashboard/makeAdmin" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
-                                    <FaUserShield /> Make Admin
-                                </NavLink>
-                            </li>
+                            {!roleLoading && role === 'user' &&
+                                <>
+                                    <li>
+                                        <NavLink to="/dashboard/myBookings/" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaClipboardList /> My Bookings
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink
+                                            to="/dashboard/addStory"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                        >
+                                            <FaPlusCircle /> Add Story
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/dashboard/paymentHistory" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaMoneyCheckAlt /> Payment History
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink
+                                            to="/dashboard/beAGuide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                        >
+                                            <FaUserTie /> Be a Guide
+                                        </NavLink>
 
+                                    </li>
+                                </>
+                            }
+
+
+                            {/* {guide} */}
+                            {!roleLoading && role === 'guide' &&
+                                <>
+                                    <li>
+                                        <NavLink
+                                            to="/dashboard/addStory"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                        >
+                                            <FaPlusCircle /> Add Story
+                                        </NavLink>
+                                    </li>
+                                </>
+                            }
+
+                            {/* Admin */}
+                            {!roleLoading && role === 'admin' &&
+                                <>
+                                    <li>
+                                        <NavLink to="/dashboard/addPackage" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaBoxOpen className="text-lg" /> Add Package
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/dashboard/assign-guide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaCompass /> Assign Guide
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/dashboard/makeAdmin" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaUserShield /> Make Admin
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/dashboard/pendingGuides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaUserClock /> Manage Candidates
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/dashboard/pendingGuides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaUserClock /> Manage Users
+                                        </NavLink>
+                                    </li>
+
+                                    <li>
+                                        <NavLink to="/dashboard/active-guides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaUserCheck /> Active Guides
+                                        </NavLink>
+                                    </li>
+                                </>
+                            }
                         </ul>
                     </div>
                 </div>

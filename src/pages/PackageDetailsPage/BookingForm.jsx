@@ -19,11 +19,35 @@ const BookingForm = ({ packageData, guides }) => {
     // const axiosSecure = useAxiosSecure();
     const axiosInstance = useAxios()
     const navigate = useNavigate();
-
     const [selectedGuide, setSelectedGuide] = useState("");
     const [totalMembers, setTotalMembers] = useState(1);
 
     const maxMembers = Number(packageData.groupSize.split("-")[1]);
+
+    // const filteredGuides = guides.filter(
+    //     (guide) => guide.district === packageData.location
+    // );
+
+    // const filteredGuides = guides.filter((guide) => {
+    //     const guideDistrict = guide.district || "";      // fallback to empty string
+    //     const packageLocation = packageData.location || ""; // fallback to empty string
+
+    //     return guideDistrict.toLowerCase().replace(/\s/g, "") ===
+    //         packageLocation.toLowerCase().replace(/\s/g, "");
+    // });
+
+    const normalize = (str) =>
+        (str || "")                  // fallback if undefined
+            .toLowerCase()             // lowercase
+            .replace(/\s+/g, "")       // remove all spaces
+            .replace(/['’]/g, "");    // remove apostrophes
+
+    const filteredGuides = guides.filter(
+        (guide) => normalize(guide.district) === normalize(packageData.location)
+    );
+
+
+
 
     const handleBooking = async () => {
         if (!user) {
@@ -86,6 +110,7 @@ const BookingForm = ({ packageData, guides }) => {
                     },
                     payment_status: 'unpaid',
                     guideName: selectedGuide,
+                    // guideDistrict: guide.district,
                     totalMembers,
                     status: "pending",
                     tracking_id: tracking_id,
@@ -178,8 +203,8 @@ const BookingForm = ({ packageData, guides }) => {
                 </div>
 
                 <div>
-                    <label className="block font-semibold">Select Tour Guide</label>
-                    <select
+                    <label className="block font-semibold">Available Tour Guides In This Area</label>
+                    {/* <select
                         value={selectedGuide}
                         onChange={(e) => setSelectedGuide(e.target.value)}
                         className="select select-bordered w-full"
@@ -190,7 +215,23 @@ const BookingForm = ({ packageData, guides }) => {
                                 {guide.name}
                             </option>
                         ))}
+                    </select> */}
+
+                    <select
+                        value={selectedGuide}
+                        onChange={(e) => setSelectedGuide(e.target.value)}
+                        className="select select-bordered w-full"
+                    >
+                        <option value="">Select One</option>
+                        {filteredGuides.map((guide) => (
+                            <option key={guide._id} value={guide.name}>
+                                {guide.name}
+                            </option>
+                        ))}
                     </select>
+                    {filteredGuides.length === 0 && (
+                        <p className="text-sm text-red-500 mt-1">No guides available in this location</p>
+                    )}
                 </div>
 
                 <div>

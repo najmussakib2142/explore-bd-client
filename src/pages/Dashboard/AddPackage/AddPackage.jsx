@@ -6,6 +6,9 @@ import Swal from "sweetalert2";
 // import axios from "axios";
 import { FaTimes, FaSpinner } from "react-icons/fa";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import axios from "axios";
+import Loading from "../../shared/Loading/Loading";
+// import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const AddPackage = () => {
     const axiosSecure = useAxiosSecure();
@@ -32,6 +35,8 @@ const AddPackage = () => {
     // Images
     const [pictures, setPictures] = useState([]); // array of URLs
     const [uploading, setUploading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+
 
     // Helpers
     const fmt = (d) => (d ? d.toISOString().split("T")[0] : "");
@@ -50,6 +55,7 @@ const AddPackage = () => {
                 setValue("duration", "");
                 return;
             }
+            // const diffTime = end.getTime() - start.getTime();
             const diffTime = end.setHours(12, 0, 0, 0) - start.setHours(12, 0, 0, 0); // avoid DST edge cases
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
             const dur = `${diffDays} Days / ${Math.max(diffDays - 1, 0)} Nights`;
@@ -72,7 +78,10 @@ const AddPackage = () => {
             const uploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`;
 
             try {
-                const res = await axiosSecure.post(uploadUrl, formData);
+                // const res = await axiosSecure.post(uploadUrl, formData);
+                const res = await axios.post(uploadUrl, formData, {
+                    headers: { "Content-Type": "multipart/form-data" },
+                })
                 uploadedUrls.push(res.data?.data?.url);
             } catch (err) {
                 console.error("Image upload failed:", err);
@@ -91,6 +100,7 @@ const AddPackage = () => {
     };
 
     const onSubmit = async (data) => {
+        setSubmitting(true)
         try {
             // Normalize
             data.price = parseFloat(data.price);
@@ -145,7 +155,6 @@ const AddPackage = () => {
                 //     exclusions: [],
                 // });
                 reset()
-                
                 setPictures([]);
                 setStartDate(null);
                 setEndDate(null);
@@ -154,6 +163,8 @@ const AddPackage = () => {
         } catch (err) {
             console.error(err);
             Swal.fire("Error!", err?.message || "Something went wrong", "error");
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -166,6 +177,7 @@ const AddPackage = () => {
                 <div>
                     <label className="font-semibold mb-1 block">Tour Title</label>
                     <input
+                        required
                         type="text"
                         {...register("title", { required: true })}
                         className="input input-bordered w-full"
@@ -190,7 +202,7 @@ const AddPackage = () => {
                 </div>
 
                 {/* Location */}
-                <div>
+                {/* <div>
                     <label className="font-semibold mb-1 block">Location</label>
                     <input
                         type="text"
@@ -198,7 +210,92 @@ const AddPackage = () => {
                         {...register("location", { required: true })}
                         className="input input-bordered w-full"
                     />
+                </div> */}
+
+                <div>
+                    <label className="block font-semibold mb-1">Location</label>
+                    <select
+                        // name="district"
+                        required
+                        {...register("location", { required: true })}
+                        // value={formData.district}
+                        // onChange={handleChange}
+                        className="select select-bordered w-full"
+                    >
+                        <option value="">Select District</option>
+                        <option value="Dhaka">Dhaka</option>
+                        <option value="Chattogram">Chattogram</option>
+                        <option value="Khulna">Khulna</option>
+                        <option value="Rajshahi">Rajshahi</option>
+                        <option value="Barishal">Barishal</option>
+                        <option value="Sylhet">Sylhet</option>
+                        <option value="Rangpur">Rangpur</option>
+                        <option value="Mymensingh">Mymensingh</option>
+                        {/* Remaining 56 districts */}
+                        <option value="Bagerhat">Bagerhat</option>
+                        <option value="Bandarban">Bandarban</option>
+                        <option value="Barguna">Barguna</option>
+                        <option value="Bhola">Bhola</option>
+                        <option value="Bogra">Bogra</option>
+                        <option value="Brahmanbaria">Brahmanbaria</option>
+                        <option value="Chandpur">Chandpur</option>
+                        <option value="Chuadanga">Chuadanga</option>
+                        <option value="Comilla">Comilla</option>
+                        <option value="Cox's Bazar">Cox's Bazar</option>
+                        <option value="Dinajpur">Dinajpur</option>
+                        <option value="Faridpur">Faridpur</option>
+                        <option value="Feni">Feni</option>
+                        <option value="Gaibandha">Gaibandha</option>
+                        <option value="Gazipur">Gazipur</option>
+                        <option value="Gopalganj">Gopalganj</option>
+                        <option value="Habiganj">Habiganj</option>
+                        <option value="Jamalpur">Jamalpur</option>
+                        <option value="Jashore">Jashore</option>
+                        <option value="Jhalokati">Jhalokati</option>
+                        <option value="Jhenaidah">Jhenaidah</option>
+                        <option value="Joypurhat">Joypurhat</option>
+                        <option value="Junk">Junk</option>
+                        <option value="Khagrachhari">Khagrachhari</option>
+                        <option value="Kishoreganj">Kishoreganj</option>
+                        <option value="Kurigram">Kurigram</option>
+                        <option value="Kushtia">Kushtia</option>
+                        <option value="Lakshmipur">Lakshmipur</option>
+                        <option value="Lalmonirhat">Lalmonirhat</option>
+                        <option value="Madaripur">Madaripur</option>
+                        <option value="Magura">Magura</option>
+                        <option value="Manikganj">Manikganj</option>
+                        <option value="Meherpur">Meherpur</option>
+                        <option value="Munshiganj">Munshiganj</option>
+                        <option value="Mymensingh">Mymensingh</option>
+                        <option value="Naogaon">Naogaon</option>
+                        <option value="Narail">Narail</option>
+                        <option value="Narsingdi">Narsingdi</option>
+                        <option value="Natore">Natore</option>
+                        <option value="Nawabganj">Nawabganj</option>
+                        <option value="Netrokona">Netrokona</option>
+                        <option value="Nilphamari">Nilphamari</option>
+                        <option value="Noakhali">Noakhali</option>
+                        <option value="Pabna">Pabna</option>
+                        <option value="Panchagarh">Panchagarh</option>
+                        <option value="Patuakhali">Patuakhali</option>
+                        <option value="Pirojpur">Pirojpur</option>
+                        <option value="Rajbari">Rajbari</option>
+                        <option value="Rajshahi">Rajshahi</option>
+                        <option value="Rangamati">Rangamati</option>
+                        <option value="Satkhira">Satkhira</option>
+                        <option value="Shariatpur">Shariatpur</option>
+                        <option value="Sherpur">Sherpur</option>
+                        <option value="Sirajganj">Sirajganj</option>
+                        <option value="Sunamganj">Sunamganj</option>
+                        <option value="Sylhet">Sylhet</option>
+                        <option value="Tangail">Tangail</option>
+                        <option value="Thakurgaon">Thakurgaon</option>
+                    </select>
                 </div>
+
+
+
+
                 <div>
                     <label className="font-semibold mb-1 block">Meeting Point</label>
                     <input
@@ -428,8 +525,8 @@ const AddPackage = () => {
                 </div>
 
                 {/* Submit */}
-                <button type="submit" className="btn btn-primary w-full" disabled={uploading}>
-                    {uploading ? "Please wait..." : "Add Package"}
+                <button type="submit" className="btn btn-primary w-full" disabled={uploading || submitting}>
+                    {submitting ? "Uploading..." : "Add Package"}
                 </button>
             </form>
         </div>

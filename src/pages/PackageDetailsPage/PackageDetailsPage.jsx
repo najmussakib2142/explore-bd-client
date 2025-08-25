@@ -8,33 +8,15 @@ import "aos/dist/aos.css";
 import Loading from "../shared/Loading/Loading";
 import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 import BookingForm from "./BookingForm";
-// import useAxios from "../../hooks/useAxios";
-// import useAxiosSecure from "../../hooks/useAxiosSecure";
-// import useAuth from "../../hooks/useAuth";
 import useAxios from "../../hooks/useAxios";
 import GuidesList from "./GuidesList";
+// import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 
 const PackageDetailsPage = () => {
     const { id } = useParams();
-    const navigate = useNavigate();
-    // const { user } = useAuth()
-    // const [selectedDate, setSelectedDate] = useState(null);
-    // const [selectedGuide, setSelectedGuide] = useState("");
     // const axiosSecure = useAxiosSecure()
     const axiosInstance = useAxios()
-
-
-    // const { data: guides = [], isLoading: guidesLoading, error: guidesError } = useQuery({
-    //     queryKey: ["guides"],
-    //     queryFn: async () => {
-    //         if (!user?.accessToken) throw new Error("No access token");
-    //         const res = await axiosInstance.get("/guides/approved");
-    //         return res.data;
-    //     },
-    //     // enabled: !!user?.accessToken,
-    //     enabled: true,
-    // });
 
     const { data: guides = [], isLoading: guidesLoading, error: guidesError } = useQuery({
         queryKey: ["guides"],
@@ -62,24 +44,6 @@ const PackageDetailsPage = () => {
     if (packageLoading) return <Loading />;
     if (packageError) return <p className="text-red-500 text-center py-7">Error loading package!</p>;
 
-    // {
-    //     guidesError && (
-    //         <p className="text-red-500">Failed to load guides: {guidesError.message}</p>
-    //     )
-    // }
-
-    if (guidesError) {
-        console.error("Failed to fetch guides:", guidesError.response?.data || guidesError.message);
-    }
-
-
-    // const handleBooking = () => {
-    //     if (!selectedDate || !selectedGuide) {
-    //         alert("Please select a tour date and guide");
-    //         return;
-    //     }
-    //     alert(`Booking confirmed for ${packageData.title} with guide ${selectedGuide}`);
-    // };
 
     return (
         <div className="max-w-6xl mx-auto my-12 px-4 pt-4 space-y-10">{/* About & Info */}
@@ -179,86 +143,13 @@ const PackageDetailsPage = () => {
                 </ul>
             </div>
 
+
             {/* Guides */}
             <GuidesList guides={guides} guidesLoading={guidesLoading} guidesError={guidesError}></GuidesList>
-            {/* <div className="bg-base-100 p-6 rounded-lg shadow-lg" data-aos="fade-up">
-                <h3 className="text-2xl font-semibold mb-6 text-center">Available Tour Guides</h3>
-
-                {guidesLoading ? (
-                    <div className="flex justify-center py-12">
-                        <Loading />
-                    </div>
-                ) : guidesError ? (
-                    <p className="text-center text-red-500">Failed to load guides</p>
-                ) : guides.length === 0 ? (
-                    <p className="text-center text-gray-500 dark:text-gray-400">No guides available</p>
-                ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        {guides.map((guide) => (
-                            <div
-                                key={guide._id}
-                                className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 flex flex-col items-center text-center hover:shadow-2xl transform hover:-translate-y-1 transition duration-300"
-                            >
-                                <img
-                                    src={guide.photoURL || "https://via.placeholder.com/150"}
-                                    alt={guide.name}
-                                    className="w-28 h-28 object-cover rounded-full mb-4 border-2 border-gray-200 dark:border-gray-600"
-                                />
-                                <p className="font-semibold text-lg mb-1 text-gray-900 dark:text-gray-100">{guide.name}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">{guide.district || "N/A"}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                                    Experience: {guide.experience || "N/A"} yrs
-                                </p>
-                                <button
-                                    className="btn btn-secondary btn-sm mt-auto w-full"
-                                    onClick={() => navigate(`/guides/${guide._id}`)}
-                                >
-                                    View Profile
-                                </button>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div> */}
-
 
             {/* Booking Form */}
             <BookingForm packageData={packageData} guides={guides}></BookingForm>
-            {/* <div className="bg-base-100 p-6 rounded-lg shadow-lg" data-aos="fade-up">
-                <h3 className="text-xl font-semibold mb-4">Book This Package</h3>
-                <div className="space-y-4">
-                    <p><span className="font-semibold">Package:</span> {packageData.title}</p>
-                    <p><span className="font-semibold">Price:</span> BDT {packageData.price}</p>
 
-                    <label className="block font-semibold">Select Tour Date</label>
-                    <DatePicker
-                        selected={selectedDate}
-                        onChange={(date) => setSelectedDate(date)}
-                        className="input input-bordered w-full"
-                    />
-
-                    <label className="block font-semibold">Select Tour Guide</label>
-                    <select
-                        value={selectedGuide}
-                        onChange={(e) => setSelectedGuide(e.target.value)}
-                        className="select select-bordered w-full"
-                    >
-                        <option value="">Select Guide</option>
-                        {guides.map((guide) => (
-                            <option key={guide._id} value={guide.name}>
-                                {guide.name}
-                            </option>
-                        ))}
-                    </select>
-
-                    <button
-                        className="btn btn-primary w-full"
-                        onClick={handleBooking}
-                    >
-                        Book Now
-                    </button>
-                </div>
-            </div> */}
         </div>
     );
 };

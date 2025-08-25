@@ -64,7 +64,7 @@ const PendingGuides = () => {
                             <th>Name</th>
                             <th>Email</th>
                             <th>Age</th>
-                            <th>Phone</th>
+                            <th>Role</th>
                             <th>Applied</th>
                             <th>Status</th>
                             <th>Actions</th>
@@ -85,7 +85,8 @@ const PendingGuides = () => {
                                     <td>{guide.name}</td>
                                     <td>{guide.email}</td>
                                     <td>{guide.age || '-'}</td>
-                                    <td>{guide.phone || '-'}</td>
+                                    {/* <td>{guide.phone || '-'}</td> */}
+                                    <td>{guide.role || "User"}</td>
                                     <td>{new Date(guide.created_at).toLocaleDateString()}</td>
                                     <td>
                                         <span className={`badge ${guide.status === 'pending' ? 'badge-warning' : guide.status === 'active' ? 'badge-success' : 'badge-error'}`}>
@@ -154,6 +155,7 @@ const PendingGuides = () => {
                                 <p><strong>Email:</strong> {selectedGuide.email}</p>
                                 <p><strong>Phone:</strong> {selectedGuide.phone}</p>
                                 <p><strong>Age:</strong> {selectedGuide.age}</p>
+                                <p><strong>Location:</strong> {selectedGuide.district}</p>
                                 <p><strong>Experience:</strong> {selectedGuide.experience}</p>
                                 <p><strong>Bio:</strong> {selectedGuide.bio}</p>
                                 <p><strong>Applied At:</strong> {new Date(selectedGuide.created_at).toLocaleString()}</p>

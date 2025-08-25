@@ -27,6 +27,9 @@ import PaymentHistory from "../pages/Dashboard/PaymentHistory/PaymentHistory";
 import GuidesList from "../pages/PackageDetailsPage/GuidesList";
 import AllPackages from "../pages/AllPackages/AllPackages";
 import MakeAdmin from "../pages/Dashboard/MakeAdmin/MakeAdmin";
+import Forbidden from "../pages/Forbidden/Forbidden";
+import AdminRoute from "../routes/AdminRoute";
+import AssignGuide from "../pages/Dashboard/AssignGuide/AssignGuide";
 
 export const router = createBrowserRouter([
     {
@@ -65,7 +68,10 @@ export const router = createBrowserRouter([
                 path: 'allTrips',
                 Component: AllPackages,
             },
-
+            {
+                path: 'forbidden',
+                element: <Forbidden></Forbidden>
+            }
         ]
     },
     {
@@ -96,27 +102,32 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'addPackage',
-                Component: AddPackage,
-            },
-            {
-                path: 'beAGuide',
-                element: <BeAGuide></BeAGuide>
+                element: <AdminRoute><AddPackage></AddPackage></AdminRoute>,
             },
             {
                 path: 'pendingGuides',
-                element: <PendingGuides></PendingGuides>
+                element: <AdminRoute><PendingGuides></PendingGuides></AdminRoute>
             },
-            {
-                path: 'myBookings',
-                element: <MyBookings></MyBookings>
-            },
+
             {
                 path: 'active-guides',
-                element: <ActiveGuides></ActiveGuides>
+                element: <AdminRoute><ActiveGuides></ActiveGuides></AdminRoute>
+            },
+            {
+                path: "makeAdmin",
+                element: <AdminRoute><MakeAdmin></MakeAdmin></AdminRoute>
+            },
+            {
+                path: "assign-guide",
+                element: <AdminRoute><AssignGuide></AssignGuide></AdminRoute>
             },
             {
                 path: 'payment/:packageId/:bookingId',
                 Component: Payment,
+            },
+            {
+                path: 'beAGuide',
+                element: <BeAGuide></BeAGuide>
             },
             {
                 path: "addStory",
@@ -127,9 +138,10 @@ export const router = createBrowserRouter([
                 Component: PaymentHistory,
             },
             {
-                path: "makeAdmin",
-                element: <MakeAdmin></MakeAdmin>
-            }
+                path: 'myBookings',
+                element: <MyBookings></MyBookings>
+            },
+
         ]
     }
 ]);

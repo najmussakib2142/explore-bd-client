@@ -4,9 +4,9 @@ import { FaSpinner } from "react-icons/fa";
 import { useNavigate } from "react-router";
 // import useAxiosSecure from "../../hooks/useAxiosSecure";
 import Loading from "../shared/Loading/Loading";
-import './pagination.css'
+// import './pagination.css'
 import useAxios from "../../hooks/useAxios";
-import Pagination from "../shared/Pagination/Pagination";
+// import Pagination from "../shared/Pagination/Pagination";
 
 const AllPackages = () => {
     const axiosInstance = useAxios();
@@ -40,13 +40,13 @@ const AllPackages = () => {
         setCurrentPage(0);
     };
 
-    // const handlePrevPage = () => {
-    //     if (currentPage > 0) setCurrentPage(currentPage - 1);
-    // };
+    const handlePrevPage = () => {
+        if (currentPage > 0) setCurrentPage(currentPage - 1);
+    };
 
-    // const handleNextPage = () => {
-    //     if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
-    // };
+    const handleNextPage = () => {
+        if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
+    };
 
     if (isLoading) return <Loading />;
     if (isError)
@@ -90,7 +90,7 @@ const AllPackages = () => {
             )}
 
             {/* Pagination Controls */}
-            {/* <div className="pagination mt-6 flex justify-center items-center gap-2">
+            <div className="pagination mt-6 flex justify-center items-center gap-2">
                 <button
                     onClick={handlePrevPage}
                     disabled={currentPage === 0}
@@ -127,14 +127,14 @@ const AllPackages = () => {
                     <option value="9">9</option>
                     <option value="12">12</option>
                 </select>
-            </div> */}
-            <Pagination
+            </div>
+            {/* <Pagination
                 currentPage={currentPage}
                 totalPages={pages.length}
                 onPageChange={setCurrentPage}
                 itemsPerPage={itemsPerPage}
                 onItemsPerPageChange={handleItemsPerPage}
-            ></Pagination>
+            ></Pagination> */}
         </div>
     );
 };

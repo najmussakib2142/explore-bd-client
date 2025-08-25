@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import useAuth from "../../../../hooks/useAuth";
+import Loading from "../../../shared/Loading/Loading";
 
 const MyBookings = () => {
   const axiosSecure = useAxiosSecure();
@@ -38,7 +39,7 @@ const MyBookings = () => {
     navigate(`/dashboard/payment/${packageId}/${bookingId}`);
   };
 
-  if (isLoading) return <p className="text-center">Loading bookings...</p>;
+  if (isLoading) return <Loading></Loading>;
 
   return (
     <div className="p-6">
@@ -70,13 +71,12 @@ const MyBookings = () => {
                 </td>
                 <td>
                   <span
-                    className={`badge ${
-                      b.status === "accepted"
-                        ? "badge-success"
-                        : b.status === "rejected"
+                    className={`badge ${b.status === "accepted"
+                      ? "badge-success"
+                      : b.status === "rejected"
                         ? "badge-error"
                         : "badge-warning"
-                    }`}
+                      }`}
                   >
                     {b.status}
                   </span>
@@ -129,11 +129,14 @@ const MyBookings = () => {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full"
+            className="bg-white space-y-1 dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-md w-full"
           >
-            <h3 className="text-xl font-bold mb-4">Booking Details</h3>
-            <p>
+            <h3 className="text-2xl font-bold mb-4">Booking Details</h3>
+            <p >
               <strong>Package:</strong> {selectedBooking.packageName}
+            </p>
+            <p>
+              <strong>Tracking ID:</strong> {selectedBooking.tracking_id}
             </p>
             <p>
               <strong>Guide:</strong> {selectedBooking.guideName}
@@ -143,10 +146,10 @@ const MyBookings = () => {
               {selectedBooking.tourDate?.end}
             </p>
             <p>
-              <strong>Payment Status:</strong> {selectedBooking.payment_status}
+              <strong>Admin Approval:</strong> {selectedBooking.status}
             </p>
             <p>
-              <strong>Status:</strong> {selectedBooking.status}
+              <strong>Payment Status:</strong> {selectedBooking.payment_status}
             </p>
             <p>
               <strong>Price:</strong> ${selectedBooking.price}

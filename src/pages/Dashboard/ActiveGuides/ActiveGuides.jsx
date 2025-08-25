@@ -2,17 +2,18 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { FaSearch, FaUserSlash } from "react-icons/fa";
-import useAxiosSecure from "../../../hooks/useAxiosSecure";
+// import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import useAxios from "../../../hooks/useAxios";
 
 const ActiveGuides = () => {
-    const axiosSecure = useAxiosSecure();
+    const axiosInstance = useAxios();
     const [searchTerm, setSearchTerm] = useState("");
 
     // 🟡 Load Active Riders with React Query
     const { data: guides = [], isLoading, refetch, error } = useQuery({
-        queryKey: ["activeRiders"],
+        queryKey: ["activeGuides"],
         queryFn: async () => {
-            const res = await axiosSecure.get("/guides/approved");
+            const res = await axiosInstance.get("/guides/approved");
             return res.data;
         },
     });

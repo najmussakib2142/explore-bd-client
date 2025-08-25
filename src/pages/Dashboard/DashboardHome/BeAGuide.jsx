@@ -21,8 +21,11 @@ const BeAGuide = () => {
     status: "pending",
     bio: "",
     cv: "",
+    district: "",
     created_at: new Date().toISOString(),
   });
+
+  // console.log(formData, setFormData);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -97,7 +100,7 @@ const BeAGuide = () => {
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="flex flex-col items-start gap-2">
           {profilePic ? (
-            <div className="flex flex-col items-center gap-2">
+            <div className="flex  flex-col items-center gap-2">
               <img
                 src={profilePic}
                 alt={user?.displayName || "Profile"}
@@ -184,7 +187,7 @@ const BeAGuide = () => {
             required
             onChange={handleChange}
             className="input input-bordered w-full"
-            placeholder="Card Number"
+            placeholder="ID Number"
           />
         </div>
 
@@ -201,7 +204,7 @@ const BeAGuide = () => {
           />
         </div>
 
-        <div>
+        {/* <div>
           <label className="block font-semibold">District</label>
           <input
             type="text"
@@ -212,7 +215,87 @@ const BeAGuide = () => {
             className="input input-bordered w-full"
             placeholder="District name"
           />
+        </div> */}
+        <div>
+          <label className="block font-semibold mb-1">District</label>
+          <select
+            name="district"
+            required
+            value={formData.district}
+            onChange={handleChange}
+            className="select select-bordered w-full"
+          >
+            <option value="">Select District</option>
+            <option value="Dhaka">Dhaka</option>
+            <option value="Chattogram">Chattogram</option>
+            <option value="Khulna">Khulna</option>
+            <option value="Rajshahi">Rajshahi</option>
+            <option value="Barishal">Barishal</option>
+            <option value="Sylhet">Sylhet</option>
+            <option value="Rangpur">Rangpur</option>
+            <option value="Mymensingh">Mymensingh</option>
+            {/* Remaining 56 districts */}
+            <option value="Bagerhat">Bagerhat</option>
+            <option value="Bandarban">Bandarban</option>
+            <option value="Barguna">Barguna</option>
+            <option value="Bhola">Bhola</option>
+            <option value="Bogra">Bogra</option>
+            <option value="Brahmanbaria">Brahmanbaria</option>
+            <option value="Chandpur">Chandpur</option>
+            <option value="Chuadanga">Chuadanga</option>
+            <option value="Comilla">Comilla</option>
+            <option value="Cox's Bazar">Cox's Bazar</option>
+            <option value="Dinajpur">Dinajpur</option>
+            <option value="Faridpur">Faridpur</option>
+            <option value="Feni">Feni</option>
+            <option value="Gaibandha">Gaibandha</option>
+            <option value="Gazipur">Gazipur</option>
+            <option value="Gopalganj">Gopalganj</option>
+            <option value="Habiganj">Habiganj</option>
+            <option value="Jamalpur">Jamalpur</option>
+            <option value="Jashore">Jashore</option>
+            <option value="Jhalokati">Jhalokati</option>
+            <option value="Jhenaidah">Jhenaidah</option>
+            <option value="Joypurhat">Joypurhat</option>
+            <option value="Junk">Junk</option>
+            <option value="Khagrachhari">Khagrachhari</option>
+            <option value="Kishoreganj">Kishoreganj</option>
+            <option value="Kurigram">Kurigram</option>
+            <option value="Kushtia">Kushtia</option>
+            <option value="Lakshmipur">Lakshmipur</option>
+            <option value="Lalmonirhat">Lalmonirhat</option>
+            <option value="Madaripur">Madaripur</option>
+            <option value="Magura">Magura</option>
+            <option value="Manikganj">Manikganj</option>
+            <option value="Meherpur">Meherpur</option>
+            <option value="Munshiganj">Munshiganj</option>
+            <option value="Mymensingh">Mymensingh</option>
+            <option value="Naogaon">Naogaon</option>
+            <option value="Narail">Narail</option>
+            <option value="Narsingdi">Narsingdi</option>
+            <option value="Natore">Natore</option>
+            <option value="Nawabganj">Nawabganj</option>
+            <option value="Netrokona">Netrokona</option>
+            <option value="Nilphamari">Nilphamari</option>
+            <option value="Noakhali">Noakhali</option>
+            <option value="Pabna">Pabna</option>
+            <option value="Panchagarh">Panchagarh</option>
+            <option value="Patuakhali">Patuakhali</option>
+            <option value="Pirojpur">Pirojpur</option>
+            <option value="Rajbari">Rajbari</option>
+            <option value="Rajshahi">Rajshahi</option>
+            <option value="Rangamati">Rangamati</option>
+            <option value="Satkhira">Satkhira</option>
+            <option value="Shariatpur">Shariatpur</option>
+            <option value="Sherpur">Sherpur</option>
+            <option value="Sirajganj">Sirajganj</option>
+            <option value="Sunamganj">Sunamganj</option>
+            <option value="Sylhet">Sylhet</option>
+            <option value="Tangail">Tangail</option>
+            <option value="Thakurgaon">Thakurgaon</option>
+          </select>
         </div>
+
 
         <div>
           <label className="block font-semibold">Experience</label>
