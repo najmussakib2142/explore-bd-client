@@ -24,18 +24,6 @@ const BookingForm = ({ packageData, guides }) => {
 
     const maxMembers = Number(packageData.groupSize.split("-")[1]);
 
-    // const filteredGuides = guides.filter(
-    //     (guide) => guide.district === packageData.location
-    // );
-
-    // const filteredGuides = guides.filter((guide) => {
-    //     const guideDistrict = guide.district || "";      // fallback to empty string
-    //     const packageLocation = packageData.location || ""; // fallback to empty string
-
-    //     return guideDistrict.toLowerCase().replace(/\s/g, "") ===
-    //         packageLocation.toLowerCase().replace(/\s/g, "");
-    // });
-
     const normalize = (str) =>
         (str || "")                  // fallback if undefined
             .toLowerCase()             // lowercase

@@ -7,6 +7,7 @@ import { FaSpinner, FaTimes } from "react-icons/fa";
 import useAxios from "../../../hooks/useAxios";
 import useAuth from "../../../hooks/useAuth";
 import Loading from "../../shared/Loading/Loading";
+import axios from "axios";
 
 const AddStory = () => {
     const { register, handleSubmit, reset } = useForm();
@@ -63,7 +64,7 @@ const AddStory = () => {
 
             const uploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`
             try {
-                const res = await axiosInstance.post(uploadUrl, formData);
+                const res = await axios.post(uploadUrl, formData);
                 console.log(res);
                 uploadedUrls.push(res.data?.data?.url);
                 // if (url) uploadedUrls.push(url);

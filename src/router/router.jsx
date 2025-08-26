@@ -30,6 +30,7 @@ import MakeAdmin from "../pages/Dashboard/MakeAdmin/MakeAdmin";
 import Forbidden from "../pages/Forbidden/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
 import AssignGuide from "../pages/Dashboard/AssignGuide/AssignGuide";
+import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
 
 export const router = createBrowserRouter([
     {
@@ -116,6 +117,10 @@ export const router = createBrowserRouter([
             {
                 path: "makeAdmin",
                 element: <AdminRoute><MakeAdmin></MakeAdmin></AdminRoute>
+            },
+            {
+                path: "manage-users",
+                element: <ManageUsers></ManageUsers>
             },
             {
                 path: "assign-guide",

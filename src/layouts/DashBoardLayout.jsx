@@ -106,6 +106,16 @@ const DashBoardLayout = () => {
                                         </NavLink>
                                     </li>
                                     <li>
+                                        <NavLink to="/dashboard/pendingGuides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaUserClock /> Manage Candidates
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink to="/dashboard/manage-users" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                            <FaUserClock /> Manage Users
+                                        </NavLink>
+                                    </li>
+                                    <li>
                                         <NavLink to="/dashboard/assign-guide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
                                             <FaCompass /> Assign Guide
                                         </NavLink>
@@ -115,16 +125,7 @@ const DashBoardLayout = () => {
                                             <FaUserShield /> Make Admin
                                         </NavLink>
                                     </li>
-                                    <li>
-                                        <NavLink to="/dashboard/pendingGuides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
-                                            <FaUserClock /> Manage Candidates
-                                        </NavLink>
-                                    </li>
-                                    <li>
-                                        <NavLink to="/dashboard/pendingGuides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
-                                            <FaUserClock /> Manage Users
-                                        </NavLink>
-                                    </li>
+
 
                                     <li>
                                         <NavLink to="/dashboard/active-guides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">

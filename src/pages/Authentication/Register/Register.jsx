@@ -6,6 +6,7 @@ import SocialLogin from '../SocialLogin/SocialLogin';
 import useAxios from '../../../hooks/useAxios';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 const Register = () => {
 
@@ -16,6 +17,7 @@ const Register = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from || '/'
+    const [showPassword, setShowPassword] = useState(false);
 
     const onSubmit = (data) => {
         console.log(data);
@@ -38,6 +40,8 @@ const Register = () => {
                     // update user info in database
                     const userInfo = {
                         email: data.email,
+                        displayName: data.name,
+                        photoURL: profilePic,
                         role: "user",
                         created_at: new Date().toISOString(),
                         last_log_in: new Date().toISOString(),
@@ -100,7 +104,7 @@ const Register = () => {
                             {/* name */}
                             <label className="label">Your Name</label>
                             <input type="text" {...register('name', { required: true })}
-                                className="input" placeholder="Your Name"
+                                className="input select-primary" placeholder="Your Name"
                             />
                             {
                                 errors.name?.type === 'required' &&
@@ -110,7 +114,7 @@ const Register = () => {
                             <label className="label">Your Profile Picture</label>
                             <input type="file"
                                 onChange={handleImageUpload}
-                                className="input" placeholder="Your Profile Picture"
+                                className="input select-primary" placeholder="Your Profile Picture"
                             />
                             {/* {
                                 errors.email?.type === 'required' &&
@@ -119,26 +123,42 @@ const Register = () => {
                             {/* email */}
                             <label className="label">Email</label>
                             <input type="email" {...register('email', { required: true })}
-                                className="input" placeholder="Email"
+                                className="input select-primary" placeholder="Email"
                             />
                             {
                                 errors.email?.type === 'required' &&
                                 <p className='text-red-500'>Email is Required</p>
                             }
 
-                            {/* password */}
                             <label className="label">Password</label>
-                            <input type="password" {...register('password', { required: true, minLength: 6 })}
-                                className="input" placeholder="Password"
-                            />
-                            {
-                                errors.password?.type === "required" &&
-                                (<p className='text-red-500'>Password is required</p>)
-                            }
-                            {
-                                errors.password?.type === "minLength" &&
-                                (<p className='text-red-500'>Password must be 6 characters or longer</p>)
-                            }
+                            <div className='relative'>
+                                <input
+                                    name='password'
+                                    {...register('password', {
+                                        required: true,
+                                        minLength: 6,
+                                        // pattern: /^[A-Za-z]+$/i
+                                    })}
+                                    type={showPassword ? 'text' : "password"}
+                                    className="input select-primary"
+                                    placeholder="Password"
+                                />
+                                {
+                                    errors.password?.type === "required" &&
+                                    (<p className='text-red-500 pt-2'>Password is required</p>)
+                                }
+                                {
+                                    errors.password?.type === "minLength" &&
+                                    (<p className='text-red-500 pt-2'>Password must be 6 characters or longer</p>)
+                                }
+                                <button
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    className='absolute btn btn-xs right-5 top-2'
+                                    type='button'
+                                >
+                                    {showPassword ? <FaEyeSlash></FaEyeSlash> : <FaEye></FaEye>}
+                                </button>
+                            </div>
 
                             <div><a className="link link-hover">Forgot password?</a></div>
                             <button className="btn btn-primary text-black mt-4">Register</button>

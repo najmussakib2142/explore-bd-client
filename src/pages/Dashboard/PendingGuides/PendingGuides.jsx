@@ -8,26 +8,40 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const PendingGuides = () => {
     const [selectedGuide, setSelectedGuide] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(6);
     const axiosSecure = useAxiosSecure();
 
-    const { isLoading, data: guides = [], refetch } = useQuery({
-        queryKey: ['pending-guides'],
+    // Fetch pending guides with server-side pagination
+    const { isLoading, data = {}, refetch } = useQuery({
+        queryKey: ['pending-guides', currentPage, itemsPerPage],
         queryFn: async () => {
-            const res = await axiosSecure.get("/guides/pending");
+            const res = await axiosSecure.get('/guides/pending', {
+                params: { page: currentPage, limit: itemsPerPage },
+            });
             return res.data;
-        }
+        },
+        keepPreviousData: true, // optional
     });
 
-    if (isLoading) return <Loading />;
+    const guides = data.guides || [];
+    const count = data.count || 0;
+    const numberOfPages = Math.ceil(count / itemsPerPage);
+    const pages = [...Array(numberOfPages).keys()];
 
-    if (guides.length === 0) {
-        return (
-            <div className="p-6">
-                <h2 className="text-2xl font-semibold mb-4">Pending Guide Applications</h2>
-                <p className="text-gray-500">No pending guide requests at the moment.</p>
-            </div>
-        );
-    }
+    const handleItemsPerPage = (e) => {
+        const value = parseInt(e.target.value);
+        setItemsPerPage(value);
+        setCurrentPage(0);
+    };
+
+    const handlePrevPage = () => {
+        if (currentPage > 0) setCurrentPage(currentPage - 1);
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
+    };
 
     const handleDecision = async (id, action, email) => {
         const confirm = await Swal.fire({
@@ -42,9 +56,7 @@ const PendingGuides = () => {
 
         try {
             const status = action === "approve" ? "active" : "rejected";
-            
             await axiosSecure.patch(`/guides/${id}/status`, { status, email });
-
             refetch();
             Swal.fire("Success", `Guide ${action}d successfully`, "success");
         } catch (err) {
@@ -53,12 +65,23 @@ const PendingGuides = () => {
         }
     };
 
+    if (isLoading) return <Loading />;
+
+    if (guides.length === 0) {
+        return (
+            <div className="p-6">
+                <h2 className="text-2xl font-semibold mb-4">Pending Guide Applications</h2>
+                <p className="text-gray-500">No pending guide requests at the moment.</p>
+            </div>
+        );
+    }
+
     return (
         <div className="p-6">
             <h2 className="text-2xl font-semibold mb-4">Pending Guide Applications</h2>
 
             <div className="overflow-x-auto">
-                <table className="table table-zebra w-full">
+                <table className="table w-full">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -80,12 +103,11 @@ const PendingGuides = () => {
                                     exit={{ opacity: 0, y: 10 }}
                                     transition={{ duration: 0.3 }}
                                     whileHover={{ scale: 1.02 }}
-                                    className={`hover:bg-base-100 transition-colors ${index % 2 === 1 ? "bg-base-100 bg-opacity-50" : ""
-                                        }`}                                >
+                                    className={`hover:bg-base-100 transition-colors ${index % 2 === 1 ? "bg-base-100 bg-opacity-50" : ""}`}
+                                >
                                     <td>{guide.name}</td>
                                     <td>{guide.email}</td>
                                     <td>{guide.age || '-'}</td>
-                                    {/* <td>{guide.phone || '-'}</td> */}
                                     <td>{guide.role || "User"}</td>
                                     <td>{new Date(guide.created_at).toLocaleDateString()}</td>
                                     <td>
@@ -126,6 +148,46 @@ const PendingGuides = () => {
                 </table>
             </div>
 
+            {/* Pagination */}
+            <div className="pagination mt-6 flex justify-center items-center gap-2">
+                <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 0}
+                    className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                >
+                    Prev
+                </button>
+                {pages.map((page) => (
+                    <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-3 py-1 rounded ${currentPage === page
+                            ? "bg-primary text-white"
+                            : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                            }`}
+                    >
+                        {page + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === pages.length - 1}
+                    className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                >
+                    Next
+                </button>
+                <select
+                    value={itemsPerPage}
+                    onChange={handleItemsPerPage}
+                    className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+                >
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
+
             {/* Modal for viewing guide details */}
             <AnimatePresence>
                 {selectedGuide && (
@@ -155,11 +217,9 @@ const PendingGuides = () => {
                                 <p><strong>Email:</strong> {selectedGuide.email}</p>
                                 <p><strong>Phone:</strong> {selectedGuide.phone}</p>
                                 <p><strong>Age:</strong> {selectedGuide.age}</p>
-                                <p><strong>Location:</strong> {selectedGuide.district}</p>
                                 <p><strong>Experience:</strong> {selectedGuide.experience}</p>
                                 <p><strong>Bio:</strong> {selectedGuide.bio}</p>
                                 <p><strong>Applied At:</strong> {new Date(selectedGuide.created_at).toLocaleString()}</p>
-
                             </div>
                             <div className="mt-4 text-right">
                                 <motion.button

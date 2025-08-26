@@ -216,7 +216,7 @@ const BeAGuide = () => {
             placeholder="District name"
           />
         </div> */}
-        <div>
+        {/* <div>
           <label className="block font-semibold mb-1">District</label>
           <select
             name="district"
@@ -234,7 +234,6 @@ const BeAGuide = () => {
             <option value="Sylhet">Sylhet</option>
             <option value="Rangpur">Rangpur</option>
             <option value="Mymensingh">Mymensingh</option>
-            {/* Remaining 56 districts */}
             <option value="Bagerhat">Bagerhat</option>
             <option value="Bandarban">Bandarban</option>
             <option value="Barguna">Barguna</option>
@@ -294,7 +293,7 @@ const BeAGuide = () => {
             <option value="Tangail">Tangail</option>
             <option value="Thakurgaon">Thakurgaon</option>
           </select>
-        </div>
+        </div> */}
 
 
         <div>
@@ -329,7 +328,7 @@ const BeAGuide = () => {
             value={formData.bio}
             onChange={handleChange}
             className="textarea textarea-bordered w-full"
-            placeholder="Tell us about yourself"
+            placeholder="Tell us What inspires you"
           />
         </div>
 

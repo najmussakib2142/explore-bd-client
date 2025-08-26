@@ -75,7 +75,7 @@ const MakeAdmin = () => {
 
             {users.length > 0 && (
                 <div className="overflow-x-auto">
-                    <table className="table w-full table-zebra">
+                    <table className="table w-full ">
                         <thead>
                             <tr>
                                 <th>Email</th>

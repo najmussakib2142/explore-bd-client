@@ -13,7 +13,8 @@ import Loading from "../../shared/Loading/Loading";
 const AddPackage = () => {
     const axiosSecure = useAxiosSecure();
 
-    const { register, handleSubmit, control, setValue, reset } = useForm({
+    // const { register, handleSubmit, control, setValue, reset } = useForm({
+    const { register, handleSubmit, control, reset } = useForm({
         defaultValues: {
             plan: [{ day: "Day 1", activity: "" }],
             inclusions: [],
@@ -28,9 +29,9 @@ const AddPackage = () => {
     });
 
     // Dates + duration derived state
-    const [startDate, setStartDate] = useState(null); // JS Date
-    const [endDate, setEndDate] = useState(null);     // JS Date
-    const [duration, setDuration] = useState("");
+    // const [startDate, setStartDate] = useState(null); 
+    // const [endDate, setEndDate] = useState(null);     
+    // const [duration, setDuration] = useState("");
 
     // Images
     const [pictures, setPictures] = useState([]); // array of URLs
@@ -39,30 +40,41 @@ const AddPackage = () => {
 
 
     // Helpers
-    const fmt = (d) => (d ? d.toISOString().split("T")[0] : "");
+    // const fmt = (d) => (d ? d.toISOString().split("T")[0] : "");
 
-    const handleDateChange = (start, end) => {
-        setStartDate(start);
-        setEndDate(end);
+    // const handleDateChange = (start, end) => {
+    //     setStartDate(start);
+    //     setEndDate(end);
 
-        // Persist raw values to form (ISO yyyy-mm-dd)
-        setValue("startDate", fmt(start));
-        setValue("endDate", fmt(end));
+    //     // Persist raw values to form (ISO yyyy-mm-dd)
+    //     setValue("startDate", fmt(start));
+    //     setValue("endDate", fmt(end));
 
-        if (start && end) {
-            if (end < start) {
-                setDuration("");
-                setValue("duration", "");
-                return;
-            }
-            // const diffTime = end.getTime() - start.getTime();
-            const diffTime = end.setHours(12, 0, 0, 0) - start.setHours(12, 0, 0, 0); // avoid DST edge cases
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            const dur = `${diffDays} Days / ${Math.max(diffDays - 1, 0)} Nights`;
-            setDuration(dur);
-            setValue("duration", dur);
-        }
-    };
+    //     if (start && end) {
+    //         if (end < start) {
+    //             setDuration("");
+    //             setValue("duration", "");
+    //             return;
+    //         }
+    //         // const diffTime = end.getTime() - start.getTime();
+    //         const diffTime = end.setHours(12, 0, 0, 0) - start.setHours(12, 0, 0, 0); // avoid DST edge cases
+    //         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    //         const dur = `${diffDays} Days / ${Math.max(diffDays - 1, 0)} Nights`;
+    //         setDuration(dur);
+    //         setValue("duration", dur);
+    //     }
+    // };
+
+    const districts = [
+        "Dhaka", "Chattogram", "Khulna", "Rajshahi", "Barishal", "Sylhet", "Rangpur", "Mymensingh",
+        "Bagerhat", "Bandarban", "Barguna", "Bhola", "Bogra", "Brahmanbaria", "Chandpur", "Chuadanga", "Comilla",
+        "Cox's Bazar", "Dinajpur", "Faridpur", "Feni", "Gaibandha", "Gazipur", "Gopalganj", "Habiganj",
+        "Jamalpur", "Jashore", "Jhalokati", "Jhenaidah", "Joypurhat", "Khagrachhari", "Kishoreganj", "Kurigram",
+        "Kushtia", "Lakshmipur", "Lalmonirhat", "Madaripur", "Magura", "Manikganj", "Meherpur", "Munshiganj",
+        "Naogaon", "Narail", "Narsingdi", "Natore", "Nawabganj", "Netrokona", "Nilphamari", "Noakhali",
+        "Pabna", "Panchagarh", "Patuakhali", "Pirojpur", "Rajbari", "Rangamati", "Satkhira", "Shariatpur",
+        "Sherpur", "Sirajganj", "Sunamganj", "Tangail", "Thakurgaon"
+    ];
 
     const handleImageUpload = async (e) => {
         const files = e.target.files;
@@ -105,7 +117,8 @@ const AddPackage = () => {
             // Normalize
             data.price = parseFloat(data.price);
             data.images = pictures;
-
+            data.totalDays = fields.length;
+            
             // Convert highlights (comma separated) -> array
             if (data.highlights && typeof data.highlights === "string") {
                 data.highlights = data.highlights
@@ -149,16 +162,12 @@ const AddPackage = () => {
                     showConfirmButton: false,
                 });
 
-                // reset({
-                //     plan: [{ day: "Day 1", activity: "" }],
-                //     inclusions: [],
-                //     exclusions: [],
-                // });
+
                 reset()
                 setPictures([]);
-                setStartDate(null);
-                setEndDate(null);
-                setDuration("");
+                // setStartDate(null);
+                // setEndDate(null);
+                // setDuration("");
             }
         } catch (err) {
             console.error(err);
@@ -167,6 +176,10 @@ const AddPackage = () => {
             setSubmitting(false);
         }
     };
+
+    const totalDays = fields.length;
+    console.log("Total days:", totalDays);
+
 
     return (
         <div className="max-w-3xl mx-auto my-10 p-6 bg-base-100 shadow-xl rounded-2xl">
@@ -198,105 +211,29 @@ const AddPackage = () => {
                         <option value="Historical">Historical</option>
                         <option value="Cultural">Cultural</option>
                         <option value="Beach">Beach</option>
+                        <option value="Beach">City Tour</option>
+                        <option value="Beach">Religious / Pilgrimage Tour</option>
                     </select>
                 </div>
-
-                {/* Location */}
-                {/* <div>
-                    <label className="font-semibold mb-1 block">Location</label>
-                    <input
-                        type="text"
-                        placeholder="e.g. Bandarban, Bangladesh"
-                        {...register("location", { required: true })}
-                        className="input input-bordered w-full"
-                    />
-                </div> */}
 
                 <div>
                     <label className="block font-semibold mb-1">Location</label>
                     <select
-                        // name="district"
-                        required
                         {...register("location", { required: true })}
-                        // value={formData.district}
-                        // onChange={handleChange}
                         className="select select-bordered w-full"
+                        required
                     >
                         <option value="">Select District</option>
-                        <option value="Dhaka">Dhaka</option>
-                        <option value="Chattogram">Chattogram</option>
-                        <option value="Khulna">Khulna</option>
-                        <option value="Rajshahi">Rajshahi</option>
-                        <option value="Barishal">Barishal</option>
-                        <option value="Sylhet">Sylhet</option>
-                        <option value="Rangpur">Rangpur</option>
-                        <option value="Mymensingh">Mymensingh</option>
-                        {/* Remaining 56 districts */}
-                        <option value="Bagerhat">Bagerhat</option>
-                        <option value="Bandarban">Bandarban</option>
-                        <option value="Barguna">Barguna</option>
-                        <option value="Bhola">Bhola</option>
-                        <option value="Bogra">Bogra</option>
-                        <option value="Brahmanbaria">Brahmanbaria</option>
-                        <option value="Chandpur">Chandpur</option>
-                        <option value="Chuadanga">Chuadanga</option>
-                        <option value="Comilla">Comilla</option>
-                        <option value="Cox's Bazar">Cox's Bazar</option>
-                        <option value="Dinajpur">Dinajpur</option>
-                        <option value="Faridpur">Faridpur</option>
-                        <option value="Feni">Feni</option>
-                        <option value="Gaibandha">Gaibandha</option>
-                        <option value="Gazipur">Gazipur</option>
-                        <option value="Gopalganj">Gopalganj</option>
-                        <option value="Habiganj">Habiganj</option>
-                        <option value="Jamalpur">Jamalpur</option>
-                        <option value="Jashore">Jashore</option>
-                        <option value="Jhalokati">Jhalokati</option>
-                        <option value="Jhenaidah">Jhenaidah</option>
-                        <option value="Joypurhat">Joypurhat</option>
-                        <option value="Junk">Junk</option>
-                        <option value="Khagrachhari">Khagrachhari</option>
-                        <option value="Kishoreganj">Kishoreganj</option>
-                        <option value="Kurigram">Kurigram</option>
-                        <option value="Kushtia">Kushtia</option>
-                        <option value="Lakshmipur">Lakshmipur</option>
-                        <option value="Lalmonirhat">Lalmonirhat</option>
-                        <option value="Madaripur">Madaripur</option>
-                        <option value="Magura">Magura</option>
-                        <option value="Manikganj">Manikganj</option>
-                        <option value="Meherpur">Meherpur</option>
-                        <option value="Munshiganj">Munshiganj</option>
-                        <option value="Mymensingh">Mymensingh</option>
-                        <option value="Naogaon">Naogaon</option>
-                        <option value="Narail">Narail</option>
-                        <option value="Narsingdi">Narsingdi</option>
-                        <option value="Natore">Natore</option>
-                        <option value="Nawabganj">Nawabganj</option>
-                        <option value="Netrokona">Netrokona</option>
-                        <option value="Nilphamari">Nilphamari</option>
-                        <option value="Noakhali">Noakhali</option>
-                        <option value="Pabna">Pabna</option>
-                        <option value="Panchagarh">Panchagarh</option>
-                        <option value="Patuakhali">Patuakhali</option>
-                        <option value="Pirojpur">Pirojpur</option>
-                        <option value="Rajbari">Rajbari</option>
-                        <option value="Rajshahi">Rajshahi</option>
-                        <option value="Rangamati">Rangamati</option>
-                        <option value="Satkhira">Satkhira</option>
-                        <option value="Shariatpur">Shariatpur</option>
-                        <option value="Sherpur">Sherpur</option>
-                        <option value="Sirajganj">Sirajganj</option>
-                        <option value="Sunamganj">Sunamganj</option>
-                        <option value="Sylhet">Sylhet</option>
-                        <option value="Tangail">Tangail</option>
-                        <option value="Thakurgaon">Thakurgaon</option>
+                        {districts.map((district, idx) => (
+                            <option key={idx} value={district}>
+                                {district}
+                            </option>
+                        ))}
                     </select>
                 </div>
 
-
-
-
-                <div>
+                {/* Meeting Point */}
+                {/* <div>
                     <label className="font-semibold mb-1 block">Meeting Point</label>
                     <input
                         type="text"
@@ -304,10 +241,10 @@ const AddPackage = () => {
                         {...register("meetingPoint", { required: true })}
                         className="input input-bordered w-full"
                     />
-                </div>
+                </div> */}
 
                 {/* Dates + Duration */}
-                <div>
+                {/* <div>
                     <label className="font-semibold mb-1 block">Event Dates</label>
                     <div className="flex flex-col md:flex-row gap-3">
                         <DatePicker
@@ -334,14 +271,14 @@ const AddPackage = () => {
                             Duration: <span className="font-medium ">{duration}</span>
                         </p>
                     )}
-                    {/* Hidden fields to submit dates/duration */}
+
                     <input type="hidden" {...register("startDate")} value={fmt(startDate)} readOnly />
                     <input type="hidden" {...register("endDate")} value={fmt(endDate)} readOnly />
                     <input type="hidden" {...register("duration")} value={duration} readOnly />
-                </div>
+                </div> */}
 
                 {/* Group Size */}
-                <div>
+                {/* <div>
                     <label className="font-semibold mb-1 block">Group Size</label>
                     <select
                         {...register("groupSize", { required: true })}
@@ -353,7 +290,7 @@ const AddPackage = () => {
                         <option value="11-20">11 - 20 People</option>
                         <option value="21+">21+ People</option>
                     </select>
-                </div>
+                </div> */}
 
                 {/* Price */}
                 <div>
@@ -427,6 +364,7 @@ const AddPackage = () => {
                                 "Insurance",
                                 "Restaurant Bills",
                                 "Visa",
+                                "Travel documents",
                             ].map((item) => (
                                 <label key={item} className="flex items-center gap-2">
                                     <input

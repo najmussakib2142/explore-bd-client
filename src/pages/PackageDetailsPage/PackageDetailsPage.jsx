@@ -1,16 +1,16 @@
 import React from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import Loading from "../shared/Loading/Loading";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import BookingForm from "./BookingForm";
 import useAxios from "../../hooks/useAxios";
 import GuidesList from "./GuidesList";
-// import useAxiosSecure from "../../hooks/useAxiosSecure";
+// import Masonry from "react-masonry-css";
 
 
 const PackageDetailsPage = () => {
@@ -35,7 +35,13 @@ const PackageDetailsPage = () => {
         },
     });
 
-
+    // const breakpointColumnsObj = {
+    //     default: 3,
+    //     1024: 3,
+    //     768: 2,
+    //     500: 1
+    // };
+    // 
 
     React.useEffect(() => {
         AOS.init({ duration: 1000, once: true });
@@ -50,17 +56,45 @@ const PackageDetailsPage = () => {
 
 
             {/* Gallery */}
-            <div className="columns-2 md:columns-3 gap-2 md:gap-4" data-aos="fade-up">
+            {/* <div className="columns-2 md:columns-3 gap-2 md:gap-4" data-aos="fade-up">
                 {packageData.images.map((img, idx) => (
                     <img
                         key={idx}
                         src={img}
                         alt={`Gallery ${idx}`}
-                        // loading="lazy"
+                        loading="lazy"
                         className="w-full  object-cover rounded-lg shadow-md mb-4 break-inside-avoid hover:scale-105 transition-transform duration-300"
                     />
                 ))}
+            </div> */}
+            <div className="columns-2 sm:columns-2 md:columns-3 gap-2 md:gap-3 p-2" data-aos="fade-up">
+                {packageData.images.map((img, idx) => (
+                    <img
+                        key={idx}
+                        src={img}
+                        alt={`Gallery ${idx}`}
+                        loading="lazy"
+                        className="w-full mb-4 rounded-lg shadow-md object-cover break-inside-avoid hover:scale-103 transition-transform duration-300"
+                    />
+                ))}
             </div>
+
+
+            {/* <ResponsiveMasonry
+                columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
+                gutterBreakpoints={{ 350: "12px", 750: "16px", 900: "24px" }}
+            >
+                <Masonry>
+                    {packageData.images.map((img, idx) => (
+                        <img
+                            key={idx}
+                            src={img}
+                            alt={`Gallery ${idx}`}
+                            className="w-full mb-4 rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
+                        />
+                    ))}
+                </Masonry>
+            </ResponsiveMasonry> */}
 
 
 
@@ -90,11 +124,17 @@ const PackageDetailsPage = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-sm md:text-base font-medium">
                     <p><span className="font-semibold text-primary">Tour Type:</span> {packageData.tourType}</p>
                     <p><span className="font-semibold text-primary">Location:</span> {packageData.location}</p>
-                    <p><span className="font-semibold text-primary">Duration:</span> {packageData.duration}</p>
-                    <p><span className="font-semibold text-primary">Group Size:</span> {packageData.groupSize}</p>
-                    <p><span className="font-semibold text-primary">Start date:</span> {packageData.startDate}</p>
-                    <p><span className="font-semibold text-primary">End date:</span> {packageData.endDate}</p>
+                    {/* <p><span className="font-semibold text-primary">Group Size:</span> {packageData.groupSize}</p> */}
+                    {/* <p><span className="font-semibold text-primary">Start date:</span> {packageData.startDate}</p> */}
+                    {/* <p><span className="font-semibold text-primary">End date:</span> {packageData.endDate}</p> */}
                 </div>
+                <p><span className="font-semibold text-primary">Duration:</span> {packageData.count}</p>
+                {/* <p className="mt-4 text-lg">
+                    <span className="font-semibold text-primary">Duration:</span>{" "}
+                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg font-medium">
+                        {packageData.totalDays} {packageData.totalDays > 1 ? "Days" : "Day"}
+                    </span>
+                </p> */}
 
 
 
@@ -148,7 +188,7 @@ const PackageDetailsPage = () => {
             <GuidesList guides={guides} guidesLoading={guidesLoading} guidesError={guidesError}></GuidesList>
 
             {/* Booking Form */}
-            <BookingForm packageData={packageData} guides={guides}></BookingForm>
+            {/* <BookingForm packageData={packageData} guides={guides}></BookingForm> */}
 
         </div>
     );

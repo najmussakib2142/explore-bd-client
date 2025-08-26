@@ -136,9 +136,11 @@ const TourismSection = () => {
                   />
                   <div className="p-4">
                     <h3 className="text-xl font-semibold mb-1">{guide.name}</h3>
-                    <p className="text-sm text-gray-400 mb-1">Region: {guide.district}</p>
-                    <p className="text-sm text-gray-400 mb-3">
-                      Experience: {guide.experience || "N/A"} yrs
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      District: {guide.district || "N/A"}
+                    </p>
+                    <p className="text-sm line-clamp-2 text-gray-400 mb-3">
+                      Experience: {guide.experience || "N/A"}
                     </p>
                     <button
                       onClick={() => navigate(`/guides/${guide._id}`)}

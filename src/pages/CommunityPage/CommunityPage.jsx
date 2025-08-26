@@ -13,17 +13,41 @@ export default function CommunityStories() {
     const navigate = useNavigate();
     const queryClient = useQueryClient();
 
-    const [selectedStory, setSelectedStory] = useState(null); // modal
-    const [likeLoading, setLikeLoading] = useState(null); // storyId being liked
+    const [selectedStory, setSelectedStory] = useState(null);
+    const [likeLoading, setLikeLoading] = useState(null);
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(6);
 
-    // Fetch all stories
-    const { data: stories = [], isLoading: loadingStories } = useQuery({
-        queryKey: ["stories", "all"],
+    // Server-side pagination query
+    const { data = {}, isLoading } = useQuery({
+        queryKey: ["stories", currentPage, itemsPerPage],
         queryFn: async () => {
-            const res = await axiosInstance.get("/stories");
-            return res.data;
+            const res = await axiosInstance.get("/stories", {
+                params: { page: currentPage, limit: itemsPerPage },
+            });
+            return res.data; // { stories: [...], count: totalCount }
         },
+        keepPreviousData: true,
     });
+
+    const stories = data.stories || [];
+    const count = data.count || 0;
+    const numberOfPages = Math.ceil(count / itemsPerPage);
+    const pages = [...Array(numberOfPages).keys()];
+
+    const handleItemsPerPage = (e) => {
+        const value = parseInt(e.target.value);
+        setItemsPerPage(value);
+        setCurrentPage(0);
+    };
+
+    const handlePrevPage = () => {
+        if (currentPage > 0) setCurrentPage(currentPage - 1);
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < pages.length - 1) setCurrentPage(currentPage + 1);
+    };
 
     // Mutation for like/unlike
     const likeMutation = useMutation({
@@ -32,18 +56,15 @@ export default function CommunityStories() {
             return res.data;
         },
         onSuccess: (data, variables) => {
-            queryClient.setQueryData(["stories", "all"], (oldData) =>
-                oldData.map((story) =>
-                    story._id === variables.storyId
-                        ? { ...story, likes: data.likes }
-                        : story
-                )
-            );
+            queryClient.setQueryData(["stories", currentPage, itemsPerPage], (oldData) => ({
+                ...oldData,
+                stories: oldData.stories.map((story) =>
+                    story._id === variables.storyId ? { ...story, likes: data.likes } : story
+                ),
+            }));
             setLikeLoading(null);
         },
-        onError: () => {
-            setLikeLoading(null);
-        },
+        onError: () => setLikeLoading(null),
     });
 
     const handleLike = (story) => {
@@ -58,7 +79,7 @@ export default function CommunityStories() {
         return story.likes?.includes(userId);
     };
 
-    if (loadingStories) return <Loading></Loading>
+    if (isLoading) return <Loading />;
 
     return (
         <section className="max-w-7xl mx-auto py-10 px-7">
@@ -79,15 +100,12 @@ export default function CommunityStories() {
                         <div className="p-4 space-y-2">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-lg font-semibold">{story.title}</h3>
-
                                 <button
                                     onClick={(e) => {
-                                        e.stopPropagation(); // prevent modal open
+                                        e.stopPropagation();
                                         handleLike(story);
                                     }}
-                                    className={`flex items-center gap-1 px-2 py-1 rounded-md transition-colors duration-300 ${hasLiked(story)
-                                        ? "text-red-500"
-                                        : "text-gray-500 dark:text-gray-300"
+                                    className={`flex items-center gap-1 px-2 py-1 rounded-md transition-colors duration-300 ${hasLiked(story) ? "text-red-500" : "text-gray-500 dark:text-gray-300"
                                         }`}
                                     disabled={likeLoading === story._id}
                                 >
@@ -104,19 +122,6 @@ export default function CommunityStories() {
                                 {story.description}
                             </p>
 
-                            {/* <div className="flex items-center justify-between mt-2">
-                                <div className="flex items-center gap-2">
-                                    <img
-                                        src={story.createdBy?.photo}
-                                        alt={story.createdBy?.name}
-                                        className="w-8 h-8 rounded-full border"
-                                    />
-                                    <span className="text-sm text-gray-700 dark:text-gray-400">
-                                        {story.createdBy?.name}
-                                    </span>
-                                </div>
-                            </div> */}
-                            <div className="flex items-center justify-between">
                             <div className="flex items-center justify-between mt-2">
                                 <div className="flex items-center gap-2">
                                     {story.createdBy?.photo ? (
@@ -134,33 +139,71 @@ export default function CommunityStories() {
                                         {story.createdBy?.name || "Unknown"}
                                     </span>
                                 </div>
-                            </div>
 
-
-                            <div className="flex pb-2 justify-end mt-3">
-                                <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm hover:bg-indigo-600 hover:text-white transition-all duration-300 cursor-pointer">
-                                    {user ? (
-                                        <FacebookShareButton
-                                            url={window.location.origin + "/story/" + story._id}
-                                            quote={story.title}
-                                            hashtag="#TravelStory"
-                                            className="flex items-center gap-2"
-                                        >
-                                            <FacebookIcon size={22} round />
-                                            <span>Share</span>
-                                        </FacebookShareButton>
-                                    ) : (
-                                        <div className="flex items-center gap-2">
-                                            <FacebookIcon size={22} round />
-                                            <span>Share</span>
-                                        </div>
-                                    )}
+                                <div className="flex pb-2 justify-end mt-3">
+                                    <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm hover:bg-indigo-600 hover:text-white transition-all duration-300 cursor-pointer">
+                                        {user ? (
+                                            <FacebookShareButton
+                                                url={window.location.origin + "/story/" + story._id}
+                                                quote={story.title}
+                                                hashtag="#TravelStory"
+                                                className="flex items-center gap-2"
+                                            >
+                                                <FacebookIcon size={22} round />
+                                                <span>Share</span>
+                                            </FacebookShareButton>
+                                        ) : (
+                                            <div className="flex items-center gap-2">
+                                                <FacebookIcon size={22} round />
+                                                <span>Share</span>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         </div>
                     </div>
                 ))}
+            </div>
+
+            {/* Pagination */}
+            <div className="pagination mt-6 flex justify-center items-center gap-2">
+                <button
+                    onClick={handlePrevPage}
+                    disabled={currentPage === 0}
+                    className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                >
+                    Prev
+                </button>
+                {pages.map((page) => (
+                    <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-3 py-1 rounded ${currentPage === page
+                                ? "bg-primary text-white"
+                                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                            }`}
+                    >
+                        {page + 1}
+                    </button>
+                ))}
+                <button
+                    onClick={handleNextPage}
+                    disabled={currentPage === pages.length - 1}
+                    className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                >
+                    Next
+                </button>
+                <select
+                    value={itemsPerPage}
+                    onChange={handleItemsPerPage}
+                    className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+                >
+                    <option value="9">9</option>
+                    <option value="12">12</option>
+                    <option value="15">15</option>
+                    <option value="20">20</option>
+                </select>
             </div>
 
             {/* Modal */}
@@ -175,25 +218,14 @@ export default function CommunityStories() {
                     >
                         <h2 className="text-2xl font-bold mb-1">{selectedStory.title}</h2>
                         <p className="text-gray-700 dark:text-gray-300 mb-4">
-                            <span className="text-blue-400">Added By:</span>{" "}
-                            {selectedStory.createdBy?.name}
+                            <span className="text-blue-400">Added By:</span> {selectedStory.createdBy?.name}
                         </p>
-
-                        <p className="text-gray-700 dark:text-gray-300 mb-4">
-                            {selectedStory.description}
-                        </p>
-
+                        <p className="text-gray-700 dark:text-gray-300 mb-4">{selectedStory.description}</p>
                         <div className="flex flex-wrap gap-3 mb-4">
                             {selectedStory.images?.map((img, idx) => (
-                                <img
-                                    key={idx}
-                                    src={img}
-                                    alt={`story-${idx}`}
-                                    className="w-32 h-32 object-cover rounded"
-                                />
+                                <img key={idx} src={img} alt={`story-${idx}`} className="w-32 h-32 object-cover rounded" />
                             ))}
                         </div>
-
                         <div className="flex justify-end">
                             <button
                                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
