@@ -31,6 +31,7 @@ import Forbidden from "../pages/Forbidden/Forbidden";
 import AdminRoute from "../routes/AdminRoute";
 import AssignGuide from "../pages/Dashboard/AssignGuide/AssignGuide";
 import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
+import MyAssignedTours from "../pages/Dashboard/MyAssignedTours/MyAssignedTours";
 
 export const router = createBrowserRouter([
     {
@@ -137,6 +138,10 @@ export const router = createBrowserRouter([
             {
                 path: "addStory",
                 Component: AddStory
+            },
+            {
+                path: "myAssignedTours",
+                element: <MyAssignedTours></MyAssignedTours>
             },
             {
                 path: "paymentHistory",

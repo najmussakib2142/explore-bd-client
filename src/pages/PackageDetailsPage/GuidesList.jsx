@@ -28,33 +28,39 @@ const GuideList = ({ guides, guidesLoading, guidesError }) => {
 
     return (
         <div className="bg-base-100 p-6 rounded-lg shadow-lg" data-aos="fade-up">
-            <h3 className="text-2xl font-semibold mb-6 text-center">Available Tour Guides</h3>
+            <h3 className="text-2xl font-semibold mb-6 text-center" data-aos="fade-down">
+                Available Tour Guides
+            </h3>
 
             <div className="space-y-4">
-                {currentGuides.map((guide) => (
+                {currentGuides.map((guide, idx) => (
                     <div
                         key={guide._id}
-                        className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-5 flex items-center justify-between hover:shadow-xl transition"
+                        className="bg-white hover:scale-105 transition-transform ease-in-out  duration-2000 dark:bg-gray-800 rounded-xl shadow-md p-5 flex items-center justify-between hover:shadow-xl"
+                        data-aos="fade-up"
+                        data-aos-delay={idx * 100} // stagger effect
                     >
                         <div className="flex items-center gap-4">
                             <img
                                 src={guide.photoURL || "https://via.placeholder.com/100"}
                                 alt={guide.name}
-                                className="w-20 h-20 object-cover rounded-full border-2 border-gray-200 dark:border-gray-600"
+                                className="w-20 h-20  object-cover rounded-full border-2 border-gray-200 dark:border-gray-600"
+                                data-aos="zoom-in"
                             />
-                            <div>
+                            <div >
                                 <p className="font-semibold text-lg text-gray-900 dark:text-gray-100">{guide.name}</p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
+                                <p className="text-sm text-gray-500 hidden md:block dark:text-gray-400">
                                     District: {guide.district || "N/A"}
                                 </p>
-                                <p className="text-sm text-gray-500 dark:text-gray-400">
-                                    Experience: {guide.experience || "N/A"} yrs
+                                <p className="text-sm line-clamp-2  text-gray-500 dark:text-gray-400">
+                                    <span className="">Experience:</span> {guide.experience || "N/A"}
                                 </p>
                             </div>
                         </div>
                         <button
                             className="btn btn-secondary btn-sm"
                             onClick={() => navigate(`/guides/${guide._id}`)}
+                            data-aos="fade-left"
                         >
                             View Profile
                         </button>
@@ -77,8 +83,8 @@ const GuideList = ({ guides, guidesLoading, guidesError }) => {
                         key={page}
                         onClick={() => setCurrentPage(page)}
                         className={`px-3 py-1 rounded ${currentPage === page
-                                ? "bg-primary text-white"
-                                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                            ? "bg-primary text-white"
+                            : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                             }`}
                     >
                         {page + 1}

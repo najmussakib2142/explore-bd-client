@@ -60,13 +60,19 @@ const UserDashboard = () => {
             </div>
 
             {/* Actions */}
+
+
             <div className="flex gap-4">
                 <button className="btn btn-primary" onClick={handleEdit}>Edit Profile</button>
 
-                <button className="btn btn-secondary" onClick={handleApplyGuide}>
-                    Apply for Tour Guide
-                </button>
+                {userInfo?.role === 'user' && (
+                    <button className="btn btn-secondary" onClick={handleApplyGuide}>
+                        Apply for Tour Guide
+                    </button>
+                )}
+
             </div>
+
 
             {/* Edit Modal */}
             {isModalOpen && (

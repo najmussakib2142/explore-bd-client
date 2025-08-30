@@ -2,25 +2,41 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Select from "react-select";
 import useAxios from "../../../hooks/useAxios";
+import Loading from "../../shared/Loading/Loading";
 
 const ManageUsers = () => {
     const axiosInstance = useAxios();
-    const [page, setPage] = useState(1);
+    const [currentPage, setCurrentPage] = useState(0); // ✅ page starts at 0
+    const [itemsPerPage, setItemsPerPage] = useState(10); // ✅ default
     const [search, setSearch] = useState("");
     const [role, setRole] = useState("all");
-    const [itemsPerPage, setItemsPerPage] = useState(10);
 
-    // React Query
     const { data, isLoading, error } = useQuery({
-        queryKey: ["users", page, search, role, itemsPerPage],
+        queryKey: ["users", currentPage, itemsPerPage, search, role],
         queryFn: async () => {
             const res = await axiosInstance.get(
-                `/users?page=${page}&limit=${itemsPerPage}&search=${search}&role=${role}`
+                `/users?page=${currentPage + 1}&limit=${itemsPerPage}&search=${search}&role=${role}`
             );
             return res.data;
         },
-        keepPreviousData: true,
     });
+
+    const totalPages = data?.totalPages || 0;
+    const pages = [...Array(totalPages).keys()];
+
+    // 🔄 Pagination Handlers
+    const handlePrevPage = () => {
+        if (currentPage > 0) setCurrentPage((prev) => prev - 1);
+    };
+
+    const handleNextPage = () => {
+        if (currentPage < totalPages - 1) setCurrentPage((prev) => prev + 1);
+    };
+
+    const handleItemsPerPage = (e) => {
+        setItemsPerPage(parseInt(e.target.value));
+        setCurrentPage(0); // reset to first page
+    };
 
     const roles = [
         { value: "all", label: "All" },
@@ -29,21 +45,11 @@ const ManageUsers = () => {
         { value: "admin", label: "Admin" },
     ];
 
-    const handleItemsPerPage = (e) => {
-        setItemsPerPage(parseInt(e.target.value));
-        setPage(1); // reset to first page
-    };
-
-    const handlePrevPage = () => setPage((prev) => Math.max(prev - 1, 1));
-    const handleNextPage = () => setPage((prev) => Math.min(prev + 1, data.totalPages));
-
-    const pages = data ? Array.from({ length: data.totalPages }, (_, i) => i + 1) : [];
-
     return (
         <div className="p-6">
             <h2 className="text-2xl font-semibold mb-4">Manage Users</h2>
 
-            {/* Search + Filter */}
+            {/* 🔍 Search + Filter */}
             <div className="flex flex-col md:flex-row gap-4 mb-4">
                 <input
                     type="text"
@@ -52,7 +58,7 @@ const ManageUsers = () => {
                     value={search}
                     onChange={(e) => {
                         setSearch(e.target.value);
-                        setPage(1);
+                        setCurrentPage(0);
                     }}
                 />
 
@@ -61,17 +67,46 @@ const ManageUsers = () => {
                     value={roles.find((r) => r.value === role)}
                     onChange={(opt) => {
                         setRole(opt.value);
-                        setPage(1);
+                        setCurrentPage(0);
                     }}
                     className="w-full md:w-1/3"
+                    styles={{
+                        control: (base) => ({
+                            ...base,
+                            backgroundColor: "white",
+                            borderColor: "#ccc",
+                            boxShadow: "none",
+                            "&:hover": {
+                                borderColor: "#2563eb", // Tailwind's blue-600
+                            },
+                        }),
+                        option: (base, state) => ({
+                            ...base,
+                            color: state.isSelected ? "white" : "#1f2937", // selected white, default gray-800
+                            backgroundColor: state.isSelected
+                                ? "#2563eb" // Tailwind blue-600
+                                : state.isFocused
+                                    ? "#e0f2fe" // Tailwind blue-100
+                                    : "white",
+                            "&:hover": {
+                                backgroundColor: "#e0f2fe",
+                                color: "#1f2937",
+                            },
+                        }),
+                        singleValue: (base) => ({
+                            ...base,
+                            color: "#111827", // text-gray-900
+                        }),
+                    }}
                 />
             </div>
 
-            {/* Loading/Error */}
-            {isLoading && <p>Loading users...</p>}
-            {error && <p className="text-red-500">Failed to load users</p>}
 
-            {/* Table */}
+            {/* 🌀 Loading/Error */}
+            {isLoading && <Loading></Loading>}
+            {error && <p className="text-red-500 text-center py-10">Failed to load users</p>}
+
+            {/* 📊 Table */}
             {!isLoading && data?.users?.length > 0 && (
                 <>
                     <div className="overflow-x-auto">
@@ -79,19 +114,31 @@ const ManageUsers = () => {
                             <thead className="bg-base-200">
                                 <tr>
                                     <th>#</th>
-                                    <th>Name</th>
                                     <th>Email</th>
+                                    <th>Name</th>
+                                    <th>Created At</th>
                                     <th>Role</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {data.users.map((user, idx) => (
                                     <tr key={user._id}>
-                                        <td>{(page - 1) * itemsPerPage + idx + 1}</td>
-                                        <td>{user.name}</td>
+                                        {/* <td>{idx + 1}</td> */}
+                                        <td>{currentPage * itemsPerPage + idx + 1}</td>
                                         <td>{user.email}</td>
+                                        <td>{user.displayName}</td>
+                                        <td>{user.created_at}</td>
                                         <td>
-                                            <span className="badge badge-info">{user.role}</span>
+                                            <span
+                                                className={`badge ${user.role === "admin"
+                                                    ? "badge-error"   // red for admin
+                                                    : user.role === "guide"
+                                                        ? "badge-warning" // yellow for guide
+                                                        : "badge-info"    // blue for normal user
+                                                    }`}
+                                            >
+                                                {user.role}
+                                            </span>
                                         </td>
                                     </tr>
                                 ))}
@@ -99,32 +146,32 @@ const ManageUsers = () => {
                         </table>
                     </div>
 
-                    {/* Pagination */}
+                    {/* 🔄 Pagination */}
                     <div className="pagination mt-6 flex justify-center items-center gap-2">
                         <button
                             onClick={handlePrevPage}
-                            disabled={page === 1}
+                            disabled={currentPage === 0}
                             className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
                         >
                             Prev
                         </button>
 
-                        {pages.map((p) => (
+                        {pages.map((page) => (
                             <button
-                                key={p}
-                                onClick={() => setPage(p)}
-                                className={`px-3 py-1 rounded ${page === p
-                                        ? "bg-primary text-white"
-                                        : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                                key={page}
+                                onClick={() => setCurrentPage(page)}
+                                className={`px-3 py-1 rounded ${currentPage === page
+                                    ? "bg-primary text-white"
+                                    : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                                     }`}
                             >
-                                {p}
+                                {page + 1}
                             </button>
                         ))}
 
                         <button
                             onClick={handleNextPage}
-                            disabled={page === data.totalPages}
+                            disabled={currentPage === pages.length - 1}
                             className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
                         >
                             Next

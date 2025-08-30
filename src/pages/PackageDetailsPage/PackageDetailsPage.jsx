@@ -18,13 +18,14 @@ const PackageDetailsPage = () => {
     // const axiosSecure = useAxiosSecure()
     const axiosInstance = useAxios()
 
-    const { data: guides = [], isLoading: guidesLoading, error: guidesError } = useQuery({
+    const { data: guidesData = {}, isLoading: guidesLoading, error: guidesError } = useQuery({
         queryKey: ["guides"],
         queryFn: async () => {
             const res = await axiosInstance.get("/guides/approved");
             return res.data;
         },
     });
+    const guides = Array.isArray(guidesData.guides) ? guidesData.guides : [];
 
     // Fetch package data
     const { data: packageData, isLoading: packageLoading, error: packageError } = useQuery({
@@ -52,22 +53,9 @@ const PackageDetailsPage = () => {
 
 
     return (
-        <div className="max-w-6xl mx-auto my-12 px-4 pt-4 space-y-10">{/* About & Info */}
-
-
+        <div className="max-w-6xl mx-auto my-12 px-4 pt-4 space-y-10">
             {/* Gallery */}
-            {/* <div className="columns-2 md:columns-3 gap-2 md:gap-4" data-aos="fade-up">
-                {packageData.images.map((img, idx) => (
-                    <img
-                        key={idx}
-                        src={img}
-                        alt={`Gallery ${idx}`}
-                        loading="lazy"
-                        className="w-full  object-cover rounded-lg shadow-md mb-4 break-inside-avoid hover:scale-105 transition-transform duration-300"
-                    />
-                ))}
-            </div> */}
-            <div className="columns-2 sm:columns-2 md:columns-3 gap-2 md:gap-3 p-2" data-aos="fade-up">
+            <div className="columns-2 sm:columns-2 md:columns-3 gap-2 md:gap-3 p-2">
                 {packageData.images.map((img, idx) => (
                     <img
                         key={idx}
@@ -75,74 +63,43 @@ const PackageDetailsPage = () => {
                         alt={`Gallery ${idx}`}
                         loading="lazy"
                         className="w-full mb-4 rounded-lg shadow-md object-cover break-inside-avoid hover:scale-103 transition-transform duration-300"
+                        data-aos="zoom-in"
+                        data-aos-delay={idx * 100}
                     />
                 ))}
             </div>
 
-
-            {/* <ResponsiveMasonry
-                columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3 }}
-                gutterBreakpoints={{ 350: "12px", 750: "16px", 900: "24px" }}
-            >
-                <Masonry>
-                    {packageData.images.map((img, idx) => (
-                        <img
-                            key={idx}
-                            src={img}
-                            alt={`Gallery ${idx}`}
-                            className="w-full mb-4 rounded-lg shadow-md hover:scale-105 transition-transform duration-300"
-                        />
-                    ))}
-                </Masonry>
-            </ResponsiveMasonry> */}
-
-
-
             {/* About & Info */}
             <div className="bg-base-100 p-6 rounded-lg shadow-lg space-y-4" data-aos="fade-up">
-                {/* Title */}
-                <h2 className="text-2xl md:text-3xl font-bold mb-2">{packageData.title}</h2>
-
-                {/* About */}
-                <p className="text-gray-400 mb-4">{packageData.about}</p>
+                <h2 className="text-2xl md:text-3xl font-bold mb-2" data-aos="fade-down">{packageData.title}</h2>
+                <p className="text-gray-400 mb-4" data-aos="fade-up">{packageData.about}</p>
 
                 {packageData.highlights?.length > 0 && (
-                    <div className="mt-4">
+                    <div className="mt-4" data-aos="fade-up">
                         <h3 className="text-lg font-semibold mb-2">Highlights:</h3>
                         <div className="flex flex-wrap gap-2">
                             {packageData.highlights.map((item, idx) => (
                                 <span
                                     key={idx}
-                                    className="px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100 shadow-sm"                                >
+                                    className="px-3 py-1 rounded-full text-sm font-medium bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100 shadow-sm"
+                                    data-aos="fade-up"
+                                    data-aos-delay={idx * 50}
+                                >
                                     {item}
                                 </span>
                             ))}
                         </div>
                     </div>
                 )}
-                {/* Basic Info Grid */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-sm md:text-base font-medium">
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 text-sm md:text-base font-medium" data-aos="fade-up">
                     <p><span className="font-semibold text-primary">Tour Type:</span> {packageData.tourType}</p>
                     <p><span className="font-semibold text-primary">Location:</span> {packageData.location}</p>
-                    {/* <p><span className="font-semibold text-primary">Group Size:</span> {packageData.groupSize}</p> */}
-                    {/* <p><span className="font-semibold text-primary">Start date:</span> {packageData.startDate}</p> */}
-                    {/* <p><span className="font-semibold text-primary">End date:</span> {packageData.endDate}</p> */}
                 </div>
-                <p><span className="font-semibold text-primary">Duration:</span> {packageData.count}</p>
-                {/* <p className="mt-4 text-lg">
-                    <span className="font-semibold text-primary">Duration:</span>{" "}
-                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-lg font-medium">
-                        {packageData.totalDays} {packageData.totalDays > 1 ? "Days" : "Day"}
-                    </span>
-                </p> */}
 
+                <p data-aos="fade-up"><span className="font-semibold text-primary">Duration:</span> {packageData.count}</p>
 
-
-                {/* Highlights */}
-
-
-                <div className="md:grid grid-cols-4 pt-2">
-                    {/* Inclusions */}
+                <div className="md:grid grid-cols-4 pt-2" data-aos="fade-up">
                     {packageData.inclusions?.length > 0 && (
                         <div>
                             <h3 className="text-lg font-semibold mb-">Inclusions:</h3>
@@ -154,7 +111,6 @@ const PackageDetailsPage = () => {
                         </div>
                     )}
 
-                    {/* Exclusions */}
                     {packageData.exclusions?.length > 0 && (
                         <div className="mt-2">
                             <h3 className="text-lg font-semibold mb-2">Exclusions:</h3>
@@ -168,14 +124,12 @@ const PackageDetailsPage = () => {
                 </div>
             </div>
 
-
-
             {/* Tour Plan */}
-            <div className="bg-base-100  p-6 rounded-lg shadow-lg" data-aos="fade-up">
-                <h3 className="text-xl text-primary font-semibold mb-4">Tour Plan</h3>
+            <div className="bg-base-100 p-6 rounded-lg shadow-lg" data-aos="fade-up">
+                <h3 className="text-xl text-primary font-semibold mb-4" data-aos="fade-down">Tour Plan</h3>
                 <ul className="space-y-2">
                     {packageData.plan.map((day, idx) => (
-                        <li key={idx} className="border-l-4 border-primary pl-4">
+                        <li key={idx} className="border-l-4 border-primary pl-4" data-aos="fade-right" data-aos-delay={idx * 50}>
                             <span className="font-bold">{day.day}: </span>
                             {day.activity}
                         </li>
@@ -183,13 +137,17 @@ const PackageDetailsPage = () => {
                 </ul>
             </div>
 
-
             {/* Guides */}
-            <GuidesList guides={guides} guidesLoading={guidesLoading} guidesError={guidesError}></GuidesList>
-
+            <GuidesList
+                guides={guides}
+                guidesLoading={guidesLoading}
+                guidesError={guidesError}
+            />
             {/* Booking Form */}
-            {/* <BookingForm packageData={packageData} guides={guides}></BookingForm> */}
-
+            <BookingForm
+                packageData={packageData}
+                guides={guides}
+            ></BookingForm>
         </div>
     );
 };

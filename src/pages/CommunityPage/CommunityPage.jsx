@@ -83,19 +83,22 @@ export default function CommunityStories() {
 
     return (
         <section className="max-w-7xl mx-auto py-10 px-7">
-            <h2 className="text-3xl font-bold mb-6">Community Stories</h2>
+            <h2 className="text-3xl font-bold mb-6" data-aos="fade-down">Community Stories</h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {stories.map((story) => (
+                {stories.map((story, idx) => (
                     <div
                         key={story._id}
-                        className="bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
+                        className="bg-white dark:bg-gray-900 border-gray-600 dark:border-gray-700 rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
+                        data-aos="fade-up"
+                        data-aos-delay={idx * 100}
                     >
                         <img
                             src={story.images?.[0]}
                             alt={story.title}
                             className="w-full h-48 object-cover"
                             onClick={() => setSelectedStory(story)}
+                            data-aos="zoom-in"
                         />
                         <div className="p-4 space-y-2">
                             <div className="flex justify-between items-center">
@@ -109,18 +112,12 @@ export default function CommunityStories() {
                                         }`}
                                     disabled={likeLoading === story._id}
                                 >
-                                    {likeLoading === story._id ? (
-                                        <FaSpinner className="animate-spin" />
-                                    ) : (
-                                        <FaHeart className="text-lg" />
-                                    )}
+                                    {likeLoading === story._id ? <FaSpinner className="animate-spin" /> : <FaHeart className="text-lg" />}
                                     <span className="text-sm">{story.likes?.length || 0}</span>
                                 </button>
                             </div>
 
-                            <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
-                                {story.description}
-                            </p>
+                            <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">{story.description}</p>
 
                             <div className="flex items-center justify-between mt-2">
                                 <div className="flex items-center gap-2">
@@ -129,15 +126,14 @@ export default function CommunityStories() {
                                             src={story.createdBy.photo}
                                             alt={story.createdBy?.name || "User"}
                                             className="w-8 h-8 rounded-full border"
+                                            data-aos="fade-right"
                                         />
                                     ) : (
                                         <div className="w-8 h-8 rounded-full border bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-sm text-gray-600">
                                             {story.createdBy?.name?.[0] || "U"}
                                         </div>
                                     )}
-                                    <span className="text-sm text-gray-700 dark:text-gray-400">
-                                        {story.createdBy?.name || "Unknown"}
-                                    </span>
+                                    <span className="text-sm text-gray-700 dark:text-gray-400">{story.createdBy?.name || "Unknown"}</span>
                                 </div>
 
                                 <div className="flex pb-2 justify-end mt-3">
@@ -167,7 +163,7 @@ export default function CommunityStories() {
             </div>
 
             {/* Pagination */}
-            <div className="pagination mt-6 flex justify-center items-center gap-2">
+            <div className="pagination mt-6 flex justify-center items-center gap-2" data-aos="fade-up">
                 <button
                     onClick={handlePrevPage}
                     disabled={currentPage === 0}
@@ -179,9 +175,7 @@ export default function CommunityStories() {
                     <button
                         key={page}
                         onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 rounded ${currentPage === page
-                                ? "bg-primary text-white"
-                                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                        className={`px-3 py-1 rounded ${currentPage === page ? "bg-primary text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                             }`}
                     >
                         {page + 1}
@@ -211,10 +205,12 @@ export default function CommunityStories() {
                 <div
                     className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-lg flex items-center justify-center z-50"
                     onClick={() => setSelectedStory(null)}
+                    data-aos="fade-in"
                 >
                     <div
                         className="bg-white dark:bg-gray-900 rounded-xl shadow-xl p-6 max-w-3xl w-full overflow-auto"
                         onClick={(e) => e.stopPropagation()}
+                        data-aos="zoom-in"
                     >
                         <h2 className="text-2xl font-bold mb-1">{selectedStory.title}</h2>
                         <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -223,7 +219,7 @@ export default function CommunityStories() {
                         <p className="text-gray-700 dark:text-gray-300 mb-4">{selectedStory.description}</p>
                         <div className="flex flex-wrap gap-3 mb-4">
                             {selectedStory.images?.map((img, idx) => (
-                                <img key={idx} src={img} alt={`story-${idx}`} className="w-32 h-32 object-cover rounded" />
+                                <img key={idx} src={img} alt={`story-${idx}`} className="w-32 h-32 object-cover rounded" data-aos="zoom-in" data-aos-delay={idx * 100} />
                             ))}
                         </div>
                         <div className="flex justify-end">

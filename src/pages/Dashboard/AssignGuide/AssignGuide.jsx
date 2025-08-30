@@ -1,354 +1,289 @@
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import { useState } from "react";
-// import Swal from "sweetalert2";
-// import useAxios from "../../../hooks/useAxios";
-
-// const AssignGuide = () => {
-//     const [selectedBooking, setSelectedBooking] = useState(null);
-//     const [availableGuides, setAvailableGuides] = useState([]);
-//     const queryClient = useQueryClient();
-//     const axiosInstance = useAxios();
-
-//     // Fetch bookings that are paid but pending guide assignment
-//     const { data: bookings = [], isLoading } = useQuery({
-//         queryKey: ["assignableBookings"],
-//         queryFn: async () => {
-//             const res = await axiosInstance.get(
-//                 "/bookings?payment_status=paid&status=pending"
-//             );
-//             return res.data.sort(
-//                 (a, b) => new Date(a.created_at) - new Date(b.created_at)
-//             );
-//         },
-//     });
-
-//     // Mutation to assign guide
-//     const { mutateAsync: assignGuide } = useMutation({
-//         mutationFn: async ({ bookingId, guide }) => {
-//             const res = await axiosInstance.patch(`/bookings/${bookingId}/assign`, {
-//                 guideId: guide._id,
-//                 guideEmail: guide.email,
-//                 guideName: guide.name,
-//                 status: "waiting for guide confirmation",
-//             });
-//             return res.data;
-//         },
-//         onSuccess: () => {
-//             queryClient.invalidateQueries(["assignableBookings"]);
-//             Swal.fire("Success", "Guide assigned successfully!", "success");
-//         },
-//         onError: () => {
-//             Swal.fire("Error", "Failed to assign guide", "error");
-//         },
-//     });
-
-//     const openDetailsModal = async (booking) => {
-//         setSelectedBooking(booking);
-//         try {
-//             const res = await axiosInstance.get("/guides/available", {
-//                 params: { district: booking.district || "Dhaka" },
-//             });
-//             setAvailableGuides(res.data);
-//         } catch (error) {
-//             console.error("Error fetching guides", error);
-//             Swal.fire("Error", "Failed to load guides", "error");
-//         } finally {
-//             document.getElementById("detailsModal").showModal();
-//         }
-//     };
-
-//     const handleAssign = (booking, guide) => {
-//         assignGuide({ bookingId: booking._id, guide });
-//     };
-
-//     return (
-//         <div className="p-6">
-//             <h2 className="text-2xl font-bold mb-4">Bookings Pending Guide Assignment</h2>
-
-//             {isLoading ? (
-//                 <p>Loading bookings...</p>
-//             ) : bookings.length === 0 ? (
-//                 <p className="text-gray-500">No bookings available.</p>
-//             ) : (
-//                 <div className="overflow-x-auto">
-//                     <table className="table w-full">
-//                         <thead>
-//                             <tr>
-//                                 <th>Tourist</th>
-//                                 <th>Package</th>
-//                                 <th>Guide</th>
-//                                 <th>Location</th>
-//                                 <th>Tour Date</th>
-//                                 <th>Members</th>
-//                                 <th>Payment</th>
-//                                 <th>Action</th>
-//                             </tr>
-//                         </thead>
-//                         <tbody>
-//                             {bookings.map((booking) => (
-//                                 <tr key={booking._id}>
-//                                     <td>{booking.touristName}</td>
-//                                     <td>{booking.packageName}</td>
-//                                     <td>{booking.guideName || "-"}</td>
-//                                     <td>{booking.location}</td>
-//                                     <td>
-//                                         {new Date(booking.tourDate.start).toLocaleDateString()} -{" "}
-//                                         {new Date(booking.tourDate.end).toLocaleDateString()}
-//                                     </td>
-//                                     <td>{booking.totalMembers}</td>
-//                                     <td>{booking.payment_status}</td>
-//                                     <td className="flex gap-2">
-//                                         <button
-//                                             onClick={() => openDetailsModal(booking)}
-//                                             className="btn btn-sm btn-info"
-//                                         >
-//                                             Details
-//                                         </button>
-//                                         <button
-//                                             className="btn btn-sm btn-success"
-//                                             onClick={() =>
-//                                                 handleAssign(booking, availableGuides[0]) // assign first available guide
-//                                             }
-//                                         >
-//                                             Assign Guide
-//                                         </button>
-//                                         {/* {availableGuides.length > 0 && (
-
-//                                         )} */}
-//                                     </td>
-//                                 </tr>
-//                             ))}
-//                         </tbody>
-//                     </table>
-
-//                     {/* Details Modal */}
-//                     <dialog id="detailsModal" className="modal">
-//                         <div className="modal-box max-w-2xl p-6 space-y-4 animate-slide-in">
-//                             <h3 className="text-lg font-bold mb-2">
-//                                 Booking Details:{" "}
-//                                 <span className="text-primary">{selectedBooking?.packageName}</span>
-//                             </h3>
-
-//                             {selectedBooking && (
-//                                 <div className="space-y-2">
-//                                     <p><strong>Tourist:</strong> {selectedBooking.touristName}</p>
-//                                     <p><strong>Package:</strong> {selectedBooking.packageName}</p>
-//                                     <p><strong>Location:</strong> {selectedBooking.location}</p>
-//                                     <p><strong>Tour Date:</strong> {new Date(selectedBooking.tourDate.start).toLocaleDateString()} - {new Date(selectedBooking.tourDate.end).toLocaleDateString()}</p>
-//                                     <p><strong>Members:</strong> {selectedBooking.totalMembers}</p>
-//                                     <p><strong>Payment Status:</strong> {selectedBooking.payment_status}</p>
-//                                 </div>
-//                             )}
-
-//                             <div className="modal-action">
-//                                 <form method="dialog">
-//                                     <button className="btn btn-outline">Close</button>
-//                                 </form>
-//                             </div>
-//                         </div>
-//                     </dialog>
-//                 </div>
-//             )}
-//         </div>
-//     );
-// };
-
-// export default AssignGuide;
-
-
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import Swal from "sweetalert2";
-import useAxios from "../../../hooks/useAxios";
+import { motion } from "framer-motion";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loading from "../../shared/Loading/Loading";
 
 const AssignGuide = () => {
-    const [selectedBooking, setSelectedBooking] = useState(null);
+    const axiosSecure = useAxiosSecure();
     const queryClient = useQueryClient();
-    const axiosInstance = useAxios();
+    const [selectedBooking, setSelectedBooking] = useState(null);
 
-    // ✅ Fetch bookings that are pending
+    // Initialize AOS
+    useEffect(() => {
+        AOS.init({ duration: 800, once: true });
+    }, []);
+
+    // Fetch bookings
     const { data: bookings = [], isLoading } = useQuery({
-        queryKey: ["assignableBookings"],
+        queryKey: ["adminBookings"],
         queryFn: async () => {
-            const res = await axiosInstance.get("/bookings?payment_status=paid&status=pending");
-            return res.data.sort(
-                (a, b) => new Date(a.created_at) - new Date(b.created_at)
-            );
+            const res = await axiosSecure.get("/bookings/admin"); // backend API filters paid & pending
+            return res.data;
         },
     });
 
-    // ✅ Mutation to assign guide (tourist already selected guide)
-    const { mutateAsync: assignGuide } = useMutation({
-        mutationFn: async ({ bookingId, guide }) => {
-            const res = await axiosInstance.patch(`/bookings/${bookingId}/assign`, {
-                guideId: guide._id,
-                guideEmail: guide.email,
-                guideName: guide.name,
-                status: "waiting for guide confirmation",
-            });
+    // Approve mutation
+    const approveMutation = useMutation({
+        mutationFn: async (id) => {
+            const res = await axiosSecure.patch(`/bookings/approve/${id}`);
             return res.data;
         },
         onSuccess: () => {
-            queryClient.invalidateQueries(["assignableBookings"]);
-            Swal.fire("✅ Success", "Guide assigned successfully!", "success");
+            queryClient.invalidateQueries(["adminBookings"]);
+            Swal.fire("Success!", "Booking approved and guide assigned.", "success");
         },
         onError: () => {
-            Swal.fire("❌ Error", "Failed to assign guide", "error");
+            Swal.fire("Error!", "Failed to approve booking.", "error");
         },
     });
 
-    // ✅ Assign handler (no dropdown, no validation)
-    const handleAssign = async (booking) => {
-        if (booking.payment_status !== "paid") {
-            Swal.fire("❌ Payment Pending", "Cannot assign guide until payment is completed", "error");
-            return;
-        }
+    // Delete mutation
+    const deleteMutation = useMutation({
+        mutationFn: async (id) => {
+            const res = await axiosSecure.delete(`/bookings/${id}`);
+            return res.data;
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries(["adminBookings"]);
+            Swal.fire("Deleted!", "Booking has been deleted.", "success");
+        },
+        onError: () => {
+            Swal.fire("Error!", "Failed to delete booking.", "error");
+        },
+    });
 
-        // tourist already selected guide (info is inside booking)
-        const guide = {
-            _id: booking.guideId,
-            email: booking.guideEmail,
-            name: booking.guideName,
-        };
-
-        if (!guide._id || !guide.email) {
-            Swal.fire("❌ No Guide Info", "This booking has no guide selected by the tourist", "error");
-            return;
-        }
-
-        await assignGuide({ bookingId: booking._id, guide });
-    };
-
-    // ✅ Details modal
-    const openDetailsModal = (booking) => {
-        setSelectedBooking(booking);
-        document.getElementById("detailsModal").showModal();
-    };
+    if (isLoading) return <Loading></Loading>;
 
     return (
-        <div className="p-6">
-            <h2 className="text-2xl font-bold mb-4">Bookings Pending Guide Assignment</h2>
+        <div className="p-6 max-w-7xl mx-auto">
+            <h2 className="text-2xl font-bold mb-6 text-center">Assign Guide</h2>
 
-            {isLoading ? (
-                <p>Loading bookings...</p>
-            ) : bookings.length === 0 ? (
-                <p className="text-gray-500">No bookings available.</p>
+            {bookings.length === 0 ? (
+                <p className="text-center text-gray-500 py-12">No pending bookings</p>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="table w-full">
-                        <thead>
+                <div className="overflow-x-auto" data-aos="fade-up">
+                    <table className="table w-full shadow-lg rounded-lg">
+                        <thead className="bg-base-100">
                             <tr>
-                                <th>Tourist</th>
+                                <th>#</th>
                                 <th>Package</th>
-                                <th>Guide (selected by tourist)</th>
+                                <th>Tourist</th>
+                                <th>Guide</th>
                                 <th>Tour Date</th>
                                 <th>Members</th>
-                                <th>Payment</th>
                                 <th>Status</th>
-                                <th>Action</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {bookings.map((booking) => (
-                                <tr key={booking._id}>
-                                    <td>{booking.touristName}</td>
-                                    <td>{booking.packageName}</td>
-                                    <td>{booking.guideName || "-"}</td>
+                            {bookings.map((b, idx) => (
+                                <tr key={b._id} data-aos="fade-up" data-aos-delay={idx * 50}>
+                                    <td>{idx + 1}</td>
+                                    <td>{b.packageName}</td>
+                                    <td>{b.touristName}</td>
+                                    <td>{b.guideName}</td>
                                     <td>
-                                        {new Date(booking.tourDate.start).toLocaleDateString()} -{" "}
-                                        {new Date(booking.tourDate.end).toLocaleDateString()}
+                                        {b.tourDate?.start} → {b.tourDate?.end}
                                     </td>
-                                    <td>{booking.totalMembers}</td>
+                                    <td>{b.members}</td>
                                     <td>
                                         <span
-                                            className={`badge ${booking.payment_status === "paid"
-                                                    ? "badge-success"
-                                                    : "badge-error"
+                                            className={`badge ${b.booking_status === "guide_assigned"
+                                                ? "badge-success"
+                                                : "badge-warning"
                                                 }`}
                                         >
-                                            {booking.payment_status}
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <span
-                                            className={`badge ${booking.status === "pending"
-                                                    ? "badge-warning"
-                                                    : "badge-success"
-                                                }`}
-                                        >
-                                            {booking.status}
+                                            {b.booking_status}
                                         </span>
                                     </td>
                                     <td className="flex gap-2">
                                         <button
-                                            onClick={() => openDetailsModal(booking)}
-                                            className="btn btn-sm btn-info"
+                                            className="btn btn-xs btn-success"
+                                            onClick={() => approveMutation.mutate(b._id)}
                                         >
-                                            Details
+                                            Approve
                                         </button>
                                         <button
-                                            className="btn btn-sm btn-success"
-                                            onClick={() => handleAssign(booking)}
-                                            disabled={booking.status !== "pending"}
+                                            className="btn btn-xs btn-error"
+                                            onClick={() => deleteMutation.mutate(b._id)}
                                         >
-                                            Assign Guide
+                                            Delete
+                                        </button>
+                                        <button
+                                            className="btn btn-xs btn-ghost border border-gray-300"
+                                            onClick={() => setSelectedBooking(b)}
+                                        >
+                                            Details
                                         </button>
                                     </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
-
-                    {/* Details Modal */}
-                    <dialog id="detailsModal" className="modal">
-                        <div className="modal-box max-w-2xl p-6 space-y-4 animate-slide-in">
-                            <h3 className="text-lg font-bold mb-2">
-                                Booking Details:{" "}
-                                <span className="text-primary">
-                                    {selectedBooking?.packageName}
-                                </span>
-                            </h3>
-
-                            {selectedBooking && (
-                                <div className="space-y-2">
-                                    <p>
-                                        <strong>Tourist:</strong> {selectedBooking.touristName}
-                                    </p>
-                                    <p>
-                                        <strong>Guide:</strong> {selectedBooking.guideName}
-                                    </p>
-                                    <p>
-                                        <strong>Tour Date:</strong>{" "}
-                                        {new Date(
-                                            selectedBooking.tourDate.start
-                                        ).toLocaleDateString()}{" "}
-                                        -{" "}
-                                        {new Date(
-                                            selectedBooking.tourDate.end
-                                        ).toLocaleDateString()}
-                                    </p>
-                                    <p>
-                                        <strong>Members:</strong> {selectedBooking.totalMembers}
-                                    </p>
-                                    <p>
-                                        <strong>Payment Status:</strong>{" "}
-                                        {selectedBooking.payment_status}
-                                    </p>
-                                    <p>
-                                        <strong>Status:</strong> {selectedBooking.status}
-                                    </p>
-                                </div>
-                            )}
-
-                            <div className="modal-action">
-                                <form method="dialog">
-                                    <button className="btn btn-outline">Close</button>
-                                </form>
-                            </div>
-                        </div>
-                    </dialog>
                 </div>
             )}
+
+            {/* Modal */}
+            {/* {selectedBooking && (
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-lg flex justify-center items-center z-50">
+                    <motion.div
+                        className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg max-w-md w-full"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                    >
+                        <h3 className="text-xl font-bold mb-4">Booking Details</h3>
+                        <p>
+                            <strong>Package:</strong> {selectedBooking.packageName}
+                        </p>
+                        <p>
+                            <strong>Tourist:</strong> {selectedBooking.touristName}
+                        </p>
+                        <p>
+                            <strong>Guide:</strong> {selectedBooking.guideName}
+                        </p>
+                        <p>
+                            <strong>Tour Date:</strong> {selectedBooking.tourDate?.start} →{" "}
+                            {selectedBooking.tourDate?.end}
+                        </p>
+                        <p>
+                            <strong>Members:</strong> {selectedBooking.members}
+                        </p>
+                        <p>
+                            <strong>Status:</strong> {selectedBooking.booking_status}
+                        </p>
+                        <p>
+                            <strong>Payment Status:</strong> {selectedBooking.payment_status}
+                        </p>
+                        <p>
+                            <strong>Transaction ID:</strong> {selectedBooking.payment.transactionId}
+                        </p>
+                        <p>
+                            <strong>Payment Status:</strong> {selectedBooking.payment?.paid_at
+                                ? new Date(selectedBooking.payment.paid_at).toLocaleString("en-GB", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })
+                                : "Unpaid"}
+                        </p>
+                        <div className="mt-4 flex justify-end">
+                            <button
+                                className="btn btn-sm btn-outline"
+                                onClick={() => setSelectedBooking(null)}
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </motion.div>
+                </div>
+            )} */}
+            {selectedBooking && (
+                <div className="fixed inset-0 bg-black/40 backdrop-blur-lg flex justify-center items-center z-50">
+                    <motion.div
+                        className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg max-w-lg w-full"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                    >
+                        <h3 className="text-2xl font-bold mb-4">Booking Details</h3>
+
+                        {/* Package & Tourist Info */}
+                        <div className="space-y-2">
+                            <p>
+                                <strong>Package:</strong> {selectedBooking.packageName}
+                            </p>
+                            <p>
+                                <strong>Tourist:</strong> {selectedBooking.touristName}
+                                {selectedBooking.touristImage && (
+                                    <img
+                                        src={selectedBooking.touristImage}
+                                        alt={selectedBooking.touristName}
+                                        className="inline-block w-10 h-10 rounded-full ml-2"
+                                    />
+                                )}
+                            </p>
+                            <p>
+                                <strong>Guide:</strong>{" "}
+                                {selectedBooking.guideName ? selectedBooking.guideName : "Not Assigned"}
+                            </p>
+                        </div>
+
+                        {/* Tour Info */}
+                        <div className="mt-4 space-y-2">
+                            <p>
+                                <strong>Tour Dates:</strong> {selectedBooking.tourDate?.start} →{" "}
+                                {selectedBooking.tourDate?.end}
+                            </p>
+                            <p>
+                                <strong>Members:</strong> {selectedBooking.members}
+                            </p>
+                            <p>
+                                <strong>Tracking ID:</strong> {selectedBooking.tracking_id}
+                            </p>
+                            <p>
+                                <strong>Status:</strong>{" "}
+                                <span
+                                    className={`px-2 py-1 rounded ${selectedBooking.booking_status === "guide_assigned"
+                                            ? "bg-blue-100 text-blue-800"
+                                            : selectedBooking.booking_status === "accepted"
+                                                ? "bg-green-100 text-green-800"
+                                                : selectedBooking.booking_status === "rejected"
+                                                    ? "bg-red-100 text-red-800"
+                                                    : "bg-gray-100 text-gray-800"
+                                        }`}
+                                >
+                                    {selectedBooking.booking_status}
+                                </span>
+                            </p>
+                        </div>
+
+                        {/* Payment Info */}
+                        <div className="mt-4 space-y-2 border-t pt-3">
+                            <p>
+                                <strong>Price:</strong> ${selectedBooking.price}
+                            </p>
+                            <p>
+                                <strong>Payment Status:</strong> {selectedBooking.payment_status}
+                            </p>
+                            <p>
+                                <strong>Transaction ID:</strong>{" "}
+                                {selectedBooking.payment?.transactionId || "N/A"}
+                            </p>
+                            <p>
+                                <strong>Paid At:</strong>{" "}
+                                {selectedBooking.payment?.paid_at
+                                    ? new Date(selectedBooking.payment.paid_at).toLocaleString("en-GB", {
+                                        day: "2-digit",
+                                        month: "2-digit",
+                                        year: "numeric",
+                                        hour: "2-digit",
+                                        minute: "2-digit",
+                                    })
+                                    : "Unpaid"}
+                            </p>
+                        </div>
+
+                        {/* Footer Actions */}
+                        <div className="mt-6 flex justify-end gap-3">
+                            <button
+                                className="btn btn-sm btn-outline"
+                                onClick={() => setSelectedBooking(null)}
+                            >
+                                Close
+                            </button>
+                            {/* Example admin actions */}
+                            <button className="btn btn-sm btn-success">Approve</button>
+                            <button className="btn btn-sm btn-error">Reject</button>
+                        </div>
+                    </motion.div>
+                </div>
+            )}
+
         </div>
     );
 };

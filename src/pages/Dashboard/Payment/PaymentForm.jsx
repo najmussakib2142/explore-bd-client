@@ -3,11 +3,11 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
-import Loading from '../../shared/Loading/Loading';
-import useAuth from '../../../hooks/useAuth';
+// import useAuth from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import { motion } from "framer-motion";
-
+import Loading from '../../shared/Loading/Loading';
+import useAuth from '../../../hooks/useAuth';
 
 const PaymentForm = () => {
     const { user } = useAuth();
@@ -18,7 +18,7 @@ const PaymentForm = () => {
     const axiosSecure = useAxiosSecure();
     const [error, setError] = useState('');
 
-    // 1️⃣ Load booking info
+    // Load booking info
     const { isPending, data: bookingInfo = {} } = useQuery({
         queryKey: ['booking', bookingId],
         queryFn: async () => {
@@ -32,7 +32,7 @@ const PaymentForm = () => {
     const amount = bookingInfo.price;
     const amountInCents = amount * 100;
 
-    // 2️⃣ Main payment function
+    // Main payment function
     const processPayment = async () => {
         if (!stripe || !elements) return;
 
@@ -40,14 +40,13 @@ const PaymentForm = () => {
         if (!card) return;
 
         try {
-            // Create payment intent on backend
+            // 1️⃣ Create payment intent
             const { data: paymentIntentData } = await axiosSecure.post('/create-payment-intent', {
                 amountInCents
             });
-
             const clientSecret = paymentIntentData.clientSecret;
 
-            // Confirm card payment
+            // 2️⃣ Confirm card payment
             const result = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
                     card,
@@ -60,38 +59,38 @@ const PaymentForm = () => {
 
             if (result.error) {
                 setError(result.error.message);
-            } else if (result.paymentIntent.status === 'succeeded') {
+                return;
+            }
+
+            if (result.paymentIntent.status === 'succeeded') {
                 const transactionId = result.paymentIntent.id;
 
-                // Save payment info
-                const paymentData = {
-                    packageId: bookingInfo.packageId,
-                    bookingId,
-                    email: user.email,
-                    amount,
-                    transactionId,
-                    paymentMethod: result.paymentIntent.payment_method_types
+                // 3️⃣ Patch the booking document
+                const updateData = {
+                    payment_status: "paid",
+                    payment: {
+                        transactionId,
+                        method: result.paymentIntent.payment_method_types,
+                        paid_at: new Date().toISOString(),
+                        amount
+                    }
                 };
 
-                const paymentRes = await axiosSecure.post('/payments', paymentData);
+                await axiosSecure.patch(`/bookings/${bookingId}`, updateData);
 
-                if (paymentRes.data.insertedId) {
-                    Swal.fire({
-                        title: '✅ Payment Successful',
-                        html: `
-                            <div class="text-left text-base space-y-2">
-                                <p><strong>Package:</strong> ${bookingInfo.packageName}</p>
-                                <p><strong>Amount Paid:</strong> $${amount}</p>
-                                <hr class="my-2"/>
-                                <p class="text-green-600 font-bold">Transaction ID:</p>
-                                <p class="text-gray-600 text-sm">${transactionId}</p>
-                            </div>
-                        `,
-                        icon: 'success',
-                        confirmButtonText: 'OK',
-                        confirmButtonColor: '#16a34a',
-                    }).then(() => navigate('/dashboard/myBookings'));
-                }
+                Swal.fire({
+                    title: '✅ Payment Successful',
+                    html: `
+                        <div class="text-left text-base space-y-2">
+                            <p><strong>Package:</strong> ${bookingInfo.packageName}</p>
+                            <p><strong>Amount Paid:</strong> $${amount}</p>
+                            <p><strong>Transaction ID:</strong> ${transactionId}</p>
+                        </div>
+                    `,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    confirmButtonColor: '#16a34a',
+                }).then(() => navigate('/dashboard/myBookings'));
             }
         } catch (err) {
             console.error(err);
@@ -99,7 +98,7 @@ const PaymentForm = () => {
         }
     };
 
-    // 3️⃣ Handle confirm button click
+    // Confirm button click
     const handleConfirmClick = () => {
         Swal.fire({
             title: 'Are you sure?',
@@ -118,101 +117,46 @@ const PaymentForm = () => {
     };
 
     return (
-        <motion.div
-            className="max-w-xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700"
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-        >
-            {/* Title */}
-            <motion.h2
-                className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent"
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 }}
-            >
+        <motion.div className="max-w-xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700"
+            initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+
+            <motion.h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent"
+                initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
                 Booking Details
             </motion.h2>
 
-            {/* Details Card */}
-            <motion.div
-                className="mb-6 p-5  rounded-xl bg-gradient-to-r from-indigo-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600 shadow-md"
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.3 }}
-            >
-                <p className="text-gray-700 dark:text-gray-200 mb-2">
-                    <span className="font-semibold">📦 Package:</span> {bookingInfo.packageName}
-                </p>
-                {/* <p className="text-gray-700 dark:text-gray-200 mb-2">
-                    <span className="font-semibold">🧑 Tourist:</span> {bookingInfo.touristName}
-                </p> */}
-                <p className="text-gray-700 dark:text-gray-200 mb-2">
-                    <span className="font-semibold">👥 Total Members:</span> {bookingInfo.totalMembers}
-                </p>
-                <p className="text-gray-700 dark:text-gray-200 mb-2">
-                    <span className="font-semibold">📅 Tour Dates:</span> {bookingInfo?.tourDate?.start} → {bookingInfo?.tourDate?.end}
-                </p>
-                <p className="text-lg font-bold text-indigo-600 dark:text-pink-400">
-                    💰 Price: ${bookingInfo.price}
-                </p>
+            <motion.div className="mb-6 p-5 rounded-xl bg-gradient-to-r from-indigo-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600 shadow-md"
+                initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }}>
+
+                <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">📦 Package:</span> {bookingInfo.packageName}</p>
+                <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">👥 Total Members:</span> {bookingInfo.members}</p>
+                <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">📅 Tour Dates:</span> {bookingInfo?.tourDate?.start} → {bookingInfo?.tourDate?.end}</p>
+                <p className="text-lg font-bold text-indigo-600 dark:text-pink-400">💰 Price: ${bookingInfo.price}</p>
             </motion.div>
 
-            {/* Payment Field */}
-            <motion.div
-                className="p-4 mb-6 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-sm"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.4 }}
-            >
+            <motion.div className="p-4 mb-6 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-sm"
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
                 <CardElement
                     options={{
                         style: {
                             base: {
-                                fontSize: "16px",
-                                color: "#f3f4f6", // text-gray-100
-                                letterSpacing: "0.5px",
-                                fontFamily: "Inter, sans-serif",
-                                "::placeholder": {
-                                    color: "#9ca3af", // gray-400
-                                },
-                                backgroundColor: "transparent", // Let Tailwind handle bg
-                                padding: "12px",
+                                fontSize: "16px", color: "#f3f4f6", letterSpacing: "0.5px", fontFamily: "Inter, sans-serif",
+                                "::placeholder": { color: "#9ca3af" }, padding: "12px"
                             },
-                            invalid: {
-                                color: "#f87171", // red-400
-                            },
-                        },
+                            invalid: { color: "#f87171" },
+                        }
                     }}
-                    className="p-3 rounded-md 
-             bg-gray-50 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 
-             border border-gray-200 dark:border-gray-600 
-             shadow-inner"                />
+                    className="p-3 rounded-md bg-gray-50 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-600 shadow-inner" />
             </motion.div>
 
-            {/* Pay Button */}
-            <motion.button
-                onClick={handleConfirmClick}
+            <motion.button onClick={handleConfirmClick} disabled={!stripe}
                 className="w-full py-3 text-lg font-semibold rounded-xl bg-gradient-to-r from-indigo-600 to-pink-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transform transition-all duration-300 disabled:opacity-50"
-                disabled={!stripe}
-                whileTap={{ scale: 0.97 }}
-                whileHover={{ scale: 1.02 }}
-            >
+                whileTap={{ scale: 0.97 }} whileHover={{ scale: 1.02 }}>
                 Confirm & Pay ${amount}
             </motion.button>
 
-            {/* Error */}
-            {error && (
-                <motion.p
-                    className="text-red-500 mt-4 text-center font-medium"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                >
-                    {error}
-                </motion.p>
-            )}
+            {error && <motion.p className="text-red-500 mt-4 text-center font-medium" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{error}</motion.p>}
         </motion.div>
-
     );
 };
 

@@ -128,7 +128,9 @@ const BeAGuide = () => {
             </div>
           ) : (
             <div className="flex flex-col items-start gap-2">
-              <input type="file" accept="image/*" onChange={handlePhotoChange} />
+
+              <input type="file" className="file-input file-input-bordered w-full text-base font-medium" accept="image/*" onChange={handlePhotoChange} />
+
               <button
                 type="button"
                 className="btn btn-primary btn-sm"
@@ -204,19 +206,8 @@ const BeAGuide = () => {
           />
         </div>
 
-        {/* <div>
-          <label className="block font-semibold">District</label>
-          <input
-            type="text"
-            name="district"
-            required
-            value={formData.district}
-            onChange={handleChange}
-            className="input input-bordered w-full"
-            placeholder="District name"
-          />
-        </div> */}
-        {/* <div>
+
+        <div>
           <label className="block font-semibold mb-1">District</label>
           <select
             name="district"
@@ -293,7 +284,7 @@ const BeAGuide = () => {
             <option value="Tangail">Tangail</option>
             <option value="Thakurgaon">Thakurgaon</option>
           </select>
-        </div> */}
+        </div>
 
 
         <div>
@@ -328,7 +319,7 @@ const BeAGuide = () => {
             value={formData.bio}
             onChange={handleChange}
             className="textarea textarea-bordered w-full"
-            placeholder="Tell us What inspires you"
+            placeholder="Tell us about yourself"
           />
         </div>
 

@@ -12,8 +12,10 @@ const useAxiosSecure = () => {
     const navigate = useNavigate()
 
     axiosSecure.interceptors.request.use(async (config) => {
-        const token = await user.getIdToken(true); // 'true' forces refresh
-        config.headers.Authorization = `Bearer ${token}`
+        if (user) {
+            const token = await user.getIdToken(true);
+            config.headers.Authorization = `Bearer ${token}`;
+        }
         return config;
     }, error => {
         return Promise.reject(error);
