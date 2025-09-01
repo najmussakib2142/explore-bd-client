@@ -38,7 +38,24 @@ const Login = () => {
             await axiosInstance.post("/users", userInfo);
             navigate(from, { replace: true });
         } catch (err) {
-            setError(err.code);
+            let message = "";
+            switch (err.code) {
+                case "auth/user-not-found":
+                    message = "No account found with this email.";
+                    break;
+                case "auth/wrong-password":
+                    message = "Password is incorrect.";
+                    break;
+                case "auth/invalid-credential":
+                    message = "Invalid login credentials. Please try again.";
+                    break;
+                case "auth/too-many-requests":
+                    message = "Too many attempts. Please try again later.";
+                    break;
+                default:
+                    message = "Login failed. Please try again.";
+            }
+            setError(message);
         }
     };
 

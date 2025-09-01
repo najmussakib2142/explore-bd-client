@@ -13,15 +13,19 @@ const PendingGuides = () => {
     const axiosSecure = useAxiosSecure();
 
     // Fetch pending guides with server-side pagination
-    const { isLoading, data = {}, refetch } = useQuery({
-        queryKey: ['pending-guides', currentPage, itemsPerPage],
+    const { data = {}, isLoading, refetch } = useQuery({
+        queryKey: ["guides", currentPage, itemsPerPage],
         queryFn: async () => {
-            const res = await axiosSecure.get('/guides/pending', {
-                params: { page: currentPage, limit: itemsPerPage },
+            const res = await axiosSecure.get("/guides/pending", {
+                params: {
+                    page: currentPage,
+                    limit: itemsPerPage,
+                    status: "pending"
+                }
             });
             return res.data;
         },
-        keepPreviousData: true, // optional
+        keepPreviousData: true,
     });
 
     const guides = data.guides || [];
@@ -76,6 +80,7 @@ const PendingGuides = () => {
         );
     }
 
+
     return (
         <div className="p-6">
             <h2 className="text-2xl font-semibold mb-4">Pending Guide Applications</h2>
@@ -107,10 +112,13 @@ const PendingGuides = () => {
                                 >
                                     <td>{guide.name}</td>
                                     <td>{guide.email}</td>
-                                    <td>{guide.age || '-'}</td>
+                                    <td>{guide.age ? guide.age : '-'}</td>
                                     <td>{guide.role || "User"}</td>
-                                    <td>{new Date(guide.created_at).toLocaleDateString()}</td>
                                     <td>
+                                        {guide.created_at
+                                            ? new Date(guide.created_at.$date || guide.created_at).toLocaleDateString()
+                                            : '-'}
+                                    </td>                                    <td>
                                         <span className={`badge ${guide.status === 'pending' ? 'badge-warning' : guide.status === 'active' ? 'badge-success' : 'badge-error'}`}>
                                             {guide.status}
                                         </span>

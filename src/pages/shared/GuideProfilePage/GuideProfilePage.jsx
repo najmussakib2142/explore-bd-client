@@ -36,7 +36,7 @@ const GuideProfilePage = () => {
     } = useQuery({
         queryKey: ["guide", id],
         queryFn: async () => {
-            const res = await axiosInstance.get(`/guides/${id}`);
+            const res = await axiosInstance.get(`/guides/id/${id}`);
             return res.data;
         },
     });

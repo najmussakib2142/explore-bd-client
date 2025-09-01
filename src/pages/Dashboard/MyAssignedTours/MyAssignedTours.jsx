@@ -13,6 +13,7 @@ const MyAssignedTours = () => {
   const axiosSecure = useAxiosSecure();
   const queryClient = useQueryClient();
   const [selectedTour, setSelectedTour] = useState(null);
+  const [pendingTourId, setPendingTourId] = useState(null);
 
   // Initialize AOS
   useEffect(() => {
@@ -40,8 +41,8 @@ const MyAssignedTours = () => {
       return res.data;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["assignedTours"] });
-      Swal.fire("Success", `Tour ${variables.action}ed successfully`, "success");
+      queryClient.invalidateQueries({ queryKey: ["assignedTours", user?.email] });
+      Swal.fire("Success", `Tour ${variables.action === "accept" ? "Accepted" : "Rejected"} successfully`, "success");
     },
     onError: () => {
       Swal.fire("Error", "Action failed", "error");
@@ -58,7 +59,10 @@ const MyAssignedTours = () => {
       cancelButtonText: "Cancel",
     }).then((result) => {
       if (result.isConfirmed) {
-        mutation.mutate({ id, action });
+        setPendingTourId(id); // set the specific tour as pending
+        mutation.mutate({ id, action }, {
+          onSettled: () => setPendingTourId(null), // reset after success/error
+        });
       }
     });
   };
@@ -67,188 +71,256 @@ const MyAssignedTours = () => {
   if (isError) return <p className="text-red-500">Failed to load tours.</p>;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto" data-aos="fade-up">
-      <h2 className="text-2xl font-bold mb-6 text-center">My Assigned Tours</h2>
+    <>
+      <div className="p-6 max-w-7xl mx-auto" data-aos="fade-up">
+        <h2 className="text-2xl font-bold mb-6 text-center">My Assigned Tours</h2>
 
-      {tours.length === 0 ? (
-        <p className="text-center text-gray-500">No assigned tours yet.</p>
-      ) : (
-        <div className="overflow-x-auto">
-          <table className="table w-full shadow-lg">
-            <thead className="bg-base-200">
-              <tr>
-                <th>#</th>
-                <th>Package</th>
-                <th>Tourist</th>
-                <th>Dates</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tours.map((tour, idx) => (
-                <tr key={tour._id}>
-                  <td>{idx + 1}</td>
-                  <td>{tour.packageName}</td>
-                  <td>{tour.touristName}</td>
-                  {/* <td>
-                    {tour.tourDate.start} → {tour.tourDate.end}
-                  </td> */}
-                  <td>
-                    {
-                      (() => {
-                        const start = new Date(tour.tourDate.start)
-                        const end = new Date(tour.tourDate.end);
+        {tours.length === 0 ? (
+          <p className="text-center text-gray-500">No assigned tours yet.</p>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="table w-full shadow-lg">
+              <thead className="bg-base-200">
+                <tr>
+                  <th>#</th>
+                  <th>Package</th>
+                  <th>Tourist</th>
+                  <th>Dates</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {tours.map((tour, idx) => (
+                  <tr key={tour._id} className="align-top">
+                    <td className="whitespace-nowrap">{idx + 1}</td>
+
+                    {/* Package Name */}
+                    <td className="max-w-[200px] truncate" title={tour.packageName}>
+                      {tour.packageName}
+                    </td>
+
+                    {/* Tourist Name */}
+                    <td className="max-w-[150px] truncate" title={tour.touristName}>
+                      {tour.touristName}
+                    </td>
+
+                    {/* Dates */}
+                    <td className="whitespace-nowrap">
+                      {(() => {
+                        const parseDMY = (str) => {
+                          const [day, month, year] = str.split("/").map(Number);
+                          const fullYear = year < 100 ? 2000 + year : year;
+                          return new Date(fullYear, month - 1, day);
+                        };
+
+                        const start = parseDMY(tour.tourDate.start);
+                        const end = parseDMY(tour.tourDate.end);
 
                         const startFormatted = start.toLocaleDateString("en-GB");
                         const endFormatted = end.toLocaleDateString("en-GB");
 
-                        if (
-                          start.getMonth() === end.getMonth() &&
-                          start.getFullYear() === end.getFullYear()
-                        ) {
+                        if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
                           return `${start.getDate()} → ${endFormatted}`;
                         }
                         return `${startFormatted} → ${endFormatted}`;
-                      })
-                        ()}
-                  </td>
-                  <td>${tour.price}</td>
-                  <td>
-                    <span
-                      className={`badge ${tour.booking_status === "accepted"
-                        ? "badge-success"
-                        : tour.booking_status === "rejected"
-                          ? "badge-error"
-                          : "badge-warning"
-                        }`}
-                    >
-                      {tour.booking_status}
-                    </span>
-                  </td>
-                  <td className="flex gap-2">
-                    <button
-                      onClick={() => handleAction(tour._id, "accept")}
-                      disabled={tour.booking_status !== "in-review" || mutation.isPending}
-                      className="btn btn-sm btn-success"
-                    >
-                      {mutation.isPending ? "Processing..." : "Accept"}
-                    </button>
-                    <button
-                      onClick={() => handleAction(tour._id, "reject")}
-                      disabled={tour.booking_status !== "in-review" || mutation.isPending}
-                      className="btn btn-sm btn-error"
-                    >
-                      {mutation.isPending ? "Processing..." : "Reject"}
-                    </button>
-                    <button
-                      className="btn btn-xs btn-ghost border border-blue-300"
-                      onClick={() => setSelectedTour(tour)}
-                    >
-                      Details
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+                      })()}
+                    </td>
 
+                    {/* Price */}
+                    <td className="whitespace-nowrap">${tour.price}</td>
+
+                    {/* Status Badge */}
+                    <td>
+                      <span
+                        className={`badge px-3 py-1 whitespace-nowrap ${tour.booking_status === "accepted"
+                          ? "badge-success"
+                          : tour.booking_status === "rejected"
+                            ? "badge-error"
+                            : "badge-warning"
+                          }`}
+                      >
+                        {tour.booking_status === "in-review" ? "In Review" : tour.booking_status}
+                      </span>
+                    </td>
+
+                    {/* Actions */}
+                    <td className="flex gap-2 overflow-x-auto">
+                      <button
+                        onClick={() => handleAction(tour._id, "accept")}
+                        disabled={tour.booking_status !== "in-review" || pendingTourId === tour._id}
+                        className="btn btn-sm btn-success whitespace-nowrap"
+                      >
+                        {pendingTourId === tour._id ? "Processing..." : "Accept"}
+                      </button>
+
+                      <button
+                        onClick={() => handleAction(tour._id, "reject")}
+                        disabled={tour.booking_status !== "in-review" || pendingTourId === tour._id}
+                        className="btn btn-sm btn-error whitespace-nowrap"
+                      >
+                        {pendingTourId === tour._id ? "Processing..." : "Reject"}
+                      </button>
+
+                      <button
+                        className="btn btn-xs btn-ghost border border-blue-300 whitespace-nowrap"
+                        onClick={() => setSelectedTour(tour)}
+                      >
+                        Details
+                      </button>
+                    </td>
+
+                  </tr>
+                ))}
+              </tbody>
+
+            </table>
+          </div>
+        )}
+
+
+
+      </div>
       {/* Details modal */}
       {selectedTour && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-lg flex justify-center items-center z-50">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
+            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="bg-white dark:bg-gray-900 p-6 rounded-lg max-w-lg w-full shadow-xl"
+            transition={{ duration: 0.25 }}
+            className="bg-white dark:bg-gray-900 p-6 rounded-2xl max-w-lg w-full shadow-2xl border border-gray-200 dark:border-gray-700"
           >
-            <h3 className="text-2xl font-bold mb-4">Tour Details</h3>
+            {/* Title */}
+            <h3 className="text-2xl font-bold mb-4 text-center text-gray-800 dark:text-gray-100">
+              Tour Details
+            </h3>
 
-            <div className="space-y-3 text-sm">
+            <div className="space-y-4 text-sm">
               {/* Tourist Info */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 border-b pb-3">
                 {selectedTour.touristImage ? (
                   <img
                     src={selectedTour.touristImage}
                     alt={selectedTour.touristName}
-                    className="w-12 h-12 rounded-full object-cover"
+                    className="w-14 h-14 rounded-full object-cover shadow"
                   />
                 ) : (
-                  <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center">
+                  <div className="w-14 h-14 rounded-full bg-gray-300 flex items-center justify-center text-xl">
                     👤
                   </div>
                 )}
                 <div>
-                  <p className="font-semibold">{selectedTour.touristName}</p>
+                  <p className="font-semibold text-lg">{selectedTour.touristName}</p>
                   <p className="text-xs text-gray-500">{selectedTour.created_by}</p>
                 </div>
               </div>
 
               {/* Package */}
-              <p>
-                <strong>Package:</strong> {selectedTour.packageName}
-              </p>
+              <div>
+                <p className="font-medium">
+                  <span className="text-gray-500">Package:</span>{" "}
+                  {selectedTour.packageName}
+                </p>
+              </div>
 
               {/* Dates */}
-              <p>
-                <strong>Dates:</strong>{" "}
-                {(() => {
-                  const start = new Date(selectedTour.tourDate.start);
-                  const end = new Date(selectedTour.tourDate.end);
-                  if (
-                    start.getMonth() === end.getMonth() &&
-                    start.getFullYear() === end.getFullYear()
-                  ) {
-                    return `${start.getDate()} → ${end.toLocaleDateString("en-GB")}`;
-                  }
-                  return `${start.toLocaleDateString("en-GB")} → ${end.toLocaleDateString("en-GB")}`;
-                })()}
-              </p>
+              <div>
+                <p className="font-medium">
+                  <span className="text-gray-500">Dates:</span>{" "}
+                  {(() => {
+                    // Helper to parse DD/MM/YY
+                    const parseDMY = (str) => {
+                      const [day, month, year] = str.split("/").map(Number);
+                      const fullYear = year < 100 ? 2000 + year : year;
+                      return new Date(fullYear, month - 1, day);
+                    };
 
-              {/* Members */}
-              <p>
-                <strong>Members:</strong> {selectedTour.members}
-              </p>
+                    const start = parseDMY(selectedTour.tourDate.start);
+                    const end = parseDMY(selectedTour.tourDate.end);
 
-              {/* Price */}
-              <p>
-                <strong>Price:</strong> ${selectedTour.price}
-              </p>
+                    // Format dates
+                    const startFormatted = start.toLocaleDateString("en-GB");
+                    const endFormatted = end.toLocaleDateString("en-GB");
+
+                    // If same month & year, show just start day → end full date
+                    if (start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear()) {
+                      return `${start.getDate()} → ${endFormatted}`;
+                    }
+
+                    return `${startFormatted} → ${endFormatted}`;
+                  })()}
+                </p>
+
+              </div>
+
+              {/* Members & Price */}
+              <div className="grid grid-cols-2 gap-3">
+                <p>
+                  <span className="text-gray-500">Members:</span>{" "}
+                  <strong>{selectedTour.members}</strong>
+                </p>
+                <p>
+                  <span className="text-gray-500">Price:</span>{" "}
+                  <span className="text-green-600 font-semibold">
+                    ${selectedTour.price}
+                  </span>
+                </p>
+              </div>
 
               {/* Payment Info */}
-              <p>
-                <strong>Payment:</strong> {selectedTour.payment_status} (
-                {selectedTour.payment?.method?.join(", ")})
-              </p>
-              {selectedTour.payment?.transactionId && (
+              <div className="border-t pt-3 space-y-1">
                 <p>
-                  <strong>Txn ID:</strong> {selectedTour.payment.transactionId}
+                  <span className="text-gray-500">Payment:</span>{" "}
+                  {selectedTour.payment_status}{" "}
+                  {selectedTour.payment?.method && (
+                    <span className="text-xs text-gray-400">
+                      ({selectedTour.payment.method.join(", ")})
+                    </span>
+                  )}
                 </p>
-              )}
+                {selectedTour.payment?.transactionId && (
+                  <p>
+                    <span className="text-gray-500">Txn ID:</span>{" "}
+                    {selectedTour.payment.transactionId}
+                  </p>
+                )}
+              </div>
 
-              {/* Status */}
-              <p>
-                <strong>Status:</strong>{" "}
-                <span className="capitalize">{selectedTour.booking_status}</span>
-              </p>
-
-              {/* Tracking ID */}
-              <p>
-                <strong>Tracking ID:</strong> {selectedTour.tracking_id}
-              </p>
+              {/* Status & Tracking */}
+              <div className="grid grid-cols-2 gap-3">
+                <p>
+                  <span className="text-gray-500">Status:</span>{" "}
+                  <span
+                    className={`px-2 py-0.5 rounded text-xs font-medium capitalize ${selectedTour.booking_status === "accepted"
+                      ? "bg-green-100 text-green-700"
+                      : selectedTour.booking_status === "rejected"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-gray-100 text-gray-700"
+                      }`}
+                  >
+                    {selectedTour.booking_status}
+                  </span>
+                </p>
+                <p>
+                  <span className="text-gray-500">Tracking ID:</span>{" "}
+                  {selectedTour.tracking_id}
+                </p>
+              </div>
 
               {/* Assigned Info */}
-              <p>
-                <strong>Assigned At:</strong>{" "}
-                {new Date(selectedTour.assignedAt).toLocaleString()}
-              </p>
-              <p>
-                <strong>Assigned By:</strong> {selectedTour.assignedBy}
-              </p>
+              {/* <div className="border-t pt-3 space-y-1 text-xs text-gray-500">
+                <p>
+                  <strong>Assigned At:</strong>{" "}
+                  {new Date(selectedTour.assignedAt).toLocaleString()}
+                </p>
+                <p>
+                  <strong>Assigned By:</strong> {selectedTour.assignedBy}
+                </p>
+              </div> */}
             </div>
 
+            {/* Footer */}
             <div className="mt-6 flex justify-end">
               <button
                 className="btn btn-sm btn-outline"
@@ -261,7 +333,7 @@ const MyAssignedTours = () => {
         </div>
       )}
 
-    </div>
+    </>
   );
 };
 

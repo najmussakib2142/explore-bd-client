@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaBoxOpen, FaClipboardList, FaCompass, FaHome, FaMoneyCheckAlt, FaMotorcycle, FaPlusCircle, FaUserCheck, FaUserClock, FaUserShield, FaUserTie } from 'react-icons/fa';
+import { FaBoxOpen, FaClipboardList, FaCompass, FaEdit, FaHome, FaMoneyCheckAlt, FaMotorcycle, FaPlusCircle, FaUserCheck, FaUserClock, FaUserShield, FaUserTie } from 'react-icons/fa';
 import { NavLink, Outlet, useNavigation } from 'react-router';
 import Logo from '../pages/shared/Logo/Logo';
 import { FcPackage } from 'react-icons/fc';
@@ -90,6 +90,14 @@ const DashBoardLayout = () => {
                                 <>
                                     <li>
                                         <NavLink
+                                            to="/dashboard/myAssignedTours"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                        >
+                                            <FaClipboardList /> MyAssignedTours
+                                        </NavLink>
+                                    </li>
+                                    <li>
+                                        <NavLink
                                             to="/dashboard/addStory"
                                             className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
                                         >
@@ -98,10 +106,10 @@ const DashBoardLayout = () => {
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="/dashboard/myAssignedTours"
+                                            to="/dashboard/manageStories"
                                             className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
                                         >
-                                            <FaClipboardList /> MyAssignedTours
+                                            <FaEdit /> Manage Stories
                                         </NavLink>
                                     </li>
                                 </>

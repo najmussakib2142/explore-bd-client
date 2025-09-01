@@ -32,6 +32,8 @@ import AdminRoute from "../routes/AdminRoute";
 import AssignGuide from "../pages/Dashboard/AssignGuide/AssignGuide";
 import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
 import MyAssignedTours from "../pages/Dashboard/MyAssignedTours/MyAssignedTours";
+import ManageStories from "../pages/Dashboard/GuideDashboard/ManageStories/ManageStories";
+import EditStoryPage from "../pages/Dashboard/GuideDashboard/ManageStories/EditStoryPage";
 
 export const router = createBrowserRouter([
     {
@@ -142,6 +144,14 @@ export const router = createBrowserRouter([
             {
                 path: "myAssignedTours",
                 element: <MyAssignedTours></MyAssignedTours>
+            },
+            {
+                path: "manageStories",
+                element: <ManageStories></ManageStories>
+            },
+            {
+                path: '/dashboard/editStoryPage/:id',
+                element: <EditStoryPage />
             },
             {
                 path: "paymentHistory",

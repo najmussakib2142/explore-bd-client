@@ -17,6 +17,7 @@ const PaymentForm = () => {
     const navigate = useNavigate();
     const axiosSecure = useAxiosSecure();
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     // Load booking info
     const { isPending, data: bookingInfo = {} } = useQuery({
@@ -40,6 +41,7 @@ const PaymentForm = () => {
         if (!card) return;
 
         try {
+            setLoading(true);
             // 1️⃣ Create payment intent
             const { data: paymentIntentData } = await axiosSecure.post('/create-payment-intent', {
                 amountInCents
@@ -73,7 +75,8 @@ const PaymentForm = () => {
                         method: result.paymentIntent.payment_method_types,
                         paid_at: new Date().toISOString(),
                         amount
-                    }
+                    },
+                    booking_status: "in-review",
                 };
 
                 await axiosSecure.patch(`/bookings/${bookingId}`, updateData);
@@ -95,6 +98,8 @@ const PaymentForm = () => {
         } catch (err) {
             console.error(err);
             setError('Payment failed. Please try again.');
+        } finally {
+            setLoading(false); // stop spinner
         }
     };
 
@@ -117,46 +122,56 @@ const PaymentForm = () => {
     };
 
     return (
-        <motion.div className="max-w-xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700"
-            initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}>
+        <div className="relative">
+            <motion.div className="max-w-xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700"
+                initial={{ opacity: 0, y: 40 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease: "easeOut" }}>
 
-            <motion.h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent"
-                initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
-                Booking Details
-            </motion.h2>
+                <motion.h2 className="text-2xl font-bold mb-6 text-center bg-gradient-to-r from-indigo-600 to-pink-500 bg-clip-text text-transparent"
+                    initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+                    Booking Details
+                </motion.h2>
 
-            <motion.div className="mb-6 p-5 rounded-xl bg-gradient-to-r from-indigo-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600 shadow-md"
-                initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }}>
+                <motion.div className="mb-6 p-5 rounded-xl bg-gradient-to-r from-indigo-50 to-pink-50 dark:from-gray-800 dark:to-gray-700 border border-gray-200 dark:border-gray-600 shadow-md"
+                    initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.3 }}>
 
-                <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">📦 Package:</span> {bookingInfo.packageName}</p>
-                <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">👥 Total Members:</span> {bookingInfo.members}</p>
-                <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">📅 Tour Dates:</span> {bookingInfo?.tourDate?.start} → {bookingInfo?.tourDate?.end}</p>
-                <p className="text-lg font-bold text-indigo-600 dark:text-pink-400">💰 Price: ${bookingInfo.price}</p>
+                    <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">📦 Package:</span> {bookingInfo.packageName}</p>
+                    <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">👥 Total Members:</span> {bookingInfo.members}</p>
+                    <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">📅 Tour Dates:</span> {bookingInfo?.tourDate?.start} → {bookingInfo?.tourDate?.end}</p>
+                    <p className="text-lg font-bold text-indigo-600 dark:text-pink-400">💰 Price: ${bookingInfo.price}</p>
+                </motion.div>
+
+                <motion.div className="p-4 mb-6 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-sm"
+                    initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
+                    <CardElement
+                        options={{
+                            style: {
+                                base: {
+                                    fontSize: "16px", color: "#f3f4f6", letterSpacing: "0.5px", fontFamily: "Inter, sans-serif",
+                                    "::placeholder": { color: "#9ca3af" }, padding: "12px"
+                                },
+                                invalid: { color: "#f87171" },
+                            }
+                        }}
+                        className="p-3 rounded-md bg-gray-50 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-600 shadow-inner" />
+                </motion.div>
+
+                <motion.button onClick={handleConfirmClick} disabled={!stripe}
+                    className="w-full py-3 text-lg font-semibold rounded-xl bg-gradient-to-r from-indigo-600 to-pink-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transform transition-all duration-300 disabled:opacity-50"
+                    whileTap={{ scale: 0.97 }} whileHover={{ scale: 1.02 }}>
+                    Confirm & Pay ${amount}
+                </motion.button>
+
+                {error && <motion.p className="text-red-500 mt-4 text-center font-medium" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{error}</motion.p>}
             </motion.div>
 
-            <motion.div className="p-4 mb-6 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-sm"
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.4 }}>
-                <CardElement
-                    options={{
-                        style: {
-                            base: {
-                                fontSize: "16px", color: "#f3f4f6", letterSpacing: "0.5px", fontFamily: "Inter, sans-serif",
-                                "::placeholder": { color: "#9ca3af" }, padding: "12px"
-                            },
-                            invalid: { color: "#f87171" },
-                        }
-                    }}
-                    className="p-3 rounded-md bg-gray-50 dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-900 border border-gray-200 dark:border-gray-600 shadow-inner" />
-            </motion.div>
+            {loading && (
+                <Loading />
+                // <div className="absolute inset-0 bg-transparent backdrop-blur-2xl bg-opacity-50 flex items-center justify-center z-50 rounded-2xl">
 
-            <motion.button onClick={handleConfirmClick} disabled={!stripe}
-                className="w-full py-3 text-lg font-semibold rounded-xl bg-gradient-to-r from-indigo-600 to-pink-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transform transition-all duration-300 disabled:opacity-50"
-                whileTap={{ scale: 0.97 }} whileHover={{ scale: 1.02 }}>
-                Confirm & Pay ${amount}
-            </motion.button>
+                // </div>
+            )}
+        </div>
 
-            {error && <motion.p className="text-red-500 mt-4 text-center font-medium" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{error}</motion.p>}
-        </motion.div>
     );
 };
 

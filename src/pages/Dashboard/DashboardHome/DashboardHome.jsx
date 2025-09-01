@@ -5,6 +5,7 @@ import useAxios from '../../../hooks/useAxios';
 import useAuth from '../../../hooks/useAuth';
 import Loading from '../../shared/Loading/Loading';
 import { useQuery } from '@tanstack/react-query';
+import GuideDashboard from '../GuideDashboard/GuideDashboard';
 
 const DashboardHome = () => {
     const axiosInstance = useAxios()
@@ -30,8 +31,9 @@ const DashboardHome = () => {
             {userInfo?.role === 'user' && (
                 <UserDashboard></UserDashboard>
             )}
-            {userInfo?.role === 'user' && (
-                <UserDashboard></UserDashboard>
+            {userInfo?.role === 'guide' && (
+                // <UserDashboard></UserDashboard>
+                <GuideDashboard></GuideDashboard>
             )}
 
             {userInfo?.role === 'admin' && (

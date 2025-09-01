@@ -6,39 +6,51 @@ import useAuth from "../../../hooks/useAuth";
 import Swal from "sweetalert2";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from "recharts";
 import useAxios from "../../../hooks/useAxios";
+import Loading from "../../shared/Loading/Loading";
 
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A569BD"];
 
 const AdminProfile = () => {
-    const { user } = useAuth();
+    const { user, updateUserProfile } = useAuth();
     const axiosSecure = useAxiosSecure();
     const axiosInstance = useAxios()
     const queryClient = useQueryClient();
 
     const [editMode, setEditMode] = useState(false);
-    const [formData, setFormData] = useState({ name: "", photo: "", phone: "" });
+    const [photoFile, setPhotoFile] = useState(null);
+    const [formData, setFormData] = useState({
+        name: "",
+        photo: "",
+        phone: "",
+        age: "",
+        bio: "",
+        email: user?.email || "",
+        role: user?.role || "User",
+    });
 
-    const renderYAxisTick = (props) => {
-        const { x, y, payload } = props;
-        const value = String(payload.value || ""); // ensure it's a string
-        const words = value.split(" ");
-        return (
-            <g transform={`translate(${x},${y})`}>
-                {words.map((word, i) => (
-                    <text
-                        key={i}
-                        x={0}
-                        y={i * 14}
-                        textAnchor="end"
-                        fill="#888"
-                        fontSize={12}
-                    >
-                        {word}
-                    </text>
-                ))}
-            </g>
-        );
+    const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`;
+
+
+    const CustomTooltip = ({ active, payload, label }) => {
+        if (active && payload && payload.length) {
+            const data = payload[0].payload;
+            return (
+                <div className="bg-base-100 dark:bg-gray-800 p-3 rounded-lg shadow-lg border">
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">
+                        {data.name}
+                    </p>
+                    <p className="text-sm text-indigo-600 dark:text-pink-400">
+                        Revenue: ${data.totalRevenue.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Bookings: {data.bookingsCount}
+                    </p>
+                </div>
+            );
+        }
+        return null;
     };
+
 
 
     // Fetch overall stats
@@ -63,6 +75,10 @@ const AdminProfile = () => {
                 name: data.name || "",
                 photo: data.photo || "",
                 phone: data.phone || "",
+                age: data.age || "",
+                bio: data.bio || "",
+                email: data.email || "",
+                role: data.role || "admin",
             });
         },
     });
@@ -76,13 +92,54 @@ const AdminProfile = () => {
         },
     });
 
+    const handleEditClick = () => {
+        setPhotoFile(null); // Reset file
+        setEditMode(true);
+    };
+
+
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    const handlePhotoChange = (e) => {
+        setPhotoFile(e.target.files[0]);
+    };
+
     const handleUpdate = async () => {
         try {
-            await axiosInstance.patch(`/users/${user.email}`, formData);
+            let uploadedPhotoUrl = formData.photo;
+
+            // Upload photo if selected
+            if (photoFile) {
+                const imgData = new FormData();
+                imgData.append("image", photoFile);
+                const res = await fetch(imageUploadUrl, { method: "POST", body: imgData });
+                const data = await res.json();
+                if (data.success) uploadedPhotoUrl = data.data.display_url;
+            }
+
+            // Update Firebase Auth profile
+            if (updateUserProfile) {
+                await updateUserProfile({
+                    displayName: formData.name,
+                    photoURL: uploadedPhotoUrl,
+                });
+            }
+
+            // Update backend
+            const updatedFields = {};
+
+            // Check each field, add only if not empty
+            if (formData.name) updatedFields.name = formData.name;
+            if (formData.phone) updatedFields.phone = formData.phone;
+            if (formData.age) updatedFields.age = formData.age;
+            if (formData.bio) updatedFields.bio = formData.bio;
+            if (photoFile) updatedFields.photo = uploadedPhotoUrl;
+
+            // Then send only updatedFields
+            await axiosInstance.patch(`/users/${user.email}`, updatedFields);
+
             setEditMode(false);
             Swal.fire("Success!", "Profile updated successfully", "success");
             queryClient.invalidateQueries(["adminInfo", user.email]);
@@ -93,7 +150,7 @@ const AdminProfile = () => {
     };
 
     if (statsLoading || adminLoading || packageLoading)
-        return <p className="text-center mt-10">Loading...</p>;
+        return <Loading></Loading>;
 
     return (
         <div className="p-6 max-w-7xl mx-auto">
@@ -129,15 +186,30 @@ const AdminProfile = () => {
             </div>
 
             {/* Popular/Earning Packages */}
-            <div className="bg-base-100 dark:bg-base-100 rounded-xl shadow-lg p-4 mb-8">
+            <div className="bg-base-100 dark:bg-base-100 rounded-xl shadow-lg p-4 mb-8" data-aos="fade-up">
                 <h2 className="text-xl font-semibold mb-4">Top Packages (by Revenue)</h2>
-                <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={packageStats} layout="vertical" margin={{ top: 20, right: 20, bottom: 20, left: 80 }}>
+                <ResponsiveContainer width="100%" height={500}>
+                    <BarChart
+                        data={packageStats}
+                        layout="vertical"
+                        margin={{ top: 20, right: 40, bottom: 20, left: 100 }} // give extra left margin
+                    >
                         <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis type="number" domain={[0, "dataMax"]} tickFormatter={(value) => `$${value.toLocaleString()}`} />
-                        <YAxis dataKey="name" type="category" tick={renderYAxisTick} width={150} />
-                        <Tooltip formatter={(value) => `$${value}`} />
-                        <Bar dataKey="totalRevenue" fill="#0088FE">
+                        <XAxis
+                            type="number"
+                            domain={[0, "dataMax"]}
+                            tickFormatter={(value) => `$${value.toLocaleString()}`}
+                        />
+                        <YAxis
+                            dataKey="name"
+                            type="category"
+                            width={150}
+                            tickFormatter={(value) =>
+                                value.length > 20 ? value.substring(0, 20) + "…" : value
+                            }
+                        />
+                        <Tooltip content={<CustomTooltip />} />
+                        <Bar dataKey="totalRevenue" radius={[0, 8, 8, 0]}>
                             {packageStats.map((entry, index) => (
                                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                             ))}
@@ -161,12 +233,12 @@ const AdminProfile = () => {
                     )}
                 </div>
                 <div className="flex-1">
-                    <p className="text-xl font-semibold">{user.displayName}</p>
+                    <p className="text-xl font-semibold">{adminInfo.name || user.displayName}</p>
                     <p className="text-gray-500 dark:text-gray-300 capitalize">{adminInfo.role}</p>
                     <p className="text-gray-500 dark:text-gray-300">{adminInfo.email}</p>
                     <p className="text-gray-500 dark:text-gray-300">{adminInfo.phone || "No phone"}</p>
                     <button
-                        onClick={() => setEditMode(true)}
+                        onClick={handleEditClick}
                         className="mt-3 px-4 py-2 rounded-xl bg-indigo-600 dark:bg-pink-500 text-white hover:bg-indigo-700 dark:hover:bg-pink-600 transition"
                     >
                         Edit Profile
@@ -183,32 +255,59 @@ const AdminProfile = () => {
                         className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-2xl w-full max-w-md"
                     >
                         <h3 className="text-xl font-bold mb-4">Edit Profile</h3>
+
                         <div className="flex flex-col gap-3">
                             <input
                                 type="text"
                                 name="name"
-                                placeholder="Name"
-                                value={formData.name}
+                                value={adminInfo.name}
                                 onChange={handleChange}
+                                placeholder="Name"
                                 className="input input-bordered w-full"
                             />
                             <input
-                                type="text"
-                                name="photo"
-                                placeholder="Photo URL"
-                                value={formData.photo}
-                                onChange={handleChange}
-                                className="input input-bordered w-full"
+                                type="file"
+                                accept="image/*"
+                                onChange={handlePhotoChange}
+                                className="file-input file-input-bordered w-full"
                             />
                             <input
                                 type="text"
                                 name="phone"
-                                placeholder="Phone"
-                                value={formData.phone}
+                                value={adminInfo.phone}
                                 onChange={handleChange}
+                                placeholder="Phone"
                                 className="input input-bordered w-full"
                             />
+                            <input
+                                type="number"
+                                name="age"
+                                value={adminInfo.age}
+                                onChange={handleChange}
+                                placeholder="Age"
+                                className="input input-bordered w-full"
+                            />
+                            <textarea
+                                name="bio"
+                                value={adminInfo.bio}
+                                onChange={handleChange}
+                                placeholder="Bio"
+                                className="textarea textarea-bordered w-full"
+                            />
+                            <input
+                                type="email"
+                                value={adminInfo.email}
+                                readOnly
+                                className="input input-bordered w-full bg-base-100 cursor-not-allowed"
+                            />
+                            <input
+                                type="text"
+                                value={adminInfo.role}
+                                readOnly
+                                className="input input-bordered w-full bg-base-100 cursor-not-allowed"
+                            />
                         </div>
+
                         <div className="mt-4 flex justify-end gap-3">
                             <button onClick={() => setEditMode(false)} className="btn btn-outline">
                                 Cancel
@@ -220,6 +319,8 @@ const AdminProfile = () => {
                     </motion.div>
                 </div>
             )}
+
+
         </div>
     );
 };
