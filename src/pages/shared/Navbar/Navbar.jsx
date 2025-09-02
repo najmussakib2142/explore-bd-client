@@ -6,6 +6,7 @@ import useAuth from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
 import { FaMoon, FaSun, FaUserCircle } from "react-icons/fa";
+import Loading from '../Loading/Loading';
 
 
 
@@ -34,6 +35,10 @@ const Navbar = () => {
 
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollY]);
+
+    // if (loading) {
+    //     return <Loading></Loading>
+    // }
 
     const handleSignOut = () => {
         Swal.fire({

@@ -213,10 +213,24 @@ export default function CommunityStories() {
                         data-aos="zoom-in"
                     >
                         <h2 className="text-2xl font-bold mb-1">{selectedStory.title}</h2>
-                        <p className="text-gray-700 dark:text-gray-300 mb-4">
-                            <span className="text-blue-400">Added By:</span> {selectedStory.createdBy?.name}
+
+                        <p className="text-gray-700 dark:text-gray-300 ">
+                            <span className="text-blue-400">Created At:</span>{" "}
+                            {selectedStory.createdAt
+                                ? new Date(selectedStory.createdAt).toLocaleString(undefined, {
+                                    dateStyle: "medium",
+                                    timeStyle: "short",
+                                })
+                                : "N/A"}
                         </p>
+
+                        <p className="text-gray-700 dark:text-gray-300 mb-4">
+                            <span className="text-blue-400">Added By:</span>{" "}
+                            {selectedStory.createdBy?.name || "Unknown"}
+                        </p>
+
                         <p className="text-gray-700 dark:text-gray-300 mb-4">{selectedStory.description}</p>
+                       
                         <div className="flex flex-wrap gap-3 mb-4">
                             {selectedStory.images?.map((img, idx) => (
                                 <img key={idx} src={img} alt={`story-${idx}`} className="w-32 h-32 object-cover rounded" data-aos="zoom-in" data-aos-delay={idx * 100} />

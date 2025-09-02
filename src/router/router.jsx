@@ -102,7 +102,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 index: true,
-                Component: DashboardHome,
+                element: <DashboardHome />,
             },
             {
                 path: 'addPackage',
@@ -150,7 +150,7 @@ export const router = createBrowserRouter([
                 element: <ManageStories></ManageStories>
             },
             {
-                path: '/dashboard/editStoryPage/:id',
+                path: 'editStoryPage/:id',
                 element: <EditStoryPage />
             },
             {

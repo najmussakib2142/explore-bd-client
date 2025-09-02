@@ -196,6 +196,11 @@ const AddStory = () => {
                      disabled:opacity-60"
                 >
                     {isLoading ? "Saving..." : "Submit Story"}
+                    {/* {isLoading && (
+                        <div className="fixed inset-0 bg-base-100 bg-opacity-40 flex items-center justify-center z-50">
+                            <FaSpinner className="animate-spin text-white text-4xl" />
+                        </div>
+                    )} */}
                 </button>
             </form>
         </div>

@@ -49,7 +49,7 @@ const EditStoryPage = () => {
         onSuccess: () => {
             queryClient.invalidateQueries(["stories"]);
             queryClient.invalidateQueries(["story", id]);
-            navigate("/guide/stories"); // redirect after successful update
+            navigate("/communityPage"); // redirect after successful update
         },
     });
 
@@ -135,9 +135,9 @@ const EditStoryPage = () => {
         const payload = {
             title,
             description,
-            newImages, // ✅ already hosted image URLs
+            addImages: newImages, // ✅ already hosted image URLs
         };
-
+        console.log("🔍 Sending payload to backend:", payload);
         updateMutation.mutate(payload);
     };
 

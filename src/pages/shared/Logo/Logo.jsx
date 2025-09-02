@@ -6,13 +6,13 @@ const Logo = () => {
     return (
         <Link to="/" className="flex items-center cursor-pointer select-none">
             <img
-                className="h-12 hidden md:block md:-mr-3 w-auto" 
+                className="h-12 hidden md:block md:-mr-3 w-auto"
                 src={logo}
                 alt="ExploreBD Logo"
             />
-            <h2 className="text-2xl ml-1 md:ml-0 font-bold text-primary">
-                ExploreBD
-            </h2>
+            <h2 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">
+  ExploreBD
+</h2>
         </Link>
     );
 };

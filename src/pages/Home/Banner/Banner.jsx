@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Sundarbans from '../../../assets/Sundarbans.jpg';
 import Srimangal from '../../../assets/Srimangal.jpg';
 import Coxs from '../../../assets/coxs.jpg';
+import { useNavigate } from "react-router";
 
 const slides = [
     {
@@ -24,6 +25,7 @@ const slides = [
 
 const Banner = () => {
     const [current, setCurrent] = useState(0);
+    const navigate = useNavigate()
 
     // Auto slide every 5 seconds
     useEffect(() => {
@@ -82,8 +84,8 @@ const Banner = () => {
                                     transition={{ delay: 0.5, duration: 1 }}
                                     className="mt-6 flex gap-4"
                                 >
-                                    <button className="btn btn-primary">Explore More</button>
-                                    <button className="btn btn-secondary">Plan Trip</button>
+                                    <button onClick={() => navigate("/allTrips")} className="btn btn-primary">Explore More</button>
+                                    <button onClick={() => navigate("/allTrips")} className="btn btn-secondary">Plan Trip</button>
                                 </motion.div>
                             </div>
                         </motion.div>

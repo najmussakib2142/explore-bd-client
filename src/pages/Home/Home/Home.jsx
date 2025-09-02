@@ -4,6 +4,7 @@ import Overview from '../Overview/Overview';
 import TourismSection from '../TourismSection/TourismSection';
 import TouristStorySection from '../TouristStorySection/TouristStorySection';
 import Testimonials from '../Testimonials/Testimonials';
+import MostBookedPackages from '../MostBookedPackages/MostBookedPackages';
 
 const Home = () => {
     return (
@@ -13,6 +14,7 @@ const Home = () => {
             <TourismSection></TourismSection>
             <TouristStorySection></TouristStorySection>
             <Testimonials></Testimonials>
+            <MostBookedPackages></MostBookedPackages>
         </div>
     );
 };

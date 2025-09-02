@@ -48,7 +48,11 @@ const DashBoardLayout = () => {
                             <Logo></Logo>
 
                             <li>
-                                <NavLink to="/dashboard" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                <NavLink to="/dashboard"
+                                    end
+                                    className={({ isActive }) =>
+                                        location.pathname === "/dashboard" || isActive ? "active" : ""
+                                    }                                >
                                     <FaHome /> Home
                                 </NavLink>
                             </li>
@@ -68,6 +72,15 @@ const DashBoardLayout = () => {
                                             <FaPlusCircle /> Add Story
                                         </NavLink>
                                     </li>
+                                    <li>
+                                        <NavLink
+                                            to="/dashboard/manageStories"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                        >
+                                            <FaEdit /> Manage Stories
+                                        </NavLink>
+                                    </li>
+
                                     <li>
                                         <NavLink to="/dashboard/paymentHistory" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
                                             <FaMoneyCheckAlt /> Payment History

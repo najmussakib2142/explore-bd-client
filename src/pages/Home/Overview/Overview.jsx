@@ -2,12 +2,14 @@ import React from "react";
 // import { motion } from "framer-motion";
 import { motion } from "motion/react"
 import video from '../../../assets/video.mp4';
+import { useNavigate } from "react-router";
 
 const Overview = () => {
+  const navigate = useNavigate()
   return (
     <section className="py-13 ">
       <div className="container mx-auto flex flex-col md:flex-row items-center gap-8 px-4">
-        
+
         {/* Video with animation */}
         <motion.div
           className="md:w-1/2 w-full"
@@ -46,7 +48,7 @@ const Overview = () => {
             Whether you are planning a short getaway or a long adventure, ExploreBD
             gives you all the information you need to make the most of your journey.
           </p>
-          <button className="btn btn-primary w-max">Learn More</button>
+          <button onClick={() =>navigate('/communityPage') } className="btn btn-primary w-max">Learn More</button>
         </motion.div>
 
       </div>
