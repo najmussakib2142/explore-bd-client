@@ -34,6 +34,8 @@ import ManageUsers from "../pages/Dashboard/ManageUsers/ManageUsers";
 import MyAssignedTours from "../pages/Dashboard/MyAssignedTours/MyAssignedTours";
 import ManageStories from "../pages/Dashboard/GuideDashboard/ManageStories/ManageStories";
 import EditStoryPage from "../pages/Dashboard/GuideDashboard/ManageStories/EditStoryPage";
+import About from "../pages/About/About";
+// import BookingPage from "../pages/Dashboard/BookingPage/BookingPage";
 
 export const router = createBrowserRouter([
     {
@@ -68,6 +70,14 @@ export const router = createBrowserRouter([
                 path: 'communityPage',
                 Component: CommunityPage,
             },
+            {
+                path: 'about',
+                element: <About></About>
+            },
+            // {
+            //     path: 'bookingPage',
+            //     element: <BookingPage></BookingPage>
+            // },
             {
                 path: 'allTrips',
                 Component: AllPackages,

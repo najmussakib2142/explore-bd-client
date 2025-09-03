@@ -2,22 +2,22 @@ import React, { useState } from 'react';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { Link, useLocation, useNavigate } from 'react-router';
 import { useForm } from "react-hook-form";
+import Swal from 'sweetalert2';
 import SocialLogin from '../SocialLogin/SocialLogin';
 import useAuth from '../../../hooks/useAuth';
-import Swal from 'sweetalert2';
-import useAxios from '../../../hooks/useAxios';
 
 const Login = () => {
-    const { signIn } = useAuth();
+    const { signIn, resetPassword } = useAuth();
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm();
     const location = useLocation();
     const navigate = useNavigate();
     const from = location.state?.from || "/";
-    const axiosInstance = useAxios();
 
+    // Login submit handler
     const onSubmit = async (data) => {
+        setError("");
         try {
             const result = await signIn(data.email, data.password);
             const user = result.user;
@@ -30,14 +30,9 @@ const Login = () => {
                 timer: 2000,
             });
 
-            const userInfo = {
-                email: data.email,
-                last_log_in: new Date().toISOString(),
-            };
-
-            await axiosInstance.post("/users", userInfo);
             navigate(from, { replace: true });
         } catch (err) {
+            console.log(err);
             let message = "";
             switch (err.code) {
                 case "auth/user-not-found":
@@ -47,15 +42,36 @@ const Login = () => {
                     message = "Password is incorrect.";
                     break;
                 case "auth/invalid-credential":
-                    message = "Invalid login credentials. Please try again.";
+                    message = "Invalid login credentials.";
                     break;
                 case "auth/too-many-requests":
-                    message = "Too many attempts. Please try again later.";
+                    message = "Too many login attempts. Try again later.";
                     break;
                 default:
                     message = "Login failed. Please try again.";
             }
             setError(message);
+        }
+    };
+
+    // Forgot password handler
+    const handleForgotPassword = async () => {
+        const email = prompt("Please enter your registered email:");
+        if (!email) return;
+
+        try {
+            await resetPassword(email);
+            Swal.fire({
+                icon: "success",
+                title: "Reset Email Sent!",
+                text: `A password reset link has been sent to ${email}`,
+            });
+        } catch (err) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: err.message,
+            });
         }
     };
 
@@ -94,7 +110,7 @@ const Login = () => {
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3 top-3 text-gray-500 hover:text-primary"
+                                className="absolute right-3 top-3 text-primary"
                             >
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
@@ -110,16 +126,20 @@ const Login = () => {
                     </div>
 
                     {/* Forgot Password */}
-                    <div className="text-right">
-                        <a className="link link-hover text-sm text-primary">
+                    <div>
+                        <button
+                            type="button"
+                            onClick={handleForgotPassword}
+                            className="link link-hover text-sm text-primary"
+                        >
                             Forgot password?
-                        </a>
+                        </button>
                     </div>
 
-                    {/* Error Message */}
+                    {/* Server-side Error */}
                     {error && <p className="text-red-500 text-sm text-center">{error}</p>}
 
-                    {/* Submit Button */}
+                    {/* Submit */}
                     <button className="btn btn-primary w-full mt-2">Sign In</button>
                 </form>
 
@@ -145,127 +165,3 @@ const Login = () => {
 };
 
 export default Login;
-
-
-
-
-
-
-
-// import React, { useState } from 'react';
-// import { FaEye, FaEyeSlash } from 'react-icons/fa';
-// import { Link, useLocation, useNavigate } from 'react-router';
-// import { useForm } from "react-hook-form"
-// import SocialLogin from '../SocialLogin/SocialLogin';
-// import useAuth from '../../../hooks/useAuth';
-// import Swal from 'sweetalert2';
-// import useAxios from '../../../hooks/useAxios';
-// // import useAxios from '../../../hooks/useAxios';
-
-
-// const Login = () => {
-//     const { signIn } = useAuth()
-//     const [error, setError] = useState("")
-//     const [showPassword, setShowPassword] = useState(false);
-//     const { register, handleSubmit, formState: { errors } } = useForm()
-//     const location = useLocation();
-//     const navigate = useNavigate()
-//     const from = location.state?.from || '/'
-//     const axiosInstance = useAxios()
-//     console.log(location);
-
-
-//     const onSubmit = data => {
-//         console.log(data);
-//         signIn(data.email, data.password)
-//             .then(async (result) => {
-//                 const user = result.user;
-//                 // console.log(user);
-//                 Swal.fire({
-//                     icon: "success",
-//                     title: "Login Successful!",
-//                     text: `Welcome back, ${user.displayName || user.email}`,
-//                     showConfirmButton: false,
-//                     timer: 2000
-//                 });
-//                 const userInfo = {
-//                     email: data.email,
-//                     last_log_in: new Date().toISOString()
-//                 }
-
-//                 const userRes = await axiosInstance.post('/users', userInfo);
-//                 console.log(userRes.data);
-
-//                 navigate(from, { replace: true })
-//             })
-//             .catch(error => {
-//                 const errorCode = error.code;
-//                 // const errorMessage = error.message;
-//                 setError(errorCode)
-
-//             })
-//     }
-
-
-//     return (
-//         <div className="card bg-base-100 w-full max-w-sm shrink-0 shadow-2xl">
-//             <div className="card-body">
-//                 <h1 className="text-4xl font-bold text-primary text-center">Login now!</h1>
-//                 <form onSubmit={handleSubmit(onSubmit)}>
-//                     <fieldset className="fieldset">
-
-//                         {/* email */}
-//                         <label className="label">Email</label>
-//                         <input required name='email' {...register('email')} type="email" className="input select-primary" placeholder="Email" />
-
-//                         {/* password */}
-//                         <label className="label">Password</label>
-//                         <div className='relative'>
-//                             <input
-//                                 name='password'
-//                                 {...register('password', {
-//                                     required: true,
-//                                     minLength: 6,
-//                                     // pattern: /^[A-Za-z]+$/i
-//                                 })}
-//                                 type={showPassword ? 'text' : "password"}
-//                                 className="input select-primary"
-//                                 placeholder="Password"
-//                             />
-//                             {
-//                                 errors.password?.type === "required" &&
-//                                 (<p className='text-red-500 pt-2'>Password is required</p>)
-//                             }
-//                             {
-//                                 errors.password?.type === "minLength" &&
-//                                 (<p className='text-red-500 pt-2'>Password must be 6 characters or longer</p>)
-//                             }
-//                             <button
-//                                 onClick={() => setShowPassword(!showPassword)}
-//                                 className='absolute btn btn-xs right-5 top-2'
-//                                 type='button'
-//                             >
-//                                 {showPassword ? <FaEyeSlash></FaEyeSlash> : <FaEye></FaEye>}
-//                             </button>
-//                         </div>
-
-//                         <div><a className="link link-hover">Forgot password?</a></div>
-
-//                         {error && <p className='text-red-500 text-sm'>{error}</p>}
-
-//                         <button className="btn  mt-4">Sign In</button>
-
-//                         <SocialLogin></SocialLogin>
-
-//                         <p className='text-center pt-3'>Dont’t Have An Account ?
-//                             <Link state={{ from }} className='text-blue-600 hover:underline' to="/register"> Register </Link>
-//                         </p>
-
-//                     </fieldset>
-//                 </form>
-//             </div>
-//         </div>
-//     );
-// };
-
-// export default Login;

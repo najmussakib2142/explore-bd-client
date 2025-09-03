@@ -25,7 +25,7 @@ const PaymentHistory = () => {
 
     return (
         <div className="overflow-x-auto shadow-md rounded-xl">
-            <table className="table table-zebra w-full">
+            <table className="table  w-full">
                 <thead className="bg-base-100 text-base font-semibold">
                     <tr>
                         <th>#</th>
@@ -41,9 +41,12 @@ const PaymentHistory = () => {
                         payments.map((p, index) => (
                             <tr key={p.transactionId}>
                                 <td>{index + 1}</td>
-                                <td className="truncate" title={p.packageId}>
+                                {/* <td className="truncate" title={p.packageId}>
                                     {p.packageId}...
-                                </td>
+                                </td> */}
+                                <td className="truncate" title={p.packageName}>
+  {p.packageName}
+</td>
                                 <td>৳{p.amount}</td>
                                 <td className="font-mono text-sm">
                                     <span title={p.transactionId}>

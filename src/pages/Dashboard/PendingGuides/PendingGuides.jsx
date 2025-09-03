@@ -98,6 +98,7 @@ const PendingGuides = () => {
                             <th>Actions</th>
                         </tr>
                     </thead>
+                    {/* be careful when changing any code in the tbody, whitespace issue */}
                     <tbody>
                         <AnimatePresence>
                             {guides.map((guide, index) => (
@@ -112,14 +113,22 @@ const PendingGuides = () => {
                                 >
                                     <td>{guide.name}</td>
                                     <td>{guide.email}</td>
-                                    <td>{guide.age ? guide.age : '-'}</td>
-                                    <td>{guide.role || "User"}</td>
+                                    <td>{guide.age ?? '-'}</td>
+                                    <td>{guide.role || 'User'}</td>
                                     <td>
                                         {guide.created_at
                                             ? new Date(guide.created_at.$date || guide.created_at).toLocaleDateString()
                                             : '-'}
-                                    </td>                                    <td>
-                                        <span className={`badge ${guide.status === 'pending' ? 'badge-warning' : guide.status === 'active' ? 'badge-success' : 'badge-error'}`}>
+                                    </td>
+                                    <td>
+                                        <span
+                                            className={`badge ${guide.status === 'pending'
+                                                    ? 'badge-warning'
+                                                    : guide.status === 'active'
+                                                        ? 'badge-success'
+                                                        : 'badge-error'
+                                                }`}
+                                        >
                                             {guide.status}
                                         </span>
                                     </td>

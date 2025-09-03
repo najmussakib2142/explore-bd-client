@@ -13,6 +13,10 @@ const DashBoardLayout = () => {
     console.log(role, roleLoading);
     const { state } = useNavigation()
 
+    // if (roleLoading) {
+    //     return <Loading></Loading>
+    // }
+
     return (
         <div>
             <div className=" flex ">
@@ -146,18 +150,16 @@ const DashBoardLayout = () => {
                                             <FaUserClock /> Manage Users
                                         </NavLink>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <NavLink to="/dashboard/assign-guide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
                                             <FaCompass /> Assign Guide
                                         </NavLink>
-                                    </li>
+                                    </li> */}
                                     <li>
                                         <NavLink to="/dashboard/makeAdmin" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
                                             <FaUserShield /> Make Admin
                                         </NavLink>
                                     </li>
-
-
                                     <li>
                                         <NavLink to="/dashboard/active-guides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
                                             <FaUserCheck /> Active Guides

@@ -106,14 +106,26 @@ const PaymentForm = () => {
     // Confirm button click
     const handleConfirmClick = () => {
         Swal.fire({
-            title: 'Are you sure?',
-            text: `You are about to pay $${amount} for ${bookingInfo.packageName}.`,
-            icon: 'warning',
+            title: '💳 Confirm Your Payment',
+            html: `
+    <div style="font-size:16px; margin-top:10px;">
+      You are about to pay <b style="color:#1E88E5;">$${amount}</b><br/>
+      for the package <b>"${bookingInfo.packageName}"</b>.
+    </div>
+  `,
+            icon: 'info',
             showCancelButton: true,
             confirmButtonText: 'Yes, Pay Now',
             cancelButtonText: 'Cancel',
             confirmButtonColor: '#1E88E5',
             cancelButtonColor: '#d33',
+            background: '#f9f9f9',
+            backdrop: `rgba(0,0,0,0.6)`,
+            customClass: {
+                title: 'text-xl font-bold',
+                confirmButton: 'px-4 py-2',
+                cancelButton: 'px-4 py-2',
+            }
         }).then((result) => {
             if (result.isConfirmed) {
                 processPayment();
@@ -165,11 +177,40 @@ const PaymentForm = () => {
             </motion.div>
 
             {loading && (
-                <Loading />
-                // <div className="absolute inset-0 bg-transparent backdrop-blur-2xl bg-opacity-50 flex items-center justify-center z-50 rounded-2xl">
-
-                // </div>
+                <div className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-50">
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.3 }}
+                        className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-xl flex flex-col items-center space-y-4"
+                    >
+                        <svg
+                            className="animate-spin h-10 w-10 text-indigo-600 dark:text-pink-400"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+                            <circle
+                                className="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                strokeWidth="4"
+                            ></circle>
+                            <path
+                                className="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8v4l3.5-3.5L12 0v4a8 8 0 00-8 8h4z"
+                            ></path>
+                        </svg>
+                        <p className="text-gray-700 dark:text-gray-200 font-medium">
+                            Processing payment...
+                        </p>
+                    </motion.div>
+                </div>
             )}
+
         </div>
 
     );

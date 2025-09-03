@@ -7,6 +7,7 @@ import { FaUserCircle } from "react-icons/fa";
 import useAxios from "../../hooks/useAxios";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
+import { useQueryClient } from "@tanstack/react-query";
 
 const generateTrackingID = () => {
     const date = new Date();
@@ -18,6 +19,7 @@ const generateTrackingID = () => {
 
 const BookingForm = ({ packageData, guides }) => {
     const { user } = useAuth();
+    const queryClient = useQueryClient();
     // const axiosSecure = useAxiosSecure();
     const axiosInstance = useAxios()
     const navigate = useNavigate();
