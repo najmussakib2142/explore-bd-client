@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { Link, useNavigate } from "react-router";
 import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 import useAuth from "../../../../hooks/useAuth";
@@ -19,19 +19,18 @@ const MyBookings = () => {
 
   // ✅ Fetch bookings for logged in user
   const { data, refetch, isLoading } = useQuery({
-  queryKey: ["bookings", user?.email, currentPage, itemsPerPage],
-  queryFn: async () => {
-    const res = await axiosSecure.get(
-      `/bookings?email=${user?.email}&page=${currentPage}&limit=${itemsPerPage}`
-    );
-    return res.data;
-  },
-  enabled: !!user?.email,
-});
-  console.log("data:", JSON.stringify(data, null, 2));
+    queryKey: ["bookings", user?.email, currentPage, itemsPerPage],
+    queryFn: async () => {
+      const res = await axiosSecure.get(
+        `/myBookings?email=${user?.email}&page=${currentPage}&limit=${itemsPerPage}`
+      );
+      return res.data; // object: { bookings, totalPages }
+    },
+    enabled: !!user?.email,
+  });
 
-  const bookings = useMemo(() => data?.bookings || [], [data?.bookings]);
-  const totalPages = data?.totalPages || 0;
+  const bookings = useMemo(() => data?.bookings ?? [], [data]);
+  const totalPages = data?.totalPages ?? 0;
 
   const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 0));
   const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1));
@@ -80,10 +79,12 @@ const MyBookings = () => {
   useEffect(() => {
     if (bookings.length >= 3) {
       setShowCongrats(true);
-      const timer = setTimeout(() => setShowCongrats(false), 7000); // hide after 8s for more effect
+      const timer = setTimeout(() => setShowCongrats(false), 3000); // hide after 8s for more effect
       return () => clearTimeout(timer);
     }
   }, [bookings]);
+
+  console.log("Bookings length:", bookings.length);
 
 
   // ✅ Handle pay
@@ -95,41 +96,6 @@ const MyBookings = () => {
 
   return (
     <div className="p-6">
-
-
-      {showCongrats && (
-        <div className="fixed inset-0 flex flex-col items-center justify-center z-50 pointer-events-none">
-          <Confetti
-            width={window.innerWidth}
-            height={window.innerHeight}
-            numberOfPieces={600}
-            recycle={false}
-          />
-
-          <motion.div
-            initial={{ scale: 0, opacity: 0, y: -50 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0, opacity: 0, y: 50 }}
-            transition={{ duration: 0.6, type: "spring", stiffness: 300 }}
-            className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-2xl flex flex-col items-center justify-center text-center max-w-lg mx-4"
-          >
-            <h1 className="text-4xl font-bold text-yellow-500 mb-2 animate-bounce">
-              🎉 Congratulations! 🎉
-            </h1>
-            <p className="text-lg text-gray-700 dark:text-gray-200 mb-4">
-              You’ve successfully booked <span className="font-semibold">{bookings.length}</span> amazing trips! ✨
-            </p>
-            <button
-              onClick={() => setShowCongrats(false)}
-              className="mt-2 px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold shadow-md transition-all duration-300"
-            >
-              Awesome!
-            </button>
-          </motion.div>
-        </div>
-      )}
-
-
       <h2 className="text-2xl font-bold mb-6 text-center">My Bookings</h2>
 
       {/* Table */}
@@ -260,11 +226,26 @@ const MyBookings = () => {
               </p>
               <p>
                 <strong className="text-secondary">🧾 Transaction ID:</strong>{" "}
-                <span className="font-mono">{selectedBooking.payment.transactionId}</span>
+                <span className="font-mono">
+                  {selectedBooking?.payment?.transactionId ?? "Not paid yet"}
+                </span>
               </p>
               <p>
                 <strong className="text-secondary">🎟️ Tracking ID:</strong>{" "}
-                <span className="font-mono">{selectedBooking.tracking_id}</span>
+                <span className="font-mono">
+                  {selectedBooking?.tracking_id ?? "Not generated yet"}
+                </span>
+              </p>
+              <p>
+                <strong className="text-secondary">💳 Paid At:</strong>{" "}
+                <span className="font-mono">
+                  {selectedBooking?.payment?.paid_at
+                    ? new Date(selectedBooking.payment.paid_at).toLocaleString("en-US", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })
+                    : "Not paid yet"}
+                </span>
               </p>
               <p>
                 <strong className="text-secondary">🧑 Guide:</strong>{" "}
@@ -272,7 +253,9 @@ const MyBookings = () => {
               </p>
               <p>
                 <strong className="text-secondary">📅 Tour Date:</strong>{" "}
-                {selectedBooking.tourDate?.start} → {selectedBooking.tourDate?.end}
+                {selectedBooking?.tourDate?.start && selectedBooking?.tourDate?.end
+                  ? `${selectedBooking.tourDate.start} → ${selectedBooking.tourDate.end}`
+                  : "Date not set"}
               </p>
 
               {/* Status Badges */}
@@ -351,13 +334,59 @@ const MyBookings = () => {
             onChange={handleItemsPerPage}
             className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
           >
-            <option value="3">3</option>
-            <option value="6">6</option>
-            <option value="9">9</option>
-            <option value="12">12</option>
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
           </select>
         </div>
       )}
+
+
+
+      <AnimatePresence>
+        {showCongrats && (
+          <motion.div
+            key="congrats"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.4 }}
+            className="fixed inset-0 flex flex-col items-center justify-center z-50"
+          >
+            {showCongrats && (
+              <div className="fixed inset-0 flex flex-col items-center justify-center z-50 pointer-events-none">
+                <Confetti
+                  width={window.innerWidth}
+                  height={window.innerHeight}
+                  numberOfPieces={600}
+                  recycle={false}
+                />
+                <motion.div
+                  initial={{ scale: 0, opacity: 0, y: -50 }}
+                  animate={{ scale: 1, opacity: 1, y: 0 }}
+                  exit={{ scale: 0, opacity: 0, y: 50 }}
+                  transition={{ duration: 0.6, type: "spring", stiffness: 300 }}
+                  className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-2xl flex flex-col items-center justify-center text-center max-w-lg mx-4"
+                >
+                  <h1 className="text-4xl font-bold text-yellow-500 mb-2 animate-bounce">
+                    🎉 Congratulations! 🎉
+                  </h1>
+                  <p className="text-lg text-gray-700 dark:text-gray-200 mb-4">
+                    You’ve successfully booked <span className="font-semibold">{bookings.length}</span> amazing trips! ✨
+                  </p>
+                  <button
+                    onClick={() => setShowCongrats(false)}
+                    className="mt-2 px-6 py-2 bg-green-500 hover:bg-green-600 text-white rounded-lg font-semibold shadow-md transition-all duration-300"
+                  >
+                    Awesome!
+                  </button>
+                </motion.div>
+              </div>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
     </div>
   );

@@ -1,63 +1,53 @@
-// import React from "react";
-// import './pagination.css'
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
-// const Pagination = ({
-//     currentPage,
-//     totalPages,
-//     onPageChange,
-//     itemsPerPage,
-//     onItemsPerPageChange,
-// }) => {
-//     // Generate page numbers
-//     const pages = [...Array(totalPages).keys()];
+export function usePaginatedQuery(key, url, extraParams = {}) {
+  const axiosSecure = useAxiosSecure();
 
-//     return (
-//         <div className="pagination text-center my-6">
-//             {/* Previous Button */}
-//             <button
-//                 className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 mr-2 disabled:opacity-50"
-//                 disabled={currentPage === 0}
-//                 onClick={() => onPageChange(currentPage - 1)}
-//             >
-//                 Prev
-//             </button>
+  // Local state for pagination
+  const [currentPage, setCurrentPage] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
-//             {/* Page Numbers */}
-//             {pages.map((page) => (
-//                 <button
-//                     key={page}
-//                     className={`px-3 py-1 rounded mr-2 ${currentPage === page
-//                             ? "bg-primary text-white"
-//                             : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
-//                         }`}
-//                     onClick={() => onPageChange(page)}
-//                 >
-//                     {page + 1}
-//                 </button>
-//             ))}
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: [key, currentPage, itemsPerPage, extraParams],
+    queryFn: async () => {
+      const params = {
+        page: currentPage,
+        limit: itemsPerPage,
+        ...extraParams,
+      };
 
-//             {/* Next Button */}
-//             <button
-//                 className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 ml-2 disabled:opacity-50"
-//                 disabled={currentPage === totalPages - 1}
-//                 onClick={() => onPageChange(currentPage + 1)}
-//             >
-//                 Next
-//             </button>
+      const res = await axiosSecure.get(url, { params });
+      return res.data;
+    },
+    keepPreviousData: true, // ✅ smooth transitions when switching pages
+  });
 
-//             {/* Items per page dropdown */}
-//             <select
-//                 className="ml-4 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
-//                 value={itemsPerPage}
-//                 onChange={(e) => onItemsPerPageChange(Number(e.target.value))}
-//             >
-//                 <option value="6">6</option>
-//                 <option value="12">12</option>
-//                 <option value="15">15</option>
-//                 <option value="50">50</option>
-//             </select>
-//         </div>
-//     );
-// };
+  // Normalized response
+  const items = data?.[key] ?? [];
+  const totalPages = data?.totalPages || 0;
 
-// export default Pagination;
+  // Handlers
+  const handlePrevPage = () => setCurrentPage((p) => Math.max(p - 1, 0));
+  const handleNextPage = () =>
+    setCurrentPage((p) => Math.min(p + 1, totalPages - 1));
+  const handleItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(0);
+  };
+
+  return {
+    items,
+    totalPages,
+    currentPage,
+    itemsPerPage,
+    isLoading,
+    isError,
+    refetch,
+    setCurrentPage,
+    handlePrevPage,
+    handleNextPage,
+    handleItemsPerPage,
+  };
+}

@@ -10,7 +10,14 @@ import Masonry, { ResponsiveMasonry } from "react-responsive-masonry"
 import BookingForm from "./BookingForm";
 import useAxios from "../../hooks/useAxios";
 import GuidesList from "./GuidesList";
-// import Masonry from "react-masonry-css";
+import LightGallery from "lightgallery/react";
+
+import lgThumbnail from "lightgallery/plugins/thumbnail";
+import lgZoom from "lightgallery/plugins/zoom";
+
+import "lightgallery/css/lightgallery.css";
+import "lightgallery/css/lg-zoom.css";
+import "lightgallery/css/lg-thumbnail.css";
 
 
 const PackageDetailsPage = () => {
@@ -57,15 +64,16 @@ const PackageDetailsPage = () => {
             {/* Gallery */}
             <div className="columns-2 sm:columns-2 md:columns-3 gap-2 md:gap-3 p-2">
                 {packageData.images.map((img, idx) => (
-                    <img
-                        key={idx}
-                        src={img}
-                        alt={`Gallery ${idx}`}
-                        loading="lazy"
-                        className="w-full mb-4 rounded-lg shadow-md object-cover break-inside-avoid hover:scale-103 transition-transform duration-300"
-                        data-aos="zoom-in"
-                        data-aos-delay={idx * 100}
-                    />
+                    <LightGallery key={idx} speed={500} plugins={[lgThumbnail, lgZoom]}>
+                        <a href={img}>
+                            <img
+                                src={img}
+                                alt={`Gallery ${idx}`}
+                                loading="lazy"
+                                className="w-full mb-4 rounded-lg shadow-md object-cover break-inside-avoid hover:scale-105 transition-transform duration-300"
+                            />
+                        </a>
+                    </LightGallery>
                 ))}
             </div>
 

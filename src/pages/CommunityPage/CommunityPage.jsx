@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { FacebookShareButton, FacebookIcon } from "react-share";
 import { FaHeart, FaSpinner } from "react-icons/fa";
@@ -7,11 +7,22 @@ import useAuth from "../../hooks/useAuth";
 import useAxios from "../../hooks/useAxios";
 import Loading from "../shared/Loading/Loading";
 
+import LightGallery from 'lightgallery/react';
+import lgThumbnail from 'lightgallery/plugins/thumbnail';
+import lgZoom from 'lightgallery/plugins/zoom';
+
+// LightGallery CSS
+// import 'lightgallery/css/lightgallery.css';
+// import 'lightgallery/css/lg-thumbnail.css';
+// import 'lightgallery/css/lg-zoom.css';
+
 export default function CommunityStories() {
     const axiosInstance = useAxios();
     const { user } = useAuth();
     const navigate = useNavigate();
     const queryClient = useQueryClient();
+
+    const galleryRef = useRef(null);
 
     const [selectedStory, setSelectedStory] = useState(null);
     const [likeLoading, setLikeLoading] = useState(null);
@@ -79,7 +90,16 @@ export default function CommunityStories() {
         return story.likes?.includes(userId);
     };
 
+    useEffect(() => {
+        if (selectedStory && galleryRef.current) {
+            // refresh LightGallery when modal opens
+            galleryRef.current.refresh();
+        }
+    }, [selectedStory]);
+
     if (isLoading) return <Loading />;
+
+
 
     return (
         <section className="max-w-7xl mx-auto py-10 px-7">
@@ -230,12 +250,24 @@ export default function CommunityStories() {
                         </p>
 
                         <p className="text-gray-700 dark:text-gray-300 mb-4">{selectedStory.description}</p>
-                       
-                        <div className="flex flex-wrap gap-3 mb-4">
-                            {selectedStory.images?.map((img, idx) => (
-                                <img key={idx} src={img} alt={`story-${idx}`} className="w-32 h-32 object-cover rounded" data-aos="zoom-in" data-aos-delay={idx * 100} />
-                            ))}
-                        </div>
+
+                        <LightGallery
+                            onInit={(ref) => (galleryRef.current = ref.instance)}
+                            speed={500}
+                            plugins={[lgThumbnail, lgZoom]}
+                        >
+                            <div className="flex flex-wrap gap-3 mb-4">
+                                {selectedStory.images?.filter(Boolean).map((img, idx) => (
+                                    <a key={idx} href={img}>
+                                        <img
+                                            src={img}
+                                            alt={`story-${idx}`}
+                                            className="w-32 h-32 object-cover rounded cursor-pointer"
+                                        />
+                                    </a>
+                                ))}
+                            </div>
+                        </LightGallery>
                         <div className="flex justify-end">
                             <button
                                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
