@@ -122,7 +122,7 @@ export default function CommunityStories() {
                         />
                         <div className="p-4 space-y-2">
                             <div className="flex justify-between items-center">
-                                <h3 className="text-lg font-semibold">{story.title}</h3>
+                                <h3 className="text-lg line-clamp-1 font-semibold">{story.title}</h3>
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();

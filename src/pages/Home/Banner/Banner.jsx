@@ -94,12 +94,18 @@ const Banner = () => {
             </AnimatePresence>
 
             {/* Navigation Dots */}
-            <div className="absolute bottom-6 w-full flex justify-center gap-2">
+            <div className="absolute bottom-6 w-full flex justify-center gap-3">
                 {slides.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => setCurrent(index)}
-                        className={`w-3 h-3 rounded-full ${current === index ? "bg-primary" : "bg-white/50"}`}
+                        className={`
+                           rounded-full
+                            transition-all duration-300 ease-out
+                            ${current === index ? "bg-primary w-6 h-3" : "bg-white/50 w-3 h-3"}
+                            hover:scale-125
+                            `}
+                        aria-label={`Go to slide ${index + 1}`}
                     />
                 ))}
             </div>

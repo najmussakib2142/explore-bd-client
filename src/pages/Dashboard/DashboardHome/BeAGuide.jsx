@@ -3,14 +3,18 @@ import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import useAxios from "../../../hooks/useAxios";
 import useAuth from "../../../hooks/useAuth";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import { FaSpinner } from "react-icons/fa";
 
 const BeAGuide = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const axiosInstance = useAxios();
+  const axiosSecure = useAxiosSecure()
   const [photoFile, setPhotoFile] = useState(null);
   const [uploading, setUploading] = useState(false);
   const [profilePic, setProfilePic] = useState(user?.photoURL || "");
+  const [submitting, setSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
     name: user?.displayName || "",
@@ -56,15 +60,62 @@ const BeAGuide = () => {
     }
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (!profilePic) {
+  //     Swal.fire("Warning", "Please upload a photo first.", "warning");
+  //     return;
+  //   }
+
+  //   try {
+  //     setSubmitting(true); // start loading
+
+  //     Swal.fire({
+  //       title: "Are you sure?",
+  //       text: "Do you want to submit your application as a Tour Guide?",
+  //       icon: "question",
+  //       showCancelButton: true,
+  //       confirmButtonColor: "#3085d6",
+  //       cancelButtonColor: "#d33",
+  //       confirmButtonText: "Yes, submit",
+  //     }).then(async (result) => {
+  //       if (result.isConfirmed) {
+  //         const payload = { ...formData, userId: user?.uid, photoURL: profilePic };
+  //         const res = await axiosSecure.post("/guides", payload);
+
+  //         if (res?.data?.insertedId) {
+  //           Swal.fire({
+  //             icon: "success",
+  //             title: "Application Submitted",
+  //             text: "Your application is pending. Admin will review it soon.",
+  //             confirmButtonText: "OK",
+  //           }).then(() => navigate("/dashboard"));
+  //         }
+  //       }
+  //     });
+  //   } catch (err) {
+  //     console.error(err);
+  //     Swal.fire("Error", err.message || "Failed to submit application", "error");
+  //   }
+  //   finally {
+  //     setSubmitting(false); // stop loading
+  //   }
+  // };
+
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      if (!profilePic) {
-        Swal.fire("Warning", "Please upload a photo first.", "warning");
-        return;
-      }
 
-      Swal.fire({
+    if (!profilePic) {
+      Swal.fire("Warning", "Please upload a photo first.", "warning");
+      return;
+    }
+
+    try {
+      setSubmitting(true); // start loading
+
+      const result = await Swal.fire({
         title: "Are you sure?",
         text: "Do you want to submit your application as a Tour Guide?",
         icon: "question",
@@ -72,26 +123,30 @@ const BeAGuide = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, submit",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          const payload = { ...formData, userId: user?.uid, photoURL: profilePic };
-          const res = await axiosInstance.post("/guides", payload);
-
-          if (res?.data?.insertedId) {
-            Swal.fire({
-              icon: "success",
-              title: "Application Submitted",
-              text: "Your application is pending. Admin will review it soon.",
-              confirmButtonText: "OK",
-            }).then(() => navigate("/dashboard"));
-          }
-        }
       });
+
+      if (result.isConfirmed) {
+        const payload = { ...formData, userId: user?.uid, photoURL: profilePic };
+        const res = await axiosSecure.post("/guides", payload);
+
+        if (res?.data?.insertedId) {
+          await Swal.fire({
+            icon: "success",
+            title: "Application Submitted",
+            text: "Your application is pending. Admin will review it soon.",
+            confirmButtonText: "OK",
+          });
+          navigate("/dashboard");
+        }
+      }
     } catch (err) {
       console.error(err);
       Swal.fire("Error", err.message || "Failed to submit application", "error");
+    } finally {
+      setSubmitting(false); // stop loading here, after submission
     }
   };
+
 
   return (
     <div className="max-w-xl mx-auto bg-base-100 p-6 rounded-lg shadow-lg mt-10">
@@ -151,7 +206,7 @@ const BeAGuide = () => {
             name="name"
             value={formData.name}
             readOnly
-            className="input input-bordered w-full bg-base-100"
+            className="input text-primary cursor-not-allowed input-bordered w-full bg-base-100"
           />
         </div>
 
@@ -162,7 +217,7 @@ const BeAGuide = () => {
             name="email"
             value={formData.email}
             readOnly
-            className="input input-bordered w-full bg-base-100"
+            className="input text-primary cursor-not-allowed input-bordered w-full bg-base-100"
           />
         </div>
 
@@ -323,9 +378,20 @@ const BeAGuide = () => {
           />
         </div>
 
-        <button type="submit" className="btn btn-primary w-full">
-          Submit Application
+        <button
+          type="submit"
+          className="btn btn-primary w-full flex justify-center items-center gap-2"
+          disabled={submitting || uploading} // disable during submission or photo upload
+        >
+          {submitting ? (
+            <>
+              <FaSpinner className="animate-spin" /> Submitting...
+            </>
+          ) : (
+            "Submit Application"
+          )}
         </button>
+
       </form>
     </div>
   );

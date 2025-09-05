@@ -21,6 +21,7 @@ const EditStoryPage = () => {
     const [newImages, setNewImages] = useState([]);
     const [removingImage, setRemovingImage] = useState(null);
     const [uploading, setUploading] = useState(false);
+    const [isUpdating, setIsUpdating] = useState(false);
 
     // Fetch story data
     const { data: story = {}, isLoading } = useQuery({
@@ -33,12 +34,15 @@ const EditStoryPage = () => {
 
     // Set initial form data when story loads
     useEffect(() => {
-        if (story) {
-            setTitle(story.title || "");
-            setDescription(story.description || "");
-            setImages(story.images || []);
-        }
+        if (!story) return;
+
+        setTitle((prev) => prev !== story.title ? story.title : prev);
+        setDescription((prev) => prev !== story.description ? story.description : prev);
+        setImages((prev) => prev !== story.images ? story.images : prev);
     }, [story]);
+
+
+
 
     // Update story mutation
     const updateMutation = useMutation({
@@ -46,12 +50,40 @@ const EditStoryPage = () => {
             const res = await axiosSecure.patch(`/stories/${id}`, updatedData);
             return res.data;
         },
+        onMutate: () => {
+            setIsUpdating(true); // immediately show loading
+        },
+        onSettled: () => {
+            setIsUpdating(false); // stop loading when done (success or error)
+        },
+
         onSuccess: () => {
             queryClient.invalidateQueries(["stories"]);
             queryClient.invalidateQueries(["story", id]);
-            navigate("/communityPage"); // redirect after successful update
+
+            Swal.fire({
+                icon: "success",
+                title: "Story Updated!",
+                text: "Redirecting to Community Page...",
+                timer: 1500,
+                showConfirmButton: false,
+            }).then(() => {
+                navigate("/communityPage");
+            });
         },
     });
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const payload = {
+            title,
+            description,
+            addImages: newImages, // ✅ already hosted image URLs
+        };
+        console.log("🔍 Sending payload to backend:", payload);
+        updateMutation.mutate(payload);
+    };
 
     if (isLoading) return <Loading />;
 
@@ -129,17 +161,7 @@ const EditStoryPage = () => {
         e.target.value = "";
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
 
-        const payload = {
-            title,
-            description,
-            addImages: newImages, // ✅ already hosted image URLs
-        };
-        console.log("🔍 Sending payload to backend:", payload);
-        updateMutation.mutate(payload);
-    };
 
     return (
         <div className="max-w-3xl mx-auto p-4">
@@ -173,7 +195,7 @@ const EditStoryPage = () => {
                 <div>
                     <label className="font-semibold">Existing Images</label>
                     <div className="flex flex-wrap gap-2 mt-2">
-                        {images.map((img, idx) => (
+                        {Array.isArray(images) && images.map((img, idx) => (
                             <div key={idx} className="relative">
                                 <img
                                     src={img}
@@ -217,7 +239,7 @@ const EditStoryPage = () => {
 
                     {newImages.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-3">
-                            {newImages.map((img, idx) => (
+                            {Array.isArray(newImages) && newImages.map((img, idx) => (
                                 <img
                                     key={idx}
                                     src={img}
@@ -233,11 +255,11 @@ const EditStoryPage = () => {
                 <button
                     type="submit"
                     className="btn btn-primary"
-                    disabled={updateMutation.isLoading || uploading}
+                    disabled={isUpdating || uploading} // disable while updating
                 >
-                    {updateMutation.isLoading ? (
+                    {isUpdating ? (
                         <span className="flex items-center gap-2">
-                            <FaSpinner className="animate-spin" /> Updating
+                            <FaSpinner className="animate-spin" /> Updating...
                         </span>
                     ) : (
                         "Update Story"

@@ -102,7 +102,7 @@ const Navbar = () => {
 
                     <div className="navbar-end md:gap-3 gap-2">
                         <div>
-                            <div className='hidden md:block'>
+                            {/* <div className='hidden md:block'>
                                 <div className="flex items-center space-x-1 md:space-x-2">
                                     <div className="flex items-center bg-gray-300 dark:bg-gray-700 rounded-full md:p-0.5 transition-colors">
                                         <button
@@ -127,7 +127,36 @@ const Navbar = () => {
                                         </button>
                                     </div>
                                 </div>
+                            </div> */}
+
+                            <div className="hidden md:block">
+                                <div className="flex items-center space-x-1 md:space-x-2">
+                                    <div className="flex items-center bg-gray-300 dark:bg-gray-700 rounded-full md:p-0.5 transition-colors">
+                                        <button
+                                            onClick={() => toggleTheme('light')}
+                                            className={`md:p-1 rounded-full transition-colors ${theme === 'light'
+                                                    ? 'bg-base-100 text-yellow-600'
+                                                    : 'text-gray-600 dark:text-gray-300'
+                                                }`}
+                                            aria-label="Switch to light mode"
+                                        >
+                                            <span className="text-base md:text-xl">☀️</span>
+                                        </button>
+
+                                        <button
+                                            onClick={() => toggleTheme('dark')}
+                                            className={`md:p-1 rounded-full transition-colors ${theme === 'dark'
+                                                    ? 'bg-indigo-100 text-indigo-500'
+                                                    : 'text-gray-600 dark:text-gray-300'
+                                                }`}
+                                            aria-label="Switch to dark mode"
+                                        >
+                                            <span className="text-base md:text-xl">🌙</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
+
 
                             <div className="block md:hidden">
                                 <button

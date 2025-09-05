@@ -13,7 +13,7 @@ import useAxiosSecure from "../../../../hooks/useAxiosSecure";
 const ManageStories = () => {
     const { user } = useAuth();
     const guideEmail = user?.email;
-    const axiosInstance = useAxios();
+    // const axiosInstance = useAxios();
     const axiosSecure = useAxiosSecure()
     const queryClient = useQueryClient();
     const navigate = useNavigate();
@@ -28,7 +28,7 @@ const ManageStories = () => {
         queryKey: ["stories", guideEmail],
         queryFn: async () => {
             if (!guideEmail) return [];
-            const res = await axiosInstance.get(`/stories/guide/${guideEmail}`);
+            const res = await axiosSecure.get(`/stories/guide/${guideEmail}`);
             return res.data;
         },
         enabled: !!guideEmail,

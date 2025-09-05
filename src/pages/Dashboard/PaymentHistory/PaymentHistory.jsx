@@ -18,8 +18,9 @@ const PaymentHistory = () => {
             return res.data
         }
     })
+
     if (isPending) {
-        <Loading></Loading>
+        return <Loading></Loading>
     }
 
 

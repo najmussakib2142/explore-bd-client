@@ -35,7 +35,6 @@ const UserDashboard = () => {
         <div className="bg-base-100 p-6 rounded-lg shadow-lg space-y-6">
             {/* Welcome message */}
             <h2 className="text-2xl font-bold">Welcome, {user?.displayName || "User"}!</h2>
-
             {/* User Info */}
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
                 {/* <img
@@ -55,7 +54,7 @@ const UserDashboard = () => {
                 <div className="flex-1 space-y-2">
                     <p><span className="font-semibold">Name:</span> {user?.displayName}</p>
                     <p><span className="font-semibold">Email:</span> {user?.email}</p>
-                    <p><span className="font-semibold">Role:</span> {userInfo?.role || "User"}</p>
+                    <p><span className="font-semibold">Role:</span> {(userInfo?.role || "User").charAt(0).toUpperCase() + (userInfo?.role || "User").slice(1)}</p>
                 </div>
             </div>
 

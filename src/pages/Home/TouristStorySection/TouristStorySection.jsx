@@ -1,10 +1,11 @@
+import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { FacebookShareButton, FacebookIcon } from "react-share";
+import { useSprings, animated } from '@react-spring/web';
 import useAuth from "../../../hooks/useAuth";
 import useAxios from "../../../hooks/useAxios";
 import { GoArrowRight } from "react-icons/go";
-
 
 export default function TouristStorySection() {
     const axiosInstance = useAxios();
@@ -19,10 +20,32 @@ export default function TouristStorySection() {
         },
     });
 
+    const [hoveredIndex, setHoveredIndex] = useState(null);
+
+    // React Spring springs for cards + image lift
+    const springs = useSprings(
+        stories.length,
+        stories.map((_, index) => ({
+            transform: hoveredIndex === index ? "scale(1.03)" : "scale(1)",
+            boxShadow:
+                hoveredIndex === index
+                    ? "0px 15px 30px rgba(0,0,0,0.2)"
+                    : "0px 5px 15px rgba(0,0,0,0.1)",
+            config: { mass: 1, tension: 210, friction: 20 },
+        }))
+    );
+
+    // Subtle image lift springs
+    const imageSprings = useSprings(
+        stories.length,
+        stories.map((_, index) => ({
+            transform: hoveredIndex === index ? "translateY(-6px)" : "translateY(0px)",
+            config: { mass: 1, tension: 200, friction: 18 },
+        }))
+    );
+
     const handleShare = () => {
-        if (!user) {
-            navigate("/login");
-        }
+        if (!user) navigate("/login");
     };
 
     return (
@@ -39,25 +62,30 @@ export default function TouristStorySection() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
                 {stories.map((story, index) => (
-                    <div
+                    <animated.div
                         key={story._id}
-                        className="bg-white dark:bg-gray-900 border-gray-600 dark:border-gray-700 rounded-2xl shadow-md overflow-hidden hover:shadow-lg transition"
+                        style={springs[index]}
+                        onMouseEnter={() => setHoveredIndex(index)}
+                        onMouseLeave={() => setHoveredIndex(null)}
+                        className="bg-white dark:bg-gray-900 border-gray-600 dark:border-gray-700 rounded-2xl overflow-hidden cursor-pointer"
                         data-aos="fade-up"
-                        data-aos-delay={index * 100} // stagger effect
+                        data-aos-delay={index * 100}
                     >
-                        <img
+                        <animated.img
                             src={story.images?.[0]}
                             alt={story.title}
+                            style={imageSprings[index]}
                             className="w-full h-40 object-cover"
                         />
+
                         <div className="p-4 space-y-3">
                             <h3 className="text-lg font-semibold line-clamp-1">{story.title}</h3>
                             <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
                                 {story.description}
                             </p>
 
-                            <div className="flex justify-between items-center">
-                                <div className="flex items-center gap-2 mt-2">
+                            <div className="flex justify-between items-center mt-2">
+                                <div className="flex items-center gap-2">
                                     {story.createdBy?.photo ? (
                                         <img
                                             src={story.createdBy.photo}
@@ -74,7 +102,7 @@ export default function TouristStorySection() {
                                     </span>
                                 </div>
 
-                                <div className="flex justify-between items-center mt-3">
+                                <div className="flex items-center mt-3">
                                     {user ? (
                                         <FacebookShareButton
                                             url={window.location.origin + "/story/" + story._id}
@@ -98,10 +126,9 @@ export default function TouristStorySection() {
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </animated.div>
                 ))}
             </div>
         </section>
-
     );
 }

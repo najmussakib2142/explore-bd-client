@@ -10,17 +10,15 @@ export const useTheme = () => useContext(ThemeContext);
 // Provider component
 export const ThemeProvider = ({ children }) => {
 
-    const [theme, setTheme] = useState("dark"); // 👈 default is dark
+    //   const [theme, setTheme] = useState('light');
 
-    // use theme from browser preferences
-    
-    // const getInitialTheme = () => {
-    //     const savedTheme = localStorage.getItem('theme');
-    //     const systemPreferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    //     return savedTheme || (systemPreferDark ? 'dark' : 'light');
-    // };
+    const getInitialTheme = () => {
+        const savedTheme = localStorage.getItem('theme');
+        const systemPreferDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        return savedTheme || (systemPreferDark ? 'dark' : 'light');
+    };
 
-    // const [theme, setTheme] = useState(getInitialTheme);
+    const [theme, setTheme] = useState(getInitialTheme);
 
 
     useEffect(() => {
@@ -35,10 +33,9 @@ export const ThemeProvider = ({ children }) => {
     }, []);
 
     useEffect(() => {
-        const html = document.documentElement;
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem('theme', theme);
-    }, [theme]);
+        document.documentElement.setAttribute('data-theme', theme); // update HTML attribute
+        localStorage.setItem('theme', theme); // save user preference
+    }, [theme]); // run every time 'theme' changes
 
     const toggleTheme = () => {
         setTheme(theme === 'light' ? 'dark' : 'light');

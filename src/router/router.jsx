@@ -35,6 +35,8 @@ import MyAssignedTours from "../pages/Dashboard/MyAssignedTours/MyAssignedTours"
 import ManageStories from "../pages/Dashboard/GuideDashboard/ManageStories/ManageStories";
 import EditStoryPage from "../pages/Dashboard/GuideDashboard/ManageStories/EditStoryPage";
 import About from "../pages/About/About";
+import UserRoute from "../routes/UserRoute";
+import GuideRoute from "../routes/GuideRoute";
 // import BookingPage from "../pages/Dashboard/BookingPage/BookingPage";
 
 export const router = createBrowserRouter([
@@ -133,27 +135,19 @@ export const router = createBrowserRouter([
             },
             {
                 path: "manage-users",
-                element: <ManageUsers></ManageUsers>
+                element: <AdminRoute><ManageUsers></ManageUsers></AdminRoute>
             },
             {
                 path: "assign-guide",
                 element: <AdminRoute><AssignGuide></AssignGuide></AdminRoute>
             },
             {
-                path: 'payment/:packageId/:bookingId',
-                Component: Payment,
-            },
-            {
-                path: 'beAGuide',
-                element: <BeAGuide></BeAGuide>
+                path: "myAssignedTours",
+                element: <GuideRoute><MyAssignedTours></MyAssignedTours></GuideRoute>
             },
             {
                 path: "addStory",
                 Component: AddStory
-            },
-            {
-                path: "myAssignedTours",
-                element: <MyAssignedTours></MyAssignedTours>
             },
             {
                 path: "manageStories",
@@ -165,11 +159,20 @@ export const router = createBrowserRouter([
             },
             {
                 path: "paymentHistory",
-                Component: PaymentHistory,
+                // Component: PaymentHistory,
+                element: <UserRoute><PaymentHistory></PaymentHistory></UserRoute>
             },
             {
                 path: 'myBookings',
-                element: <MyBookings></MyBookings>
+                element: <UserRoute><MyBookings></MyBookings></UserRoute>
+            },
+            {
+                path: 'payment/:packageId/:bookingId',
+                element: <UserRoute><Payment></Payment></UserRoute>
+            },
+            {
+                path: 'beAGuide',
+                element: <UserRoute><BeAGuide></BeAGuide></UserRoute>
             },
 
         ]

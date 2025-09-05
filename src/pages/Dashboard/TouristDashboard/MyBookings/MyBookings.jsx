@@ -17,6 +17,7 @@ const MyBookings = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  // console.log(user.uid);
   // ✅ Fetch bookings for logged in user
   const { data, refetch, isLoading } = useQuery({
     queryKey: ["bookings", user?.email, currentPage, itemsPerPage],
@@ -79,7 +80,7 @@ const MyBookings = () => {
   useEffect(() => {
     if (bookings.length >= 3) {
       setShowCongrats(true);
-      const timer = setTimeout(() => setShowCongrats(false), 3000); // hide after 8s for more effect
+      const timer = setTimeout(() => setShowCongrats(false), 7000); // hide after 8s for more effect
       return () => clearTimeout(timer);
     }
   }, [bookings]);
@@ -115,7 +116,7 @@ const MyBookings = () => {
       ) : (
         <>
           <div className="overflow-x-auto">
-            <table className="table w-full shadow-xl">
+            <table className="table w-full shadow-lg">
               <thead className="bg-base-100 ">
                 <tr>
                   <th>#</th>
@@ -130,33 +131,35 @@ const MyBookings = () => {
 
               <tbody>
                 {bookings.map((b, idx) => (
-                  <tr key={b._id}>
-                    <td>{idx + 1}</td>
-                    <td>{b.packageName}</td>
-                    <td>{b.guideName}</td>
-                    <td>
+                  <tr key={b._id} className="align-top">
+                    <td className="whitespace-nowrap">{idx + 1}</td>
+                    <td className="max-w-[200px] truncate" title={b.packageName}>{b.packageName}</td>
+                    <td className="max-w-[150px] truncate" title={b.guideName}>{b.guideName}</td>
+                    <td className="whitespace-nowrap">
                       {b.tourDate?.start} → {b.tourDate?.end}
                     </td>
                     <td>
                       <span
-                        className={`badge ${b.booking_status === "accepted"
-                          ? "badge-success"
-                          : b.booking_status === "rejected"
-                            ? "badge-error"
-                            : "badge-warning"
+                        className={`badge px-3 py-1 whitespace-nowrap ${b.booking_status === "accepted"
+                            ? "badge-success"
+                            : b.booking_status === "rejected"
+                              ? "badge-error"
+                              : b.booking_status === "in-review"
+                                ? "badge-info" // or a distinct color
+                                : "badge-warning" // for pending or other statuses
                           }`}
                       >
-                        {b.booking_status}
+                        {b.booking_status.charAt(0).toUpperCase() + b.booking_status.slice(1)}
                       </span>
                     </td>
                     <td>${b.price}</td>
-                    <td className="flex gap-2">
+                    <td className="flex gap-2 overflow-x-auto">
                       {/* Cancel when status = pending */}
                       {b.booking_status === "pending" && (
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          className="btn btn-xs btn-error"
+                          className="btn btn-sm btn-error whitespace-nowrap"
                           onClick={() => handleDelete(b._id)}
                         >
                           Cancel
@@ -168,7 +171,7 @@ const MyBookings = () => {
                         <motion.button
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
-                          className="btn btn-xs btn-primary"
+                          className="btn btn-sm whitespace-nowrap btn-primary"
                           onClick={() => handlePay(b.packageId, b._id)}
                         >
                           Pay
@@ -179,7 +182,7 @@ const MyBookings = () => {
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        className="btn border-blue-300 btn-xs btn-ghost border"
+                        className="btn border-blue-300 btn-xs whitespace-nowrap btn-ghost border"
                         onClick={() => setSelectedBooking(b)}
                       >
                         Details
@@ -261,7 +264,7 @@ const MyBookings = () => {
               {/* Status Badges */}
               <div className="flex gap-2 mt-2">
                 <span
-                  className={`px-3 py-1 text-xs font-semibold rounded-full ${selectedBooking.booking_status === "accepted"
+                  className={`px-3 py-1 text-xs font-semibold rounded-full whitespace-nowrap ${selectedBooking.booking_status === "accepted"
                     ? "bg-green-100 text-green-700"
                     : "bg-yellow-100 text-yellow-700"
                     }`}
@@ -303,7 +306,7 @@ const MyBookings = () => {
           <button
             onClick={handlePrevPage}
             disabled={currentPage === 0}
-            className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+            className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
           >
             Prev
           </button>
@@ -324,7 +327,7 @@ const MyBookings = () => {
           <button
             onClick={handleNextPage}
             disabled={currentPage === totalPages - 1}
-            className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+            className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
           >
             Next
           </button>
@@ -332,7 +335,7 @@ const MyBookings = () => {
           <select
             value={itemsPerPage}
             onChange={handleItemsPerPage}
-            className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+            className="ml-3 cursor-pointer border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
           >
             <option value="10">10</option>
             <option value="20">20</option>
@@ -355,12 +358,13 @@ const MyBookings = () => {
             className="fixed inset-0 flex flex-col items-center justify-center z-50"
           >
             {showCongrats && (
-              <div className="fixed inset-0 flex flex-col items-center justify-center z-50 pointer-events-none">
+              <div className="fixed inset-0 flex flex-col items-center justify-center z-50">
                 <Confetti
                   width={window.innerWidth}
                   height={window.innerHeight}
                   numberOfPieces={600}
                   recycle={false}
+                  className="pointer-events-none"
                 />
                 <motion.div
                   initial={{ scale: 0, opacity: 0, y: -50 }}

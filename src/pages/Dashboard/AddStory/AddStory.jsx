@@ -8,11 +8,13 @@ import useAxios from "../../../hooks/useAxios";
 import useAuth from "../../../hooks/useAuth";
 import Loading from "../../shared/Loading/Loading";
 import axios from "axios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const AddStory = () => {
     const { register, handleSubmit, reset } = useForm();
     const navigate = useNavigate();
     const axiosInstance = useAxios()
+    const axiosSecure = useAxiosSecure()
     const { user } = useAuth();
     const [pictures, setPictures] = useState([]); // uploaded image URLs
     const [uploading, setUploading] = useState(false);
@@ -22,7 +24,7 @@ const AddStory = () => {
     // ✅ mutation for saving story
     const { mutate, isLoading } = useMutation({
         mutationFn: async (newStory) => {
-            const res = await axiosInstance.post("/stories", newStory);
+            const res = await axiosSecure.post("/stories", newStory);
             return res.data;
         },
         onSuccess: () => {

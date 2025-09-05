@@ -34,6 +34,10 @@ const MyAssignedTours = () => {
     enabled: !!user?.email,
   });
 
+  const toursArray = Array.isArray(tours.assignedTours) ? tours.assignedTours : [];
+  console.log(toursArray);
+  console.log(tours.assignedTours);
+
   // ✅ React Query v5 syntax for mutation
   const mutation = useMutation({
     mutationFn: async ({ id, action }) => {
@@ -67,6 +71,22 @@ const MyAssignedTours = () => {
     });
   };
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentTours = toursArray.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(toursArray.length / itemsPerPage);
+
+  const handlePrevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const handleNextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const handleItemsPerPage = (e) => {
+    setItemsPerPage(parseInt(e.target.value));
+    setCurrentPage(1);
+  };
+
+
   if (isLoading) return <Loading></Loading>;
   if (isError) return <p className="text-red-500">Failed to load tours.</p>;
 
@@ -92,7 +112,7 @@ const MyAssignedTours = () => {
                 </tr>
               </thead>
               <tbody>
-                {tours.map((tour, idx) => (
+                {currentTours.map((tour, idx) => (
                   <tr key={tour._id} className="align-top">
                     <td className="whitespace-nowrap">{idx + 1}</td>
 
@@ -138,10 +158,14 @@ const MyAssignedTours = () => {
                           ? "badge-success"
                           : tour.booking_status === "rejected"
                             ? "badge-error"
-                            : "badge-warning"
+                            : tour.booking_status === "in-review"
+                              ? "badge-info"
+                              : "badge-warning"
                           }`}
                       >
-                        {tour.booking_status === "in-review" ? "In Review" : tour.booking_status}
+                        {tour.booking_status === "in-review"
+                          ? "In Review"
+                          : tour.booking_status.charAt(0).toUpperCase() + tour.booking_status.slice(1)}
                       </span>
                     </td>
 
@@ -150,7 +174,7 @@ const MyAssignedTours = () => {
                       <button
                         onClick={() => handleAction(tour._id, "accept")}
                         disabled={tour.booking_status !== "in-review" || pendingTourId === tour._id}
-                        className="btn btn-sm btn-success whitespace-nowrap"
+                        className={`btn btn-xs btn-success whitespace-nowrap ${pendingTourId === tour._id ? "opacity-70 cursor-not-allowed" : ""}`}
                       >
                         {pendingTourId === tour._id ? "Processing..." : "Accept"}
                       </button>
@@ -158,10 +182,11 @@ const MyAssignedTours = () => {
                       <button
                         onClick={() => handleAction(tour._id, "reject")}
                         disabled={tour.booking_status !== "in-review" || pendingTourId === tour._id}
-                        className="btn btn-sm btn-error whitespace-nowrap"
+                        className={`btn btn-xs btn-error whitespace-nowrap ${pendingTourId === tour._id ? "opacity-70 cursor-not-allowed" : ""}`}
                       >
                         {pendingTourId === tour._id ? "Processing..." : "Reject"}
                       </button>
+
 
                       <button
                         className="btn btn-xs btn-ghost border border-blue-300 whitespace-nowrap"
@@ -252,8 +277,23 @@ const MyAssignedTours = () => {
                   })()}
                 </p>
 
-              </div>
 
+
+              </div>
+              <p>
+                <span className="text-gray-500">Created At:</span>{" "}
+                <strong>
+                  {selectedTour.created_at
+                    ? new Date(selectedTour.created_at).toLocaleString("en-GB", {
+                      day: "2-digit",
+                      month: "short",
+                      year: "numeric",
+                      // hour: "2-digit",
+                      // minute: "2-digit",
+                    })
+                    : "N/A"}
+                </strong>
+              </p>
               {/* Members & Price */}
               <div className="grid grid-cols-2 gap-3">
                 <p>
@@ -279,12 +319,29 @@ const MyAssignedTours = () => {
                     </span>
                   )}
                 </p>
+
+                {selectedTour.payment?.paid_at && (
+                  <p>
+                    <span className="text-gray-500">Paid At:</span>{" "}
+                    <strong>
+                      {new Date(selectedTour.payment.paid_at).toLocaleString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        // hour: "2-digit",
+                        // minute: "2-digit",
+                      })}
+                    </strong>
+                  </p>
+                )}
+
                 {selectedTour.payment?.transactionId && (
                   <p>
                     <span className="text-gray-500">Txn ID:</span>{" "}
                     {selectedTour.payment.transactionId}
                   </p>
                 )}
+
               </div>
 
               {/* Status & Tracking */}
@@ -333,6 +390,66 @@ const MyAssignedTours = () => {
         </div>
       )}
 
+      <div className="pagination mt-6 flex justify-center items-center gap-2">
+        <button
+          onClick={handlePrevPage}
+          disabled={currentPage === 0}
+          className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        {Array.from({ length: totalPages }, (_, i) => (
+          <button
+            key={i}
+            onClick={() => setCurrentPage(i + 1)} // 1-indexed page
+            className={`px-3 py-1 rounded ${currentPage === i + 1
+              ? "bg-primary text-white"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+              }`}
+          >
+            {i + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={handleNextPage}
+          disabled={currentPage === totalPages - 1}
+          className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+        >
+          Next
+        </button>
+
+        <select
+          value={itemsPerPage}
+          onChange={handleItemsPerPage}
+          className="ml-3 cursor-pointer border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+        >
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+      {/* {totalPages > 1 && (
+        <div className="flex justify-center gap-2 mt-4">
+          <button
+            className="btn btn-sm"
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            Prev
+          </button>
+          <span className="btn btn-ghost btn-sm">{currentPage} / {totalPages}</span>
+          <button
+            className="btn btn-sm"
+            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
+      )} */}
     </>
   );
 };
