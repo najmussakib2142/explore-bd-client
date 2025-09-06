@@ -36,7 +36,7 @@ const Overview = () => {
           transition={{ duration: 1 }}
         >
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-            Discover Bangladesh with ExploreBD
+            Discover Bangladesh with <span className="bg-gradient-to-r from-cyan-400 to-pink-400 bg-clip-text text-transparent">ExploreBD</span>
           </h2>
           <p className="text-gray-700 dark:text-gray-300 mb-4">
             ExploreBD is your ultimate travel guide for Bangladesh. Find detailed

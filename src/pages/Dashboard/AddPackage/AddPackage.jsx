@@ -118,7 +118,7 @@ const AddPackage = () => {
             data.price = parseFloat(data.price);
             data.images = pictures;
             data.totalDays = fields.length;
-            
+
             // Convert highlights (comma separated) -> array
             if (data.highlights && typeof data.highlights === "string") {
                 data.highlights = data.highlights
@@ -463,8 +463,19 @@ const AddPackage = () => {
                 </div>
 
                 {/* Submit */}
-                <button type="submit" className="btn btn-primary w-full" disabled={uploading || submitting}>
-                    {submitting ? "Uploading..." : "Add Package"}
+                <button
+                    type="submit"
+                    className="btn btn-primary w-full flex items-center justify-center gap-2"
+                    disabled={uploading || submitting}
+                >
+                    {submitting ? (
+                        <>
+                            <span className="loading loading-spinner loading-sm"></span>
+                            Uploading...
+                        </>
+                    ) : (
+                        "Add Package"
+                    )}
                 </button>
             </form>
         </div>

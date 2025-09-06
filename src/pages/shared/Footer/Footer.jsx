@@ -10,7 +10,7 @@ const Footer = () => {
         { name: "About Us", path: "/about" },
         { name: "Trips", path: "/allTrips" },
         { name: "Community", path: "/communityPage" },
-        { name: "Contact", path: "/contact" },
+        // { name: "Contact", path: "/contact" },
         { name: "FAQ", path: "/faq" },
     ];
 
@@ -109,16 +109,17 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-base-100 border-t border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 px-6 md:px-20 py-10">
-            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+        <footer className="bg-base-100  border-t border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 px-6 md:px-20 py-12">
+            <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3  gap-10">
 
                 {/* Logo + Description */}
                 <div className="flex flex-col gap-3">
                     <div className="md:-ml-5 -mb-2">
                         <Logo />
                     </div>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                        Plan your adventure with ExploreBD!
+                    <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                        Plan your adventure with ExploreBD — discover the best trips,
+                        communities, and experiences across Bangladesh.
                     </p>
                     <p className="text-xs text-gray-600 dark:text-gray-400">
                         © {currentYear} ExploreBD. All rights reserved.
@@ -126,8 +127,8 @@ const Footer = () => {
                 </div>
 
                 {/* Quick Links */}
-                <div>
-                    <h3 className="font-bold mb-3">Quick Links</h3>
+                <div className="md:pl-9">
+                    <h3 className="font-bold  mb-3">Quick Links</h3>
                     <ul className="flex flex-col gap-2">
                         {navLinks.map((link) => (
                             <li
@@ -142,7 +143,7 @@ const Footer = () => {
 
                 {/* Social */}
                 <div>
-                    <h3 className="font-bold mb-3">Connect with Us</h3>
+                    <h3 className="font-bold pt-2 mb-3">Connect with Us</h3>
                     <div className="flex gap-4">
                         {socialLinks.map((link) => (
                             <a
@@ -155,6 +156,18 @@ const Footer = () => {
                                 {link.icon}
                             </a>
                         ))}
+                    </div>
+                    <div className="pt-6">
+                        <h3 className="font-semibold mb-2 text-lg">Contact</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            📍 Dhaka, Bangladesh
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            📞 +880 1736 007474
+                        </p>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                            ✉️ najmussakib2142@email.com
+                        </p>
                     </div>
                 </div>
             </div>

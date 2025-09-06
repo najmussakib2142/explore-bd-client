@@ -3,9 +3,11 @@ import { useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { FaSearch, FaUserSlash } from "react-icons/fa";
 import useAxios from "../../../hooks/useAxios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const ActiveGuides = () => {
     const axiosInstance = useAxios();
+    const axiosSecure = useAxiosSecure()
 
     // State
     const [searchTerm, setSearchTerm] = useState("");
@@ -36,14 +38,32 @@ const ActiveGuides = () => {
             showCancelButton: true,
             confirmButtonText: "Yes, deactivate",
             cancelButtonText: "Cancel",
+            confirmButtonColor: "#dc2626", // red for danger
+            cancelButtonColor: "#6b7280", // gray for cancel
         });
 
         if (!confirm.isConfirmed) return;
 
         try {
-            await axiosInstance.patch(`/guides/${id}/status`, { status: "rejected", email });
+            Swal.fire({
+                title: "Updating...",
+                text: "Please wait while we deactivate the guide.",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+
+            // await axiosSecure.patch(`/guides/${id}/status`, { status: "rejected", email });
+            await Promise.all([
+                axiosSecure.patch(`/guides/${id}/status`, { status: "rejected", email }),
+                axiosSecure.patch(`/users/${email}/status`, { status: "rejected" }) // patch users collection
+            ]);
+            
             Swal.fire("Success", "Guide deactivated successfully", "success");
+
             refetch();
+
         } catch (err) {
             console.error(err);
             Swal.fire("Error", "Failed to deactivate guide", "error");
@@ -95,7 +115,7 @@ const ActiveGuides = () => {
                             <tbody>
                                 {filteredGuides.map((guide, idx) => (
                                     <tr key={idx} className="cursor-pointer" onClick={() => setSelectedGuide(guide)}>
-                                        <td>{idx+1}</td>
+                                        <td>{idx + 1}</td>
                                         <td>{guide.name}</td>
                                         <td>{guide.email}</td>
                                         <td>{guide.phone}</td>
@@ -153,7 +173,7 @@ const ActiveGuides = () => {
                             onChange={(e) => { setItemsPerPage(parseInt(e.target.value)); setCurrentPage(0); }}
                             className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
                         >
-                            {[10, 20, 30, 50].map((num) => <option key={num} value={num}>{num}</option>)}
+                            {[6, 12, 25, 50].map((num) => <option key={num} value={num}>{num}</option>)}
                         </select>
                     </div>
                 </>
@@ -162,7 +182,7 @@ const ActiveGuides = () => {
             {/* Detail Modal */}
             {selectedGuide && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+                    className="fixed inset-0 bg-transparent backdrop-blur-lg bg-opacity-50 flex items-center justify-center z-50"
                     onClick={() => setSelectedGuide(null)}
                 >
                     <div

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import useAxios from "../../../hooks/useAxios";
 import Loading from "../../shared/Loading/Loading";
-import { useSprings, animated } from "@react-spring/web";
+import { motion } from "framer-motion";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -24,72 +24,67 @@ const MostBookedPackages = () => {
     AOS.init({ duration: 800, once: true, easing: "ease-out-cubic" });
   }, []);
 
-  // React Spring animations for hover effect
-  const springs = useSprings(
-    packages.length,
-    packages.map((_, index) => ({
-      transform: hoveredIndex === index ? "scale(1.05)" : "scale(1)",
-      boxShadow:
-        hoveredIndex === index
-          ? "0px 20px 40px rgba(0,0,0,0.2)"
-          : "0px 5px 15px rgba(0,0,0,0.1)",
-      config: { mass: 1, tension: 220, friction: 20 },
-    }))
-  );
-
   if (isLoading) return <Loading />;
 
   return (
     <section className="py-16 px-5 md:px-20">
-      <h2 className="text-3xl md:text-4xl font-bold text-center text-secondary mb-12">
-        Most Popular Tours
+      <h2 className="text-3xl  md:text-4xl font-bold text-center mb-2">
+        Most Popular <span className="text-primary">Tours</span>
       </h2>
-      <div className="grid gap-4 md:gap-5 md:grid-cols-3">
+      <p className="text-center text-gray-600 dark:text-gray-400 md:text-base mb-6">
+        Explore the experiences our travelers love the most and plan your next adventure.
+      </p>
+
+      {/* Centered Carousel with Snap */}
+      <div className="flex gap-6 overflow-x-auto scrollbar-none snap-x snap-mandatory py-4 px-2">
         {packages.map((pkg, index) => (
-          <animated.div
+          <motion.div
             key={pkg._id}
-            style={springs[index]}
+            whileHover={{ scale: 1.05 }}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
-            className="bg-base-100 rounded-xl overflow-hidden cursor-pointer transition-transform duration-300"
+            className="relative min-w-[280px] md:min-w-[320px] lg:min-w-[350px] bg-base-100 rounded-xl overflow-hidden shadow-lg cursor-pointer flex-shrink-0 snap-center transition-transform duration-300"
             data-aos="fade-up"
             data-aos-delay={index * 100}
           >
-            <animated.img
+            {/* Package Image */}
+            <motion.img
               src={pkg.image || "/placeholder.jpg"}
               alt={pkg.title}
               className="w-full h-56 object-cover"
-              style={{
-                transform:
-                  hoveredIndex === index ? "translateY(-5px)" : "translateY(0px)",
-                transition: "transform 0.3s",
-              }}
+              initial={{ scale: 1 }}
+              animate={{ scale: hoveredIndex === index ? 1.05 : 1 }}
+              transition={{ type: "spring", stiffness: 150 }}
             />
-            <div className="p-5">
-              <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100 mb-2 line-clamp-1">
+
+            {/* Overlay on Hover */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
+              className="absolute inset-0 bg-black/40 flex flex-col justify-end p-5 text-white"
+            >
+              <h3 className="text-lg md:text-xl font-bold line-clamp-1">
                 {pkg.title}
               </h3>
-              <p className="text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">
+              <p className="text-sm line-clamp-2">
                 {pkg.description
-                  ? pkg.description.slice(0, 100) + "..."
+                  ? pkg.description.slice(0, 80) + "..."
                   : "No description available."}
               </p>
-              <div className="flex justify-between items-center mb-4">
-                <span className="text-sm text-gray-600 dark:text-gray-300">
-                  {pkg.totalDays} {pkg.totalDays > 1 ? "days" : "day"}
-                </span>
-                <span className="text-sm font-semibold text-secondary">
+              <div className="flex justify-between items-center mt-2 mb-3 text-sm">
+                <span>{pkg.totalDays} {pkg.totalDays > 1 ? "days" : "day"}</span>
+                <span className="font-semibold text-secondary">
                   ৳ {pkg.price?.$numberInt || pkg.price}
                 </span>
               </div>
               <button
                 onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}
-                className="bg-secondary hover:bg-secondary-dark text-white font-semibold px-4 py-2 rounded-lg w-full"
+                className="bg-secondary cursor-pointer hover:bg-secondary-dark text-white font-semibold px-4 py-2 rounded-lg w-full"
               >
                 Book Now
               </button>
-            </div>
-          </animated.div>
+            </motion.div>
+          </motion.div>
         ))}
       </div>
     </section>

@@ -11,11 +11,16 @@ const useAxiosSecure = () => {
     const { user, logOut } = useAuth();
     const navigate = useNavigate()
 
-    axiosSecure.interceptors.request.use(async (config) => {
-        if (user) {
-            const token = await user.getIdToken(true);
-            config.headers.Authorization = `Bearer ${token}`;
-        }
+    // console.log(user.accessToken);
+
+    axiosSecure.interceptors.request.use((config) => {
+        // for refresh token, can't use practice project
+        // if (user) {
+        //     const token = await user.getIdToken(true);
+        //     config.headers.Authorization = `Bearer ${token}`;
+        // }
+        config.headers.Authorization = `Bearer ${user.accessToken}`;
+
         return config;
     }, error => {
         return Promise.reject(error);

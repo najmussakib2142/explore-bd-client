@@ -22,25 +22,26 @@ export const projects = [
     {
         name: "EduCircle",
         description: "Submission and evaluation system for assignments. Teachers can give feedback and students can track submissions.",
-        github: "https://github.com/your-username/eduCircle",
-        live: "https://educircle.example.com"
+        github: "https://github.com/Programming-Hero-Web-Course4/b11a11-server-side-najmussakib2142",
+        live: "https://edu-circle-admin.web.app/"
     },
     {
-        name: "Parcel Delivery App",
+        name: "ProFast",
         description: "Parcel booking and tracking system built with React & Firebase. Users can track parcel status in real-time.",
         github: "https://github.com/your-username/parcel-delivery",
-        live: "https://parcel.example.com"
+        live: "https://zap-shift-21e9e.firebaseapp.com/"
     },
     {
         name: "Event Explorer",
         description: "An event discovery platform where users can explore local events, RSVP, and share with friends.",
         github: "https://github.com/your-username/event-explorer",
-        live: "https://eventexplorer.example.com"
+        live: "https://event-explorer-cd065.firebaseapp.com/"
     },
     {
-        name: "Travel Blog",
-        description: "Personal travel blog website showcasing travel stories and adventures. Built with React and Tailwind CSS.",
-        github: "https://github.com/your-username/travel-blog",
-        live: "https://travelblog.example.com"
+        // a-10
+        name: "HobbyHub",
+        description: "is a hobby group management platform where users can create, explore, and manage groups based on their favorite hobbies and interests.",
+        github: "https://github.com/Programming-Hero-Web-Course4/b11a10-client-side-najmussakib2142?tab=readme-ov-file",
+        live: "https://hobby-hub-discovery.web.app/"
     }
 ];

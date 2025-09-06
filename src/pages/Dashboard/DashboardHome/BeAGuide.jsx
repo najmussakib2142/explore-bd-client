@@ -123,11 +123,23 @@ const BeAGuide = () => {
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Yes, submit",
+
       });
 
       if (result.isConfirmed) {
+        Swal.fire({
+          title: "Submitting...",
+          text: "Please wait while we process your application",
+          allowOutsideClick: false,
+          didOpen: () => {
+            Swal.showLoading();
+          },
+        });
+
         const payload = { ...formData, userId: user?.uid, photoURL: profilePic };
         const res = await axiosSecure.post("/guides", payload);
+
+        Swal.close();
 
         if (res?.data?.insertedId) {
           await Swal.fire({
@@ -140,6 +152,7 @@ const BeAGuide = () => {
         }
       }
     } catch (err) {
+      Swal.close();
       console.error(err);
       Swal.fire("Error", err.message || "Failed to submit application", "error");
     } finally {
@@ -188,11 +201,12 @@ const BeAGuide = () => {
 
               <button
                 type="button"
-                className="btn btn-primary btn-sm"
+                className="btn btn-primary btn-sm flex items-center gap-2"
                 onClick={handleUploadPhoto}
                 disabled={uploading || !photoFile}
               >
-                {uploading ? "Uploading..." : "Upload Photo"}
+                {uploading && <FaSpinner className="animate-spin" />}
+                {uploading ? "Uploading..." : profilePic ? "Upload New Photo" : "Upload Photo"}
               </button>
             </div>
           )}

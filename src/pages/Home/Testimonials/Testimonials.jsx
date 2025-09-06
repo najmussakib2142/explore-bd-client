@@ -8,6 +8,7 @@ import 'swiper/css/pagination';
 import './Testimonials.css';
 import reviewImg from '../../../assets/travel-top.png';
 import reviewQuote from '../../../assets/reviewQuote.png';
+import { Typewriter } from "react-simple-typewriter";
 
 // Travel-themed reviews
 const reviews = [
@@ -62,7 +63,21 @@ const Testimonials = () => {
             {/* Decorative Top Image */}
             <div className="text-center mb-8">
                 <img src={reviewImg} alt="Travel decoration" className="mx-auto max-h-44 mb-3" />
-                <h2 className="text-3xl text-secondary font-bold mb-2">What our travelers say</h2>
+
+                <h2 className="text-3xl md:text-4xl font-bold text-center">
+                    What our travelers{" "}
+                    <span className="text-secondary">
+                        <Typewriter
+                            words={["say", "share", "recommend", "love"]}
+                            loop={0}   // 0 = infinite loop
+                            cursor
+                            cursorStyle="|"
+                            typeSpeed={120}
+                            deleteSpeed={60}
+                            delaySpeed={1000}
+                        />
+                    </span>
+                </h2>
                 <p className="max-w-2xl mx-auto text-gray-400 mb-10">
                     Hear from our travelers! Explore Bangladesh's hidden gems, breathtaking sights, and unforgettable experiences with ExploreBD.
                 </p>

@@ -28,6 +28,7 @@ const MyAssignedTours = () => {
   } = useQuery({
     queryKey: ["assignedTours", user?.email],
     queryFn: async () => {
+      if (!user?.email) return { assignedTours: [] }; // prevent bad request
       const res = await axiosSecure.get(`/bookings/assigned/${user?.email}`);
       return res.data;
     },
@@ -414,7 +415,7 @@ const MyAssignedTours = () => {
 
         <button
           onClick={handleNextPage}
-          disabled={currentPage === totalPages - 1}
+          disabled={currentPage === totalPages}
           className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
         >
           Next
@@ -431,25 +432,7 @@ const MyAssignedTours = () => {
           <option value="50">50</option>
         </select>
       </div>
-      {/* {totalPages > 1 && (
-        <div className="flex justify-center gap-2 mt-4">
-          <button
-            className="btn btn-sm"
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          >
-            Prev
-          </button>
-          <span className="btn btn-ghost btn-sm">{currentPage} / {totalPages}</span>
-          <button
-            className="btn btn-sm"
-            onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </button>
-        </div>
-      )} */}
+     
     </>
   );
 };

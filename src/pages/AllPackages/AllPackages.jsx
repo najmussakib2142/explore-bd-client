@@ -1,22 +1,17 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { FaSpinner } from "react-icons/fa";
 import { useNavigate } from "react-router";
-// import useAxiosSecure from "../../hooks/useAxiosSecure";
+import { animated } from "@react-spring/web";
 import Loading from "../shared/Loading/Loading";
-// import './pagination.css'
 import useAxios from "../../hooks/useAxios";
-// import Pagination from "../shared/Pagination/Pagination";
 
 const AllPackages = () => {
   const axiosInstance = useAxios();
   const navigate = useNavigate();
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(6);
 
-  // Fetch packages with server-side pagination
   const { data, isLoading, isError } = useQuery({
     queryKey: ["all-packages", currentPage, itemsPerPage],
     queryFn: async () => {
@@ -33,7 +28,6 @@ const AllPackages = () => {
   const numberOfPages = Math.ceil(count / itemsPerPage);
   const pages = [...Array(numberOfPages).keys()];
 
-  // Pagination handlers
   const handleItemsPerPage = (e) => {
     const value = parseInt(e.target.value);
     setItemsPerPage(value);
@@ -51,60 +45,73 @@ const AllPackages = () => {
   if (isLoading) return <Loading />;
   if (isError)
     return (
-      <p className="text-center text-red-500 py-12">Failed to load packages</p>
+      <p className="text-center text-red-500 py-12">
+        Failed to load packages
+      </p>
     );
 
   return (
-    <div className="p-6">
+    <div className="p-6 md:px-20">
+      {/* Page Title */}
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-bold text-primary mb-2">Explore All Packages</h1>
+        <p className="text-gray-600 dark:text-gray-400">
+          Discover the best trips and adventures across Bangladesh. Choose your perfect tour!
+        </p>
+      </div>
+
+      {/* Packages Grid */}
       {packages.length === 0 ? (
         <p className="text-center text-gray-500 py-12">No packages available</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {packages.map((pkg, idx) => (
-            <div
+          {packages.map((pkg) => (
+            <animated.div
               key={pkg._id}
-              className="bg-base-100 shadow-lg rounded-xl overflow-hidden transform hover:scale-105 hover:shadow-2xl transition duration-300"
-              data-aos="fade-up"
-              data-aos-delay={idx * 100} // stagger animation
+              className="bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden cursor-pointer hover:scale-105 transform transition-transform duration-300"
+              onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}
             >
-              <img
-                src={pkg.images?.[0] || "https://via.placeholder.com/300"}
-                alt={pkg.title}
-                className="w-full h-48 object-cover"
-                data-aos="zoom-in"
-              />
-              <div className="p-4">
-                <p className="px-3 py-1 rounded-full w-fit text-sm font-medium bg-gray-200 text-gray-900 dark:bg-gray-700 dark:text-gray-100 shadow-sm">
+              <div className="relative overflow-hidden">
+                <img
+                  src={pkg.images?.[0] || "https://via.placeholder.com/300"}
+                  alt={pkg.title}
+                  className="w-full h-48 object-cover"
+                />
+                <p className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
                   {pkg.tourType}
                 </p>
-                <h3 className="text-xl mt-2 font-semibold mb-2">{pkg.title}</h3>
-                <p className="text-lg font-bold mb-3">BDT {pkg.price}</p>
-                <button
-                  onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}
-                  className="btn btn-primary w-full"
-                >
-                  View Package
-                </button>
               </div>
-            </div>
+
+              <div className="p-4">
+                <h3 className="text-xl font-semibold mb-2">{pkg.title}</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                  📍 {pkg.location} • ⏳ {pkg.totalDays} days
+                </p>
+                <p className="text-lg font-bold text-secondary mb-3">
+                  BDT {pkg.price?.$numberInt || pkg.price}
+                </p>
+                <button className="btn btn-primary w-full">View Package</button>
+              </div>
+            </animated.div>
           ))}
         </div>
       )}
 
       {/* Pagination Controls */}
-      <div className="pagination mt-6 flex justify-center items-center gap-2" data-aos="fade-up">
+      <div className="mt-8 flex flex-wrap justify-center items-center gap-2">
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 0}
-          className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+          className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
         >
           Prev
         </button>
+
         {pages.map((page) => (
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
-            className={`px-3 py-1 rounded ${currentPage === page
+            className={`px-4 py-2 rounded ${currentPage === page
               ? "bg-primary text-white"
               : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
               }`}
@@ -112,22 +119,25 @@ const AllPackages = () => {
             {page + 1}
           </button>
         ))}
+
         <button
           onClick={handleNextPage}
           disabled={currentPage === pages.length - 1}
-          className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+          className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
         >
           Next
         </button>
+
         <select
           value={itemsPerPage}
           onChange={handleItemsPerPage}
           className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
         >
-          <option value="3">3</option>
           <option value="6">6</option>
           <option value="9">9</option>
           <option value="12">12</option>
+          <option value="15">15</option>
+
         </select>
       </div>
     </div>

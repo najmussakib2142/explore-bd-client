@@ -5,7 +5,7 @@ import { useTheme } from '../../../provider/ThemeContext';
 import useAuth from '../../../hooks/useAuth';
 import Swal from 'sweetalert2';
 import toast from 'react-hot-toast';
-import { FaMoon, FaSun, FaUserCircle } from "react-icons/fa";
+import { FaMoon, FaSun, FaTachometerAlt, FaUserCircle } from "react-icons/fa";
 import Loading from '../Loading/Loading';
 
 
@@ -76,8 +76,11 @@ const Navbar = () => {
     </>
     return (
         <div>
-            <div className={`fixed dark:bg-[#0f172a] max-w-7xl mx-auto  top-0 w-full bg-white z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} shadow`}>
-                <div className="navbar   py-0  z-50 md:pr-7 bg-base-100/80 dark:bg-[#0f172a]  backdrop-blur transition-all duration-300 shadow-md">
+            {/* <div className={`fixed dark:bg-[#0f172a] max-w-7xl mx-auto  top-0 w-full bg-white z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} shadow`}>
+                <div className="navbar   py-0  z-50 md:pr-7 bg-base-100/80 dark:bg-[#0f172a]  backdrop-blur transition-all duration-300 shadow-md"> */}
+            <div className={`fixed top-0  w-full z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
+                <div className="navbar h-14 max-w-7xl mx-auto px-4 md:px-7 flex justify-between items-center 
+                  bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md shadow-md transition-all duration-300">
                     <div className="navbar-start">
                         <div className="dropdown">
                             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden -mr-4">
@@ -135,8 +138,8 @@ const Navbar = () => {
                                         <button
                                             onClick={() => toggleTheme('light')}
                                             className={`md:p-1 rounded-full transition-colors ${theme === 'light'
-                                                    ? 'bg-base-100 text-yellow-600'
-                                                    : 'text-gray-600 dark:text-gray-300'
+                                                ? 'bg-base-100 text-yellow-600'
+                                                : 'text-gray-600 dark:text-gray-300'
                                                 }`}
                                             aria-label="Switch to light mode"
                                         >
@@ -146,8 +149,8 @@ const Navbar = () => {
                                         <button
                                             onClick={() => toggleTheme('dark')}
                                             className={`md:p-1 rounded-full transition-colors ${theme === 'dark'
-                                                    ? 'bg-indigo-100 text-indigo-500'
-                                                    : 'text-gray-600 dark:text-gray-300'
+                                                ? 'bg-indigo-100 text-indigo-500'
+                                                : 'text-gray-600 dark:text-gray-300'
                                                 }`}
                                             aria-label="Switch to dark mode"
                                         >
@@ -198,7 +201,7 @@ const Navbar = () => {
                                     </div>
 
                                     {/* Tooltip on hover */}
-                                    <div className="absolute bottom-[-30px] left-1/2 -translate-x-1/2 w-max bg-gray-700 text-white text-xs font-medium py-1.5 px-3 rounded-xl opacity-0 group-hover:opacity-100 transition duration-200 whitespace-nowrap z-20">
+                                    <div className="absolute bottom-[-36px] left-1/2 -translate-x-1/2 w-max bg-gray-800 dark:bg-gray-700 text-white text-sm font-medium py-1.5 px-3 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-200 whitespace-nowrap shadow-lg z-20">
                                         {user?.displayName || user?.email}
                                     </div>
 
@@ -210,10 +213,10 @@ const Navbar = () => {
                                         {/* Profile info (not clickable) */}
                                         <li className="px-3 py-2 border-b border-gray-200 dark:border-gray-700 cursor-default">
                                             <div className="flex flex-col">
-                                                <span className="font-semibold text-gray-800 dark:text-gray-200">
+                                                <span className="font-semibold truncate text-gray-800 dark:text-gray-200">
                                                     {user?.displayName || "User"}
                                                 </span>
-                                                <span className="text-sm text-gray-500 dark:text-gray-400">
+                                                <span className="text-sm truncate text-gray-500 dark:text-gray-400">
                                                     {user?.email}
                                                 </span>
                                             </div>
@@ -221,7 +224,8 @@ const Navbar = () => {
 
                                         {/* Navigation links */}
                                         <li className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary">
-                                            <NavLink to="/dashboard/">Dashboard</NavLink>
+
+                                            <NavLink to="/dashboard/"> Dashboard</NavLink>
                                         </li>
                                         <li className="text-gray-800 dark:text-gray-200 hover:text-primary dark:hover:text-primary">
                                             <NavLink to="/offers">Offer Announcements</NavLink>

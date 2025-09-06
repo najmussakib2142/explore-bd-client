@@ -38,7 +38,7 @@ const GuideDashboard = () => {
     });
 
     // Fetch accepted bookings
-    
+
 
     // console.log(guideInfo);
 
@@ -81,6 +81,12 @@ const GuideDashboard = () => {
                         <p className="text-lg">
                             <span className="font-semibold text-primary">Role:</span>{" "}
                             <span className="text-gray-800 dark:text-gray-200">{guideInfo?.role || "Guide"}</span>
+                        </p>
+                        <p className="text-lg">
+                            <span className="font-semibold text-primary">Status:</span>{" "}
+                            <span className="text-gray-800 dark:text-gray-200">
+                                {guideInfo?.status === "rejected" ? "Deactivated" : guideInfo?.status || "Guide"}
+                            </span>
                         </p>
 
                         {/* Extra fields */}
@@ -127,7 +133,7 @@ const GuideDashboard = () => {
                 )}
             </AnimatePresence>
 
-          
+
 
         </>
 

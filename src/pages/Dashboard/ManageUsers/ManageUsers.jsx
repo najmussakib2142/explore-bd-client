@@ -151,7 +151,7 @@ const ManageUsers = () => {
                         <button
                             onClick={handlePrevPage}
                             disabled={currentPage === 0}
-                            className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                            className="px-3 cursor-pointer py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
                         >
                             Prev
                         </button>
@@ -172,7 +172,7 @@ const ManageUsers = () => {
                         <button
                             onClick={handleNextPage}
                             disabled={currentPage === pages.length - 1}
-                            className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                            className="px-3 cursor-pointer py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
                         >
                             Next
                         </button>
@@ -180,7 +180,7 @@ const ManageUsers = () => {
                         <select
                             value={itemsPerPage}
                             onChange={handleItemsPerPage}
-                            className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+                            className="ml-3 cursor-pointer border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
                         >
                             <option value="10">10</option>
                             <option value="20">20</option>

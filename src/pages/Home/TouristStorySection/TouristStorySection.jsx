@@ -67,7 +67,7 @@ export default function TouristStorySection() {
                         style={springs[index]}
                         onMouseEnter={() => setHoveredIndex(index)}
                         onMouseLeave={() => setHoveredIndex(null)}
-                        className="bg-white dark:bg-gray-900 border-gray-600 dark:border-gray-700 rounded-2xl overflow-hidden cursor-pointer"
+                        className="bg-[#f0fdf4] dark:bg-[#1e293b] border-gray-600 dark:border-gray-700 rounded-2xl overflow-hidden cursor-pointer"
                         data-aos="fade-up"
                         data-aos-delay={index * 100}
                     >

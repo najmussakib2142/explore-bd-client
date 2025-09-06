@@ -39,11 +39,22 @@ const MakeAdmin = () => {
             showCancelButton: true,
             confirmButtonText: "Yes",
             cancelButtonText: "Cancel",
+            confirmButtonColor: currentRole === "admin" ? "#dc2626" : "#16a34a", // red for remove, green for make
+            cancelButtonColor: "#6b7280",
         });
 
         if (!confirm.isConfirmed) return;
 
         try {
+            Swal.fire({
+                title: "Updating...",
+                text: "Please wait while the role is being updated.",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+
             await updateRole({ id, role: newRole });
             Swal.fire("Success", `${action} successful`, "success");
         } catch (error) {

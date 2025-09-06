@@ -105,7 +105,10 @@ const PackageDetailsPage = () => {
                     <p><span className="font-semibold text-primary">Location:</span> {packageData.location}</p>
                 </div>
 
-                <p data-aos="fade-up"><span className="font-semibold text-primary">Duration:</span> {packageData.count}</p>
+                <p data-aos="fade-up">
+                    <span className="font-semibold text-primary">Duration:</span>{" "}
+                    {packageData.totalDays} {packageData.totalDays > 1 ? "Days" : "Day"}
+                </p>
 
                 <div className="md:grid grid-cols-4 pt-2" data-aos="fade-up">
                     {packageData.inclusions?.length > 0 && (

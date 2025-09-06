@@ -54,14 +54,28 @@ const PendingGuides = () => {
             showCancelButton: true,
             confirmButtonText: "Yes",
             cancelButtonText: "Cancel",
+            confirmButtonColor: action === "approve" ? "#16a34a" : "#dc2626", // green for approve, red for reject
+            cancelButtonColor: "#6b7280", // gray for cancel
         });
 
         if (!confirm.isConfirmed) return;
 
         try {
+
+            Swal.fire({
+                title: "Updating...",
+                text: "Please wait while we update the decision.",
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                },
+            });
+
             const status = action === "approve" ? "active" : "rejected";
             await axiosSecure.patch(`/guides/${id}/status`, { status, email });
+           
             refetch();
+            
             Swal.fire("Success", `Guide ${action}d successfully`, "success");
         } catch (err) {
             console.log(err);
@@ -89,6 +103,7 @@ const PendingGuides = () => {
                 <table className="table w-full">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Name</th>
                             <th>Email</th>
                             <th>Age</th>
@@ -111,6 +126,7 @@ const PendingGuides = () => {
                                     whileHover={{ scale: 1.02 }}
                                     className={`hover:bg-base-100 transition-colors ${index % 2 === 1 ? "bg-base-100 bg-opacity-50" : ""}`}
                                 >
+                                    <td>{index + 1}</td>
                                     <td>{guide.name}</td>
                                     <td>{guide.email}</td>
                                     <td>{guide.age ?? '-'}</td>
@@ -123,10 +139,10 @@ const PendingGuides = () => {
                                     <td>
                                         <span
                                             className={`badge ${guide.status === 'pending'
-                                                    ? 'badge-warning'
-                                                    : guide.status === 'active'
-                                                        ? 'badge-success'
-                                                        : 'badge-error'
+                                                ? 'badge-warning'
+                                                : guide.status === 'active'
+                                                    ? 'badge-success'
+                                                    : 'badge-error'
                                                 }`}
                                         >
                                             {guide.status}

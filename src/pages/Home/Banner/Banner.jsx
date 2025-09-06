@@ -36,7 +36,7 @@ const Banner = () => {
     }, []);
 
     return (
-        <div className="relative w-full h-[70vh] md:h-[80vh] overflow-hidden">
+        <div className="relative w-full h-[75vh] md:h-[90vh] lg:h-screen overflow-hidden flex items-center justify-center">
             <AnimatePresence>
                 {slides.map((slide, index) =>
                     index === current ? (
@@ -77,15 +77,44 @@ const Banner = () => {
                                 >
                                     {slide.text}
                                 </motion.p>
+                                {/* <motion.div className="mt-6 flex gap-4">
+                                    <motion.button
+                                        initial={{ opacity: 0, x: -50 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.4, duration: 0.7 }}
+                                        whileHover={{ scale: 1.08 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => navigate("/allTrips")}
+                                        className="btn btn-primary"
+                                    >
+                                        Explore More
+                                    </motion.button>
+
+                                    <motion.button
+                                        initial={{ opacity: 0, x: 50 }}
+                                        animate={{ opacity: 1, x: 0 }}
+                                        transition={{ delay: 0.6, duration: 0.7 }}
+                                        whileHover={{ scale: 1.08 }}
+                                        whileTap={{ scale: 0.95 }}
+                                        onClick={() => navigate("/allTrips")}
+                                        className="btn btn-secondary"
+                                    >
+                                        Plan Trip
+                                    </motion.button>
+                                </motion.div> */}
+
+
                                 <motion.div
                                     initial={{ opacity: 0, y: 30 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, y: 30 }}
                                     transition={{ delay: 0.5, duration: 1 }}
+                                    whileTap={{ scale: 0.95 }}
+
                                     className="mt-6 flex gap-4"
                                 >
-                                    <button onClick={() => navigate("/allTrips")} className="btn btn-primary">Explore More</button>
-                                    <button onClick={() => navigate("/allTrips")} className="btn btn-secondary">Plan Trip</button>
+                                    <button onClick={() => navigate("/allTrips")} className="btn border-none hover:scale-105  btn-primary">Explore More</button>
+                                    <button onClick={() => navigate("/allTrips")} className="btn border-none hover:scale-105  btn-secondary">Plan Trip</button>
                                 </motion.div>
                             </div>
                         </motion.div>
