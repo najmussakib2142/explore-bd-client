@@ -28,10 +28,14 @@ const MostBookedPackages = () => {
 
   return (
     <section className="py-16 px-5 md:px-20">
-      <h2 className="text-3xl  md:text-4xl font-bold text-center mb-2">
-        Most Popular <span className="text-primary">Tours</span>
+      <h2 className="text-3xl md:text-4xl font-bold text-center mb-2">
+        Most Popular{" "}
+        <span className="text-primary border-b-4 border-primary pb-1">
+          Packages
+        </span>
       </h2>
-      <p className="text-center text-gray-600 dark:text-gray-400 md:text-base mb-6">
+
+      <p className="text-center pt-2 text-gray-700 dark:text-gray-300 md:text-base mb-6">
         Explore the experiences our travelers love the most and plan your next adventure.
       </p>
 
@@ -43,7 +47,9 @@ const MostBookedPackages = () => {
             whileHover={{ scale: 1.05 }}
             onMouseEnter={() => setHoveredIndex(index)}
             onMouseLeave={() => setHoveredIndex(null)}
-            className="relative min-w-[280px] md:min-w-[320px] lg:min-w-[350px] bg-base-100 rounded-xl overflow-hidden shadow-lg cursor-pointer flex-shrink-0 snap-center transition-transform duration-300"
+            className="relative min-w-[280px] md:min-w-[320px] lg:min-w-[350px] 
+             bg-base-100 rounded-xl overflow-hidden shadow-lg cursor-pointer 
+             flex-shrink-0 snap-center transition-transform duration-300"
             data-aos="fade-up"
             data-aos-delay={index * 100}
           >
@@ -57,10 +63,13 @@ const MostBookedPackages = () => {
               transition={{ type: "spring", stiffness: 150 }}
             />
 
-            {/* Overlay on Hover */}
+            {/* Overlay (always visible on mobile, hover on desktop) */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: hoveredIndex === index ? 1 : 0 }}
+              animate={{
+                opacity:
+                  hoveredIndex === index || window.innerWidth < 768 ? 1 : 0,
+              }}
               className="absolute inset-0 bg-black/40 flex flex-col justify-end p-5 text-white"
             >
               <h3 className="text-lg md:text-xl font-bold line-clamp-1">
@@ -85,6 +94,7 @@ const MostBookedPackages = () => {
               </button>
             </motion.div>
           </motion.div>
+
         ))}
       </div>
     </section>

@@ -56,7 +56,7 @@ const GuideDashboard = () => {
                 </h2>
 
                 {/* Guide info */}
-                <div className="bg-base-100 rounded-2xl border border-base-100 border-x-indigo-400 p-6 flex flex-col md:flex-row items-center md:items-start gap-6 transition-all duration-300">
+                <div className="bg-base-100 rounded-2xl border-2 border-base-100 border-l-indigo-400 p-6 flex flex-col md:flex-row items-center md:items-start gap-6 transition-all duration-300">
                     {/* Profile Picture */}
                     {user?.photoURL ? (
                         <img

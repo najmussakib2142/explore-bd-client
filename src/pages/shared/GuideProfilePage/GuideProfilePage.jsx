@@ -100,13 +100,23 @@ const GuideProfilePage = () => {
                     className="w-full md:w-1/3 h-64 object-cover"
                     data-aos="zoom-in"
                 />
-                <div className="p-6 md:w-2/3" data-aos="fade-left">
-                    <h2 className="text-3xl font-bold mb-2">{guide.name}</h2>
-                    <p className="text-gray-500 mb-2">Region: {guide.district || "N/A"}</p>
-                    <p className="text-gray-500 mb-2">Experience: {guide.experience || "N/A"}</p>
-                    <p className="text-gray-500 mb-2">Age: {guide.age || "N/A"}</p>
-                    <p className="text-gray-500 mb-2">Phone: {guide.phone || "N/A"}</p>
-                    <p className="text-gray-500 mb-2">Bio: {guide.bio || "No introduction provided."}</p>
+                <div className="p-6 space-y-2 md:w-2/3" data-aos="fade-left">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">{guide.name}</h2>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        <span className="font-semibold text-primary">Region:</span> {guide.district || "N/A"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        <span className="font-semibold text-primary">Experience:</span> {guide.experience || "N/A"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        <span className="font-semibold text-primary">Age:</span> {guide.age || "N/A"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        <span className="font-semibold text-primary">Phone:</span> {guide.phone || "N/A"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        <span className="font-semibold text-primary">About:</span> {guide.bio || "No introduction provided."}
+                    </p>
                 </div>
             </div>
 

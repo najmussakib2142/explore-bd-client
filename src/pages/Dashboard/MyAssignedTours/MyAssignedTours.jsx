@@ -96,8 +96,8 @@ const MyAssignedTours = () => {
       <div className="p-6 max-w-7xl mx-auto" data-aos="fade-up">
         <h2 className="text-2xl font-bold mb-6 text-center">My Assigned Tours</h2>
 
-        {tours.length === 0 ? (
-          <p className="text-center text-gray-500">No assigned tours yet.</p>
+        {currentTours.length === 0 ? (
+          <p className="text-center text-gray-400">No assigned tours yet.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="table w-full shadow-lg">
@@ -203,11 +203,12 @@ const MyAssignedTours = () => {
 
             </table>
           </div>
+
+
         )}
-
-
-
       </div>
+
+
       {/* Details modal */}
       {selectedTour && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-lg flex justify-center items-center z-50">
@@ -391,48 +392,56 @@ const MyAssignedTours = () => {
         </div>
       )}
 
-      <div className="pagination mt-6 flex justify-center items-center gap-2">
-        <button
-          onClick={handlePrevPage}
-          disabled={currentPage === 0}
-          className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
-        >
-          Prev
-        </button>
-
-        {Array.from({ length: totalPages }, (_, i) => (
+      {currentTours.length === 0 ? (
+        <p className="text-center text-transparent">
+          No assigned tours yet.
+        </p>
+      ) : (
+        <div className="pagination mt-6 flex justify-center items-center gap-2">
           <button
-            key={i}
-            onClick={() => setCurrentPage(i + 1)} // 1-indexed page
-            className={`px-3 py-1 rounded ${currentPage === i + 1
-              ? "bg-primary text-white"
-              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
-              }`}
+            onClick={handlePrevPage}
+            disabled={currentPage === 0}
+            className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
           >
-            {i + 1}
+            Prev
           </button>
-        ))}
 
-        <button
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
-        >
-          Next
-        </button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)} // 1-indexed page
+              className={`px-3 py-1 rounded ${currentPage === i + 1
+                ? "bg-primary text-white"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                }`}
+            >
+              {i + 1}
+            </button>
+          ))}
 
-        <select
-          value={itemsPerPage}
-          onChange={handleItemsPerPage}
-          className="ml-3 cursor-pointer border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
-        >
-          <option value="10">10</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="50">50</option>
-        </select>
-      </div>
-     
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1 rounded cursor-pointer bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+          >
+            Next
+          </button>
+
+          <select
+            value={itemsPerPage}
+            onChange={handleItemsPerPage}
+            className="ml-3 cursor-pointer border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+          >
+            <option value="10">10</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+          </select>
+        </div>
+      )}
+
+
+
     </>
   );
 };

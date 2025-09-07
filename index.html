@@ -7,15 +7,18 @@
     <title>ExploreBD</title>
     
     <script>
-  (function() {
-    const savedTheme = localStorage.getItem('theme'); // user preference
-    const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const theme = savedTheme === 'light' || savedTheme === 'dark'
-      ? savedTheme
-      : (systemPrefersDark ? 'dark' : 'light');
-    // document.documentElement.setAttribute('data-theme', theme); // apply theme immediately
-    document.documentElement.classList.toggle("dark", prefersDark);
-  })();
+(function() {
+  const savedTheme = localStorage.getItem('theme'); // user preference
+  const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  
+  // Decide which theme to use
+  const theme = savedTheme === 'light' || savedTheme === 'dark'
+    ? savedTheme
+    : (systemPrefersDark ? 'dark' : 'light');
+  
+  // Apply dark class if needed
+  document.documentElement.classList.toggle("dark", theme === 'dark');
+})();
 </script>
 
   </head>

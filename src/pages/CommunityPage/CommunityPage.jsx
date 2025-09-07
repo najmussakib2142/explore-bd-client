@@ -12,9 +12,9 @@ import lgThumbnail from 'lightgallery/plugins/thumbnail';
 import lgZoom from 'lightgallery/plugins/zoom';
 
 // LightGallery CSS
-// import 'lightgallery/css/lightgallery.css';
-// import 'lightgallery/css/lg-thumbnail.css';
-// import 'lightgallery/css/lg-zoom.css';
+import 'lightgallery/css/lightgallery.css';
+import 'lightgallery/css/lg-thumbnail.css';
+import 'lightgallery/css/lg-zoom.css';
 
 export default function CommunityStories() {
     const axiosInstance = useAxios();
@@ -92,19 +92,22 @@ export default function CommunityStories() {
 
     useEffect(() => {
         if (selectedStory && galleryRef.current) {
-            // refresh LightGallery when modal opens
-            galleryRef.current.refresh();
+            setTimeout(() => galleryRef.current.refresh(), 50);
         }
     }, [selectedStory]);
 
     if (isLoading) return <Loading />;
 
+    console.log(selectedStory);
+
 
 
     return (
         <section className="max-w-7xl mx-auto py-10 px-7">
-            <h2 className="text-3xl font-bold mb-6" data-aos="fade-down">Community Stories</h2>
-
+            <h2 className="text-3xl font-bold mb-3" data-aos="fade-down">Community Stories</h2>
+            <p className=" text-gray-600 dark:text-gray-400 mb-8" data-aos="fade-down">
+                Discover stories, tips, and memories from our community of explorers.
+            </p>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {stories.map((story, idx) => (
                     <div
@@ -113,13 +116,18 @@ export default function CommunityStories() {
                         data-aos="fade-up"
                         data-aos-delay={idx * 100}
                     >
-                        <img
-                            src={story.images?.[0]}
-                            alt={story.title}
-                            className="w-full h-48 object-cover"
-                            onClick={() => setSelectedStory(story)}
-                            data-aos="zoom-in"
-                        />
+                        <div className="relative group">
+                            <img
+                                src={story.images?.[0]}
+                                alt={story.title}
+                                className="w-full h-48 object-cover"
+                                onClick={() => setSelectedStory(story)}
+                                data-aos="zoom-in"
+                            />
+                            <div className="absolute bottom-2 right-2 bg-black/60 text-white px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition">
+                                Click to read full story
+                            </div>
+                        </div>
                         <div className="p-4 space-y-2">
                             <div className="flex justify-between items-center">
                                 <h3 className="text-lg line-clamp-1 font-semibold">{story.title}</h3>
@@ -187,7 +195,7 @@ export default function CommunityStories() {
                 <button
                     onClick={handlePrevPage}
                     disabled={currentPage === 0}
-                    className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                    className="px-3 cursor-pointer py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
                 >
                     Prev
                 </button>
@@ -195,7 +203,7 @@ export default function CommunityStories() {
                     <button
                         key={page}
                         onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 rounded ${currentPage === page ? "bg-primary text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+                        className={`px-3 cursor-pointer py-1 rounded ${currentPage === page ? "bg-primary text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                             }`}
                     >
                         {page + 1}
@@ -204,14 +212,14 @@ export default function CommunityStories() {
                 <button
                     onClick={handleNextPage}
                     disabled={currentPage === pages.length - 1}
-                    className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                    className="px-3 py-1 cursor-pointer rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
                 >
                     Next
                 </button>
                 <select
                     value={itemsPerPage}
                     onChange={handleItemsPerPage}
-                    className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+                    className="ml-3 border cursor-pointer rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
                 >
                     <option value="9">9</option>
                     <option value="12">12</option>
@@ -221,7 +229,7 @@ export default function CommunityStories() {
             </div>
 
             {/* Modal */}
-            {selectedStory && (
+            {selectedStory && selectedStory.images?.length > 0 && (
                 <div
                     className="fixed inset-0 bg-transparent bg-opacity-50 backdrop-blur-lg flex items-center justify-center z-50"
                     onClick={() => setSelectedStory(null)}
@@ -251,23 +259,24 @@ export default function CommunityStories() {
 
                         <p className="text-gray-700 dark:text-gray-300 mb-4">{selectedStory.description}</p>
 
-                        <LightGallery
-                            onInit={(ref) => (galleryRef.current = ref.instance)}
-                            speed={500}
-                            plugins={[lgThumbnail, lgZoom]}
-                        >
-                            <div className="flex flex-wrap gap-3 mb-4">
-                                {selectedStory.images?.filter(Boolean).map((img, idx) => (
-                                    <a key={idx} href={img}>
-                                        <img
-                                            src={img}
-                                            alt={`story-${idx}`}
-                                            className="w-32 h-32 object-cover rounded cursor-pointer"
-                                        />
-                                    </a>
-                                ))}
-                            </div>
-                        </LightGallery>
+                        {selectedStory?.images?.length > 0 && (
+                            <LightGallery
+                                key={selectedStory._id}
+                                onInit={(ref) => (galleryRef.current = ref.instance)}
+                                speed={500}
+                                plugins={[lgThumbnail, lgZoom]}
+                            >
+                                <div className="flex flex-wrap gap-3 mb-4">
+                                    {selectedStory.images.filter(Boolean).map((img, idx) => (
+                                        <a key={idx} href={img} data-src={img}>
+                                            <img src={img} alt={`story-${idx}`} className="w-32 h-32 object-cover rounded cursor-pointer" />
+                                        </a>
+                                    ))}
+                                </div>
+                            </LightGallery>
+                        )}
+
+
                         <div className="flex justify-end">
                             <button
                                 className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
@@ -279,6 +288,7 @@ export default function CommunityStories() {
                     </div>
                 </div>
             )}
+
         </section>
     );
 }

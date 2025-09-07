@@ -78,9 +78,9 @@ const Navbar = () => {
         <div>
             {/* <div className={`fixed dark:bg-[#0f172a] max-w-7xl mx-auto  top-0 w-full bg-white z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} shadow`}>
                 <div className="navbar   py-0  z-50 md:pr-7 bg-base-100/80 dark:bg-[#0f172a]  backdrop-blur transition-all duration-300 shadow-md"> */}
-            <div className={`fixed top-0  w-full z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
-                <div className="navbar h-14 max-w-7xl mx-auto px-4 md:px-7 flex justify-between items-center 
-                  bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md shadow-md transition-all duration-300">
+            <div className={`fixed bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md shadow-md top-0  w-full z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
+                <div className="navbar h-14 px-4 md:px-7 flex justify-between transition-all  items-center 
+                  ">
                     <div className="navbar-start">
                         <div className="dropdown">
                             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden -mr-4">
@@ -133,7 +133,7 @@ const Navbar = () => {
                             </div> */}
 
                             <div className="hidden md:block">
-                                <div className="flex items-center space-x-1 md:space-x-2">
+                                <div className="flex  items-center space-x-1 md:space-x-2">
                                     <div className="flex items-center bg-gray-300 dark:bg-gray-700 rounded-full md:p-0.5 transition-colors">
                                         <button
                                             onClick={() => toggleTheme('light')}
@@ -165,12 +165,12 @@ const Navbar = () => {
                                 <button
                                     onClick={toggleTheme}
                                     aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-                                    className="p-2 rounded-full border border-gray-300 dark:border-gray-600  bg-white dark:bg-gray-800  hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-300 ease-in-out"
+                                    className="p-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm dark:shadow-md transition-all duration-300 ease-in-out"
                                 >
                                     {theme === "dark" ? (
-                                        <FaSun className="text-yellow-500 text-lg" />
+                                        <span className="text-lg">☀️</span>
                                     ) : (
-                                        <FaMoon className="text-gray-800 dark:text-gray-200 text-lg" />
+                                        <span className="text-lg">🌙</span>
                                     )}
                                 </button>
                             </div>

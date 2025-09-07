@@ -102,7 +102,7 @@ const AllPackages = () => {
         <button
           onClick={handlePrevPage}
           disabled={currentPage === 0}
-          className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+          className="px-4 cursor-pointer py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
         >
           Prev
         </button>
@@ -111,7 +111,7 @@ const AllPackages = () => {
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
-            className={`px-4 py-2 rounded ${currentPage === page
+            className={`px-4 cursor-pointer py-2 rounded ${currentPage === page
               ? "bg-primary text-white"
               : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
               }`}
@@ -123,7 +123,7 @@ const AllPackages = () => {
         <button
           onClick={handleNextPage}
           disabled={currentPage === pages.length - 1}
-          className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+          className="px-4 cursor-pointer py-2 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
         >
           Next
         </button>
@@ -131,7 +131,7 @@ const AllPackages = () => {
         <select
           value={itemsPerPage}
           onChange={handleItemsPerPage}
-          className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
+          className="ml-3 cursor-pointer border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
         >
           <option value="6">6</option>
           <option value="9">9</option>

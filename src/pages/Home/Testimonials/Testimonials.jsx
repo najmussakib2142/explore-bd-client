@@ -78,7 +78,7 @@ const Testimonials = () => {
                         />
                     </span>
                 </h2>
-                <p className="max-w-2xl mx-auto text-gray-400 mb-10">
+                <p className="max-w-2xl mx-auto pt-3 text-gray-700 dark:text-gray-300 mb-10">
                     Hear from our travelers! Explore Bangladesh's hidden gems, breathtaking sights, and unforgettable experiences with ExploreBD.
                 </p>
             </div>

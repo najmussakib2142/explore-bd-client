@@ -7,7 +7,7 @@ import { FaUserCircle } from "react-icons/fa";
 import useAxios from "../../hooks/useAxios";
 import "react-datepicker/dist/react-datepicker.css";
 import DatePicker from "react-datepicker";
-import { useQueryClient } from "@tanstack/react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 
 const generateTrackingID = () => {
     const date = new Date();
@@ -19,7 +19,7 @@ const generateTrackingID = () => {
 
 const BookingForm = ({ packageData, guides }) => {
     const { user } = useAuth();
-    const queryClient = useQueryClient();
+    // const queryClient = useQueryClient();
     // const axiosSecure = useAxiosSecure();
     const axiosInstance = useAxios()
     const navigate = useNavigate();
@@ -46,8 +46,8 @@ const BookingForm = ({ packageData, guides }) => {
         month: "2-digit",
         year: "2-digit",
     });
-    console.log("Start:", formattedStartDate);
-    console.log("End:", formattedEndDate);
+    // console.log("Start:", formattedStartDate);
+    // console.log("End:", formattedEndDate);
 
     const tracking_id = generateTrackingID()
     const guideDetails = guides.find((g) => g._id === selectedGuide);
@@ -176,7 +176,9 @@ const BookingForm = ({ packageData, guides }) => {
             }
         });
     };
-
+    const filteredGuides = guides.filter(
+        (g) => g.userId !== user?.uid
+    );
 
     return (
         <div className="bg-base-100 p-6 rounded-lg shadow-lg" data-aos="fade-up">
@@ -235,11 +237,8 @@ const BookingForm = ({ packageData, guides }) => {
                         className="select select-bordered w-full"
                     >
                         <option value="">Select Guide</option>
-                        {guides.map((guide) => (
-                            <option
-                                key={guide._id}
-                                value={guide._id}
-                            >
+                        {filteredGuides.map((guide) => (
+                            <option key={guide._id} value={guide._id}>
                                 {guide.name}
                             </option>
                         ))}

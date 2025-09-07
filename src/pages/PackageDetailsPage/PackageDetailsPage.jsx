@@ -24,15 +24,30 @@ const PackageDetailsPage = () => {
     const { id } = useParams();
     // const axiosSecure = useAxiosSecure()
     const axiosInstance = useAxios()
+    const [currentPage, setCurrentPage] = React.useState(0);
+    const [itemsPerPage, setItemsPerPage] = React.useState(6);
 
     const { data: guidesData = {}, isLoading: guidesLoading, error: guidesError } = useQuery({
-        queryKey: ["guides"],
+        queryKey: ["guides", currentPage, itemsPerPage],
         queryFn: async () => {
-            const res = await axiosInstance.get("/guides/approved");
+            const res = await axiosInstance.get(
+                `/guides/approved?page=${currentPage}&limit=${itemsPerPage}`
+            );
             return res.data;
         },
+        keepPreviousData: true, // optional: keeps old data while loading new page
     });
+
     const guides = Array.isArray(guidesData.guides) ? guidesData.guides : [];
+    const totalPages = Math.ceil((guidesData.count || 0) / itemsPerPage);
+
+    const { data: allGuides = [] } = useQuery({
+        queryKey: ["allGuides"],
+        queryFn: async () => {
+            const res = await axiosInstance.get("/guides/approved/all");
+            return res.data.guides; // all guides for dropdown
+        },
+    });
 
     // Fetch package data
     const { data: packageData, isLoading: packageLoading, error: packageError } = useQuery({
@@ -153,11 +168,16 @@ const PackageDetailsPage = () => {
                 guides={guides}
                 guidesLoading={guidesLoading}
                 guidesError={guidesError}
+                currentPage={currentPage}
+                setCurrentPage={setCurrentPage}
+                itemsPerPage={itemsPerPage}
+                setItemsPerPage={setItemsPerPage}
+                totalPages={totalPages}
             />
             {/* Booking Form */}
             <BookingForm
                 packageData={packageData}
-                guides={guides}
+                guides={allGuides}
             ></BookingForm>
         </div>
     );
