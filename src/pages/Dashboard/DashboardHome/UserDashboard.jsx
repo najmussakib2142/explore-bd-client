@@ -8,12 +8,14 @@ import { FaUserCircle } from "react-icons/fa";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../shared/Loading/Loading";
 import useAxios from "../../../hooks/useAxios";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const UserDashboard = () => {
     const { user } = useAuth();
     const navigate = useNavigate();
     const [isModalOpen, setIsModalOpen] = useState(false);
     const axiosInstance = useAxios()
+    const axiosSecure = useAxiosSecure()
     const handleEdit = () => setIsModalOpen(true);
     const handleClose = () => setIsModalOpen(false);
     const handleApplyGuide = () => navigate("/dashboard/beAGuide");
@@ -22,7 +24,7 @@ const UserDashboard = () => {
     const { data: userInfo = [], isLoading: loadingUsers } = useQuery({
         queryKey: ["user", "email"],
         queryFn: async () => {
-            const res = await axiosInstance.get(`/users/${email}`);
+            const res = await axiosSecure.get(`/users/${email}`);
             return res.data;
         },
     });
@@ -34,7 +36,7 @@ const UserDashboard = () => {
     return (
         <div className="bg-base-100 p-6 rounded-lg shadow-lg space-y-6">
             {/* Welcome message */}
-            <h2 className="text-2xl font-bold">Welcome, {user?.displayName || "User"}!</h2>
+            <h2 className="text-2xl font-bold">Welcome, <span className="text-primary">{user?.displayName || "User"}!</span></h2>
             {/* User Info */}
             <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
                 {/* <img
@@ -52,9 +54,9 @@ const UserDashboard = () => {
                     <FaUserCircle className="w-32 h-32 text-gray-600 dark:text-primary transition-colors" />)}
 
                 <div className="flex-1 space-y-2">
-                    <p><span className="font-semibold">Name:</span> {user?.displayName}</p>
-                    <p><span className="font-semibold">Email:</span> {user?.email}</p>
-                    <p><span className="font-semibold">Role:</span> {(userInfo?.role || "User").charAt(0).toUpperCase() + (userInfo?.role || "User").slice(1)}</p>
+                    <p><span className="font-semibold text-primary">Name:</span> {user?.displayName}</p>
+                    <p><span className="font-semibold text-primary">Email:</span> {user?.email}</p>
+                    <p><span className="font-semibold text-primary">Role:</span> {(userInfo?.role || "User").charAt(0).toUpperCase() + (userInfo?.role || "User").slice(1)}</p>
                 </div>
             </div>
 

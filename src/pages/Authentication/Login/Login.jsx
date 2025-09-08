@@ -24,10 +24,21 @@ const Login = () => {
 
             Swal.fire({
                 icon: "success",
-                title: "Login Successful!",
-                text: `Welcome back, ${user.displayName || user.email}`,
+                title: `<strong>Login Successful!</strong>`,
+                html: `<p style="font-size: 16px; color: #333;">Welcome back, <strong>${user.displayName || user.email}</strong>!</p>`,
                 showConfirmButton: false,
                 timer: 2000,
+                timerProgressBar: true,
+                backdrop: `
+        rgba(0,0,0,0.4)
+        left top
+        no-repeat
+    `,
+                didOpen: () => {
+                    // Optional: Customize progress bar color
+                    const progressBar = Swal.getHtmlContainer().parentElement.querySelector('.swal2-timer-progress-bar');
+                    if (progressBar) progressBar.style.background = "#1E88E5";
+                },
             });
 
             navigate(from, { replace: true });

@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 import { FaSearch, FaUserSlash } from "react-icons/fa";
 import useAxios from "../../../hooks/useAxios";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
+import Loading from "../../shared/Loading/Loading";
 
 const ActiveGuides = () => {
     const axiosInstance = useAxios();
@@ -12,7 +13,7 @@ const ActiveGuides = () => {
     // State
     const [searchTerm, setSearchTerm] = useState("");
     const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(6);
+    const [itemsPerPage, setItemsPerPage] = useState(10);
     const [selectedGuide, setSelectedGuide] = useState(null); // detail modal
 
     // Fetch paginated guides
@@ -59,7 +60,7 @@ const ActiveGuides = () => {
                 axiosSecure.patch(`/guides/${id}/status`, { status: "rejected", email }),
                 axiosSecure.patch(`/users/${email}/status`, { status: "rejected" }) // patch users collection
             ]);
-            
+
             Swal.fire("Success", "Guide deactivated successfully", "success");
 
             refetch();
@@ -92,7 +93,7 @@ const ActiveGuides = () => {
             </div>
 
             {/* Loading/Error */}
-            {isLoading && <p className="text-center">Loading active guides...</p>}
+            {isLoading && <Loading></Loading>}
             {error && <p className="text-center text-red-500">Failed to load guides</p>}
 
             {/* Guides Table */}
@@ -173,7 +174,7 @@ const ActiveGuides = () => {
                             onChange={(e) => { setItemsPerPage(parseInt(e.target.value)); setCurrentPage(0); }}
                             className="ml-3 border rounded px-2 py-1 dark:bg-gray-800 dark:text-white"
                         >
-                            {[6, 12, 25, 50].map((num) => <option key={num} value={num}>{num}</option>)}
+                            {[10, 20, 30, 50].map((num) => <option key={num} value={num}>{num}</option>)}
                         </select>
                     </div>
                 </>

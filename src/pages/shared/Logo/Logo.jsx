@@ -4,7 +4,7 @@ import { Link } from "react-router";
 
 const Logo = () => {
     return (
-        <Link to="/" className="flex items-center cursor-pointer select-none">
+        <Link to="/" className="flex items-center cursor-pointer select-none transition-transform duration-300 hover:scale-103">
             <img
                 className="h-12 hidden md:block md:-mr-3 w-auto"
                 src={logo}

@@ -80,7 +80,7 @@ const GuideList = ({ guides,
                 <button
                     onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
                     disabled={currentPage === 0}
-                    className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                    className="px-3 cursor-pointer py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
                 >
                     Prev
                 </button>
@@ -89,7 +89,7 @@ const GuideList = ({ guides,
                     <button
                         key={page}
                         onClick={() => setCurrentPage(page)}
-                        className={`px-3 py-1 rounded ${currentPage === page ? "bg-primary text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"}`}
+                        className={`px-3 cursor-pointer py-1 rounded ${currentPage === page ? "bg-primary text-white" : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"}`}
                     >
                         {page + 1}
                     </button>
@@ -98,7 +98,7 @@ const GuideList = ({ guides,
                 <button
                     onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))}
                     disabled={currentPage === totalPages - 1}
-                    className="px-3 py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
+                    className="px-3 cursor-pointer py-1 rounded bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 disabled:opacity-50"
                 >
                     Next
                 </button>

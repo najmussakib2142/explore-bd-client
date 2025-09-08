@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Select from "react-select";
-import useAxios from "../../../hooks/useAxios";
 import Loading from "../../shared/Loading/Loading";
+import useAxiosSecure from "../../../hooks/useAxiosSecure";
 
 const ManageUsers = () => {
-    const axiosInstance = useAxios();
+    const axiosSecure = useAxiosSecure()
     const [currentPage, setCurrentPage] = useState(0); // ✅ page starts at 0
     const [itemsPerPage, setItemsPerPage] = useState(10); // ✅ default
     const [search, setSearch] = useState("");
@@ -14,7 +14,7 @@ const ManageUsers = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ["users", currentPage, itemsPerPage, search, role],
         queryFn: async () => {
-            const res = await axiosInstance.get(
+            const res = await axiosSecure.get(
                 `/users?page=${currentPage + 1}&limit=${itemsPerPage}&search=${search}&role=${role}`
             );
             return res.data;

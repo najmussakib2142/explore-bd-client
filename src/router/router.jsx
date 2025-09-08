@@ -38,6 +38,7 @@ import About from "../pages/About/About";
 import UserRoute from "../routes/UserRoute";
 import GuideRoute from "../routes/GuideRoute";
 import FAQ from "../pages/FAQ/FAQ";
+import Offer from "../pages/Offer/Offer";
 // import BookingPage from "../pages/Dashboard/BookingPage/BookingPage";
 
 export const router = createBrowserRouter([
@@ -88,6 +89,10 @@ export const router = createBrowserRouter([
             {
                 path: 'faq',
                 element: <FAQ></FAQ>
+            },
+            {
+                path: "offers",
+                element: <Offer></Offer>
             },
             {
                 path: 'forbidden',
@@ -170,6 +175,7 @@ export const router = createBrowserRouter([
             {
                 path: 'myBookings',
                 element: <UserRoute><MyBookings></MyBookings></UserRoute>
+                // element: <MyBookings></MyBookings>
             },
             {
                 path: 'payment/:packageId/:bookingId',

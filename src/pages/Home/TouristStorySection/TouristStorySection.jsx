@@ -102,7 +102,7 @@ export default function TouristStorySection() {
                                     </span>
                                 </div>
 
-                                <div className="flex items-center mt-3">
+                                <div className="flex items-center gap-2  text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm hover:bg-indigo-600 hover:text-white transition-all duration-300 cursor-pointer">
                                     {user ? (
                                         <FacebookShareButton
                                             url={window.location.origin + "/story/" + story._id}

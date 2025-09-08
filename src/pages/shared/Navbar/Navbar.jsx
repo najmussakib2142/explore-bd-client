@@ -58,7 +58,17 @@ const Navbar = () => {
                         Swal.fire({
                             title: "Logged out!",
                             text: "You have been successfully logged out.",
-                            icon: "success"
+                            icon: "success",
+                            timer: 2000, // alert will close after 2 seconds
+                            timerProgressBar: true, // shows a progress bar
+                            showConfirmButton: false, // hides the OK button
+                            didOpen: () => {
+                                // change progress bar color dynamically
+                                const progressBar = Swal.getHtmlContainer().parentElement.querySelector('.swal2-timer-progress-bar');
+                                if (progressBar) {
+                                    progressBar.style.background = '#1E88E5';
+                                }
+                            }
                         });
                     })
                     .catch((error) => {
@@ -81,19 +91,40 @@ const Navbar = () => {
             <div className={`fixed bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md shadow-md top-0  w-full z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
                 <div className="navbar h-14 px-4 md:px-7 flex justify-between transition-all  items-center 
                   ">
-                    <div className="navbar-start">
-                        <div className="dropdown">
-                            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden -mr-4">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /> </svg>
+                    <div className="navbar-start flex items-center">
+                        <div className="dropdown relative">
+                            <div
+                                tabIndex={0}
+                                role="button"
+                                className="btn btn-ghost lg:hidden mr-1" // remove -mr-4, use positive margin
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    className="h-5 w-5"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
+                                        d="M4 6h16M4 12h16M4 18h16"
+                                    />
+                                </svg>
                             </div>
+
                             <ul
                                 tabIndex={0}
-                                className="menu menu-sm left-0 text-[#101828] dropdown-content bg-base-100  z-1 w-[40vw] p-2 shadow">
+                                className="menu menu-sm left-0 text-[#101828] dropdown-content bg-base-100 z-20 w-[40vw] p-2 shadow"
+                            >
                                 {navItems}
                             </ul>
                         </div>
-                        <div >
-                            <Logo></Logo>
+
+                        {/* Logo */}
+                        <div className="relative z-10">
+                            <Logo />
                         </div>
 
                     </div>
@@ -165,7 +196,7 @@ const Navbar = () => {
                                 <button
                                     onClick={toggleTheme}
                                     aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-                                    className="p-2 rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm dark:shadow-md transition-all duration-300 ease-in-out"
+                                    className="w-10 h-10 flex items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 shadow-sm dark:shadow-md transition-all duration-300 ease-in-out"
                                 >
                                     {theme === "dark" ? (
                                         <span className="text-lg">☀️</span>
@@ -192,7 +223,7 @@ const Navbar = () => {
                                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                         {user?.photoURL ? (
                                             <img
-                                                className="w-12 h-12 rounded-full object-cover dark:border dark:border-primary"
+                                                className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border dark:border-primary"
                                                 src={user.photoURL}
                                                 alt="User"
                                             />

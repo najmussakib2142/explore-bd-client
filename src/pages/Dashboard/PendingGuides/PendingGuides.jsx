@@ -6,6 +6,9 @@ import Swal from 'sweetalert2';
 import { FaEye, FaCheck, FaTimes } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
+
+// TODO - sending notification or email about their application action
+
 const PendingGuides = () => {
     const [selectedGuide, setSelectedGuide] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);

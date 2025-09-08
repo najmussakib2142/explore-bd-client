@@ -7,14 +7,14 @@ import useAuth from "../../hooks/useAuth";
 import useAxios from "../../hooks/useAxios";
 import Loading from "../shared/Loading/Loading";
 
-import LightGallery from 'lightgallery/react';
-import lgThumbnail from 'lightgallery/plugins/thumbnail';
-import lgZoom from 'lightgallery/plugins/zoom';
+// import LightGallery from 'lightgallery/react';
+// import lgThumbnail from 'lightgallery/plugins/thumbnail';
+// import lgZoom from 'lightgallery/plugins/zoom';
 
 // LightGallery CSS
-import 'lightgallery/css/lightgallery.css';
-import 'lightgallery/css/lg-thumbnail.css';
-import 'lightgallery/css/lg-zoom.css';
+// import 'lightgallery/css/lightgallery.css';
+// import 'lightgallery/css/lg-thumbnail.css';
+// import 'lightgallery/css/lg-zoom.css';
 
 export default function CommunityStories() {
     const axiosInstance = useAxios();
@@ -260,12 +260,12 @@ export default function CommunityStories() {
                         <p className="text-gray-700 dark:text-gray-300 mb-4">{selectedStory.description}</p>
 
                         {selectedStory?.images?.length > 0 && (
-                            <LightGallery
-                                key={selectedStory._id}
-                                onInit={(ref) => (galleryRef.current = ref.instance)}
-                                speed={500}
-                                plugins={[lgThumbnail, lgZoom]}
-                            >
+                            // <LightGallery
+                            //     key={selectedStory._id}
+                            //     onInit={(ref) => (galleryRef.current = ref.instance)}
+                            //     speed={500}
+                            //     plugins={[lgThumbnail, lgZoom]}
+                            // >
                                 <div className="flex flex-wrap gap-3 mb-4">
                                     {selectedStory.images.filter(Boolean).map((img, idx) => (
                                         <a key={idx} href={img} data-src={img}>
@@ -273,7 +273,7 @@ export default function CommunityStories() {
                                         </a>
                                     ))}
                                 </div>
-                            </LightGallery>
+                            // </LightGallery>
                         )}
 
 

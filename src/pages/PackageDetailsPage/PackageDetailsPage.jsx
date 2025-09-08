@@ -19,6 +19,10 @@ import "lightgallery/css/lightgallery.css";
 import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
 
+// import PhotoAlbum from "react-photo-album";
+// import Lightbox from "yet-another-react-lightbox";
+// import "yet-another-react-lightbox/styles.css";
+
 
 const PackageDetailsPage = () => {
     const { id } = useParams();
@@ -37,6 +41,8 @@ const PackageDetailsPage = () => {
         },
         keepPreviousData: true, // optional: keeps old data while loading new page
     });
+
+
 
     const guides = Array.isArray(guidesData.guides) ? guidesData.guides : [];
     const totalPages = Math.ceil((guidesData.count || 0) / itemsPerPage);
@@ -58,13 +64,6 @@ const PackageDetailsPage = () => {
         },
     });
 
-    // const breakpointColumnsObj = {
-    //     default: 3,
-    //     1024: 3,
-    //     768: 2,
-    //     500: 1
-    // };
-    // 
 
     React.useEffect(() => {
         AOS.init({ duration: 1000, once: true });
@@ -85,12 +84,14 @@ const PackageDetailsPage = () => {
                                 src={img}
                                 alt={`Gallery ${idx}`}
                                 loading="lazy"
-                                className="w-full mb-4 rounded-lg shadow-md object-cover break-inside-avoid hover:scale-105 transition-transform duration-300"
+                                className="w-full mb-4 rounded-lg shadow-md object-cover break-inside-avoid hover:scale-103 transition-transform duration-300"
                             />
                         </a>
                     </LightGallery>
                 ))}
             </div>
+            
+
 
             {/* About & Info */}
             <div className="bg-base-100 p-6 rounded-lg shadow-lg space-y-4" data-aos="fade-up">

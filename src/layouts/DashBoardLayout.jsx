@@ -64,14 +64,14 @@ const DashBoardLayout = () => {
                             {!roleLoading && role === 'user' &&
                                 <>
                                     <li>
-                                        <NavLink to="/dashboard/myBookings/" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                        <NavLink to="/dashboard/myBookings/" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800">
                                             <FaClipboardList /> My Bookings
                                         </NavLink>
                                     </li>
                                     <li>
                                         <NavLink
                                             to="/dashboard/addStory"
-                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800"
                                         >
                                             <FaPlusCircle /> Add Story
                                         </NavLink>
@@ -79,20 +79,20 @@ const DashBoardLayout = () => {
                                     <li>
                                         <NavLink
                                             to="/dashboard/manageStories"
-                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800"
                                         >
                                             <FaEdit /> Manage Stories
                                         </NavLink>
                                     </li>
 
                                     <li>
-                                        <NavLink to="/dashboard/paymentHistory" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                        <NavLink to="/dashboard/paymentHistory" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800">
                                             <FaMoneyCheckAlt /> Payment History
                                         </NavLink>
                                     </li>
                                     <li>
                                         <NavLink
-                                            to="/dashboard/beAGuide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                            to="/dashboard/beAGuide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800"
                                         >
                                             <FaUserTie /> Be a Guide
                                         </NavLink>
@@ -108,7 +108,7 @@ const DashBoardLayout = () => {
                                     <li>
                                         <NavLink
                                             to="/dashboard/myAssignedTours"
-                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800"
                                         >
                                             <FaClipboardList /> MyAssignedTours
                                         </NavLink>
@@ -116,7 +116,7 @@ const DashBoardLayout = () => {
                                     <li>
                                         <NavLink
                                             to="/dashboard/addStory"
-                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800"
                                         >
                                             <FaPlusCircle /> Add Story
                                         </NavLink>
@@ -124,7 +124,7 @@ const DashBoardLayout = () => {
                                     <li>
                                         <NavLink
                                             to="/dashboard/manageStories"
-                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300"
+                                            className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800"
                                         >
                                             <FaEdit /> Manage Stories
                                         </NavLink>
@@ -136,32 +136,32 @@ const DashBoardLayout = () => {
                             {!roleLoading && role === 'admin' &&
                                 <>
                                     <li>
-                                        <NavLink to="/dashboard/addPackage" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                        <NavLink to="/dashboard/addPackage" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800">
                                             <FaBoxOpen className="text-lg" /> Add Package
                                         </NavLink>
                                     </li>
                                     <li>
-                                        <NavLink to="/dashboard/pendingGuides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                        <NavLink to="/dashboard/pendingGuides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800">
                                             <FaUserClock /> Manage Candidates
                                         </NavLink>
                                     </li>
                                     <li>
-                                        <NavLink to="/dashboard/manage-users" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                        <NavLink to="/dashboard/manage-users" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800">
                                             <FaUserClock /> Manage Users
                                         </NavLink>
                                     </li>
                                     {/* <li>
-                                        <NavLink to="/dashboard/assign-guide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                        <NavLink to="/dashboard/assign-guide" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800">
                                             <FaCompass /> Assign Guide
                                         </NavLink>
                                     </li> */}
                                     <li>
-                                        <NavLink to="/dashboard/makeAdmin" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                        <NavLink to="/dashboard/makeAdmin" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800">
                                             <FaUserShield /> Make Admin
                                         </NavLink>
                                     </li>
                                     <li>
-                                        <NavLink to="/dashboard/active-guides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-base-300">
+                                        <NavLink to="/dashboard/active-guides" className="flex items-center gap-2 rounded-lg px-3 py-2 hover:bg-gray-200  dark:hover:bg-gray-800">
                                             <FaUserCheck /> Active Guides
                                         </NavLink>
                                     </li>

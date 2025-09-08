@@ -112,6 +112,9 @@ const GuideProfilePage = () => {
                         <span className="font-semibold text-primary">Age:</span> {guide.age || "N/A"}
                     </p>
                     <p className="text-gray-600 dark:text-gray-400">
+                        <span className="font-semibold text-primary">Email:</span> {guide.email || "N/A"}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
                         <span className="font-semibold text-primary">Phone:</span> {guide.phone || "N/A"}
                     </p>
                     <p className="text-gray-600 dark:text-gray-400">

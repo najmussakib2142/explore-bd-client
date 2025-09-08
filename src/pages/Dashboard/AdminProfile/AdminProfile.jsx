@@ -7,9 +7,15 @@ import Swal from "sweetalert2";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, Cell } from "recharts";
 import useAxios from "../../../hooks/useAxios";
 import Loading from "../../shared/Loading/Loading";
+import { FaMoneyBillWave, FaUserTie, FaBoxOpen, FaUsers, FaBook } from "react-icons/fa";
 
-const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#A569BD"];
-
+const COLORS = [
+    "#1E88E5", // deep blue - reliable/professional
+    "#10B981", // teal green - growth/positive
+    "#F59E0B", // amber - highlights/revenue
+    "#EF4444", // red - alerts or attention
+    "#6366F1", // indigo - premium/contrast
+];
 const AdminProfile = () => {
     const { user, updateUserProfile } = useAuth();
     const axiosSecure = useAxiosSecure();
@@ -40,7 +46,7 @@ const AdminProfile = () => {
                         {data.name}
                     </p>
                     <p className="text-sm text-indigo-600 dark:text-pink-400">
-                        Revenue: ${data.totalRevenue.toLocaleString()}
+                        Revenue: ৳{data.totalRevenue.toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
                         Bookings: {data.bookingsCount}
@@ -66,7 +72,7 @@ const AdminProfile = () => {
     const { data: adminInfo, isLoading: adminLoading } = useQuery({
         queryKey: ["adminInfo", user.email],
         queryFn: async () => {
-            const res = await axiosInstance.get(`/users/${user.email}`);
+            const res = await axiosSecure.get(`/users/${user.email}`);
             return res.data;
         },
         enabled: !!user?.email,
@@ -93,13 +99,23 @@ const AdminProfile = () => {
     });
 
     const handleEditClick = () => {
+        setFormData({
+            name: adminInfo.name || "",
+            photo: adminInfo.photo || "",
+            phone: adminInfo.phone || "",
+            age: adminInfo.age || "",
+            bio: adminInfo.bio || "",
+            email: adminInfo.email || "",
+            role: adminInfo.role || "admin",
+        });
         setPhotoFile(null); // Reset file
         setEditMode(true);
     };
 
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
     const handlePhotoChange = (e) => {
@@ -152,8 +168,16 @@ const AdminProfile = () => {
     if (statsLoading || adminLoading || packageLoading)
         return <Loading></Loading>;
 
+    const statItems = [
+        { label: "Total Payment", value: `৳${stats.totalPayment}`, icon: <FaMoneyBillWave /> },
+        { label: "Total Guides", value: stats.totalGuides, icon: <FaUserTie /> },
+        { label: "Total Packages", value: stats.totalPackages, icon: <FaBoxOpen /> },
+        { label: "Total Clients", value: stats.totalClients, icon: <FaUsers /> },
+        { label: "Total Stories", value: stats.totalStories, icon: <FaBook /> },
+    ];
+
     return (
-        <div className="p-6 max-w-7xl mx-auto">
+        <div className="md:p-6 p-2 max-w-7xl mx-auto">
             {/* Welcome */}
             <motion.h1
                 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-transparent"
@@ -164,7 +188,7 @@ const AdminProfile = () => {
             </motion.h1>
 
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+            {/* <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
                 {[
                     { label: "Total Payment", value: `$${stats.totalPayment}` },
                     { label: "Total Guides", value: stats.totalGuides },
@@ -183,40 +207,72 @@ const AdminProfile = () => {
                         <p className="text-2xl font-bold text-indigo-600 dark:text-pink-400">{stat.value}</p>
                     </motion.div>
                 ))}
+            </div> */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                {statItems.map((stat, idx) => (
+                    <motion.div
+                        key={idx}
+                        className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg text-center hover:shadow-xl hover:scale-105 transition-transform duration-300"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: idx * 0.1 }}
+                    >
+                        {/* Icon */}
+                        <div className="flex justify-center mb-2 text-indigo-600 dark:text-pink-400 text-3xl">
+                            {stat.icon}
+                        </div>
+
+                        {/* Label */}
+                        <p className="text-gray-500 dark:text-gray-300 font-medium">{stat.label}</p>
+
+                        {/* Value */}
+                        <p className="text-2xl font-bold text-indigo-700 dark:text-pink-300 mt-1">{stat.value}</p>
+                    </motion.div>
+                ))}
             </div>
 
             {/* Popular/Earning Packages */}
-            <div className="bg-base-100 dark:bg-base-100 rounded-xl shadow-lg p-4 mb-8" data-aos="fade-up">
+            <div
+                className="bg-base-100 dark:bg-base-100 rounded-xl shadow-lg p-4 mb-8 overflow-x-auto"
+                data-aos="fade-up"
+            >
                 <h2 className="text-xl font-semibold mb-4">Top Packages (by Revenue)</h2>
-                <ResponsiveContainer width="100%" height={500}>
-                    <BarChart
-                        data={packageStats}
-                        layout="vertical"
-                        margin={{ top: 20, right: 40, bottom: 20, left: 100 }} // give extra left margin
+
+                <div className="min-w-[500px] sm:min-w-[600px] md:min-w-full">
+                    <ResponsiveContainer
+                        width="100%"
+                        height={window.innerWidth < 640 ? 300 : 500} // adaptive height for mobile
                     >
-                        <CartesianGrid strokeDasharray="3 3" />
-                        <XAxis
-                            type="number"
-                            domain={[0, "dataMax"]}
-                            tickFormatter={(value) => `$${value.toLocaleString()}`}
-                        />
-                        <YAxis
-                            dataKey="name"
-                            type="category"
-                            width={150}
-                            tickFormatter={(value) =>
-                                value.length > 20 ? value.substring(0, 20) + "…" : value
-                            }
-                        />
-                        <Tooltip content={<CustomTooltip />} />
-                        <Bar dataKey="totalRevenue" radius={[0, 8, 8, 0]}>
-                            {packageStats.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                            ))}
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
+                        <BarChart
+                            data={packageStats}
+                            layout="vertical"
+                            margin={{ top: 20, right: 40, bottom: 20, left: 100 }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis
+                                type="number"
+                                domain={[0, "dataMax"]}
+                                tickFormatter={(value) => `৳${value.toLocaleString()}`}
+                            />
+                            <YAxis
+                                dataKey="name"
+                                type="category"
+                                width={150}
+                                tickFormatter={(value) =>
+                                    value.length > 20 ? value.substring(0, 20) + "…" : value
+                                }
+                            />
+                            <Tooltip content={<CustomTooltip />} />
+                            <Bar dataKey="totalRevenue" radius={[0, 8, 8, 0]}>
+                                {packageStats.map((entry, index) => (
+                                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                                ))}
+                            </Bar>
+                        </BarChart>
+                    </ResponsiveContainer>
+                </div>
             </div>
+
 
             {/* Admin Info Card */}
             <motion.div
@@ -233,7 +289,7 @@ const AdminProfile = () => {
                     )}
                 </div>
                 <div className="flex-1">
-                    <p className="text-xl font-semibold">{adminInfo.name || user.displayName}</p>
+                    <p className="text-xl text-primary font-semibold">{adminInfo.name || user.displayName}</p>
                     <p className="text-gray-500 dark:text-gray-300 capitalize">{adminInfo.role}</p>
                     <p className="text-gray-500 dark:text-gray-300">{adminInfo.email}</p>
                     <p className="text-gray-500 dark:text-gray-300">{adminInfo.phone || "No phone"}</p>
@@ -260,7 +316,7 @@ const AdminProfile = () => {
                             <input
                                 type="text"
                                 name="name"
-                                value={adminInfo.name}
+                                value={formData.name}
                                 onChange={handleChange}
                                 placeholder="Name"
                                 className="input input-bordered w-full"
@@ -274,7 +330,7 @@ const AdminProfile = () => {
                             <input
                                 type="text"
                                 name="phone"
-                                value={adminInfo.phone}
+                                value={formData.phone}
                                 onChange={handleChange}
                                 placeholder="Phone"
                                 className="input input-bordered w-full"
@@ -282,14 +338,14 @@ const AdminProfile = () => {
                             <input
                                 type="number"
                                 name="age"
-                                value={adminInfo.age}
+                                value={formData.age}
                                 onChange={handleChange}
                                 placeholder="Age"
                                 className="input input-bordered w-full"
                             />
                             <textarea
                                 name="bio"
-                                value={adminInfo.bio}
+                                value={formData.bio}
                                 onChange={handleChange}
                                 placeholder="Bio"
                                 className="textarea textarea-bordered w-full"

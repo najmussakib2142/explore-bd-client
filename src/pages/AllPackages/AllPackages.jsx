@@ -83,7 +83,7 @@ const AllPackages = () => {
               </div>
 
               <div className="p-4">
-                <h3 className="text-xl font-semibold mb-2">{pkg.title}</h3>
+                <h3 className="text-xl line-clamp-1 font-semibold mb-2">{pkg.title}</h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                   📍 {pkg.location} • ⏳ {pkg.totalDays} days
                 </p>

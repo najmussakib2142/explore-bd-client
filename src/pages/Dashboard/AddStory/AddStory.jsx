@@ -42,7 +42,7 @@ const AddStory = () => {
     const { data: userInfo = [], isLoading: loadingUsers } = useQuery({
         queryKey: ["user", "email"],
         queryFn: async () => {
-            const res = await axiosInstance.get(`/users/${email}`);
+            const res = await axiosSecure.get(`/users/${email}`);
             return res.data;
         },
     });

@@ -7,6 +7,8 @@ import useAuth from "../../../../hooks/useAuth";
 import Loading from "../../../shared/Loading/Loading";
 import Swal from "sweetalert2";
 import Confetti from "react-confetti";
+import { AiOutlineCalendar } from "react-icons/ai"; // calendar icon
+
 
 const MyBookings = () => {
   const axiosSecure = useAxiosSecure();
@@ -141,18 +143,18 @@ const MyBookings = () => {
                     <td>
                       <span
                         className={`badge px-3 py-1 whitespace-nowrap ${b.booking_status === "accepted"
-                            ? "badge-success"
-                            : b.booking_status === "rejected"
-                              ? "badge-error"
-                              : b.booking_status === "in-review"
-                                ? "badge-info" // or a distinct color
-                                : "badge-warning" // for pending or other statuses
+                          ? "badge-success"
+                          : b.booking_status === "rejected"
+                            ? "badge-error"
+                            : b.booking_status === "in-review"
+                              ? "badge-info" // or a distinct color
+                              : "badge-warning" // for pending or other statuses
                           }`}
                       >
                         {b.booking_status.charAt(0).toUpperCase() + b.booking_status.slice(1)}
                       </span>
                     </td>
-                    <td>${b.price}</td>
+                    <td>৳{b.price}</td>
                     <td className="flex gap-2 overflow-x-auto">
                       {/* Cancel when status = pending */}
                       {b.booking_status === "pending" && (
@@ -253,6 +255,18 @@ const MyBookings = () => {
               <p>
                 <strong className="text-secondary">🧑 Guide:</strong>{" "}
                 {selectedBooking.guideName}
+              </p>
+              <p className=" flex items-center gap-2">
+                <AiOutlineCalendar className="" />
+                <strong className="text-secondary">Created At:</strong>{" "}
+                {new Date(selectedBooking.created_at).toLocaleString("en-US", {
+                  // weekday: "short",
+                  year: "numeric",
+                  month: "short",
+                  day: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
               </p>
               <p>
                 <strong className="text-secondary">📅 Tour Date:</strong>{" "}

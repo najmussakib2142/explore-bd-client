@@ -7,7 +7,7 @@ import Logo from '../pages/shared/Logo/Logo';
 const AuthLayout = () => {
     return (
         <div className="md:p-12 max-w-7xl mx-auto">
-            <div className='md:py-4 py-4 px-3'>
+            <div className='md:py-4 py-4 px-7 lg:pl-15'>
                 <Logo></Logo>
             </div>
             <div className="hero-content flex-col flex-1 lg:flex-row-reverse">

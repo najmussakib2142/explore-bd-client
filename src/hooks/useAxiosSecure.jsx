@@ -4,7 +4,8 @@ import useAuth from './useAuth';
 import { useNavigate } from 'react-router';
 
 const axiosSecure = axios.create({
-    baseURL: `http://localhost:5000`
+    // baseURL: `http://localhost:5000`
+    baseURL: `https://explore-bd-server-iota.vercel.app`
 })
 
 const useAxiosSecure = () => {

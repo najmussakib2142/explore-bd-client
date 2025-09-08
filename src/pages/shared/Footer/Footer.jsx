@@ -111,7 +111,7 @@ const Footer = () => {
     return (
         <footer className="bg-base-100  border-t border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 px-6 md:px-20 py-12">
             <div className="max-w-7xl mx-auto">
-                <div className="md:pl-10 pl-2 grid grid-cols-1 md:grid-cols-3  gap-10">
+                <div className="md:pl-5 pl-2 grid grid-cols-1 md:grid-cols-3  gap-10">
 
                     {/* Logo + Description */}
                     <div className="flex flex-col gap-3">
@@ -167,7 +167,7 @@ const Footer = () => {
                                 📞 +880 1736 007474
                             </p>
                             <p className="text-sm text-gray-700 dark:text-gray-300">
-                                ✉️ najmussakib2142@email.com
+                                ✉️ najmussakib2142@gmail.com
                             </p>
                         </div>
                     </div>

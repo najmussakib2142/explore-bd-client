@@ -21,23 +21,34 @@ const MyAssignedTours = () => {
   }, []);
 
   // ✅ React Query v5 syntax for fetching
+  // const { data: tours = [], isLoading, isError,} = useQuery({
+  //   queryKey: ["assignedTours", user?.email],
+  //   queryFn: async () => {
+  //     if (!user?.email) return { assignedTours: [] }; // prevent bad request
+  //     const res = await axiosSecure.get(`/bookings/assigned/${user?.email}`);
+  //     return res.data;
+  //   },
+  //   enabled: !!user?.email,
+  // });
+
   const {
-    data: tours = [],
+    data,
     isLoading,
-    isError,
+    isError
   } = useQuery({
     queryKey: ["assignedTours", user?.email],
     queryFn: async () => {
-      if (!user?.email) return { assignedTours: [] }; // prevent bad request
-      const res = await axiosSecure.get(`/bookings/assigned/${user?.email}`);
+      const res = await axiosSecure.get(`/bookings/assigned/${user.email}`);
       return res.data;
     },
     enabled: !!user?.email,
+    // retry: 2, retry twice before showing error
   });
 
-  const toursArray = Array.isArray(tours.assignedTours) ? tours.assignedTours : [];
-  console.log(toursArray);
-  console.log(tours.assignedTours);
+  const toursArray = Array.isArray(data?.assignedTours) ? data.assignedTours : [];
+  // const toursArray = Array.isArray(tours.assignedTours) ? tours.assignedTours : [];
+  // console.log(toursArray);
+  // console.log(tours.assignedTours);
 
   // ✅ React Query v5 syntax for mutation
   const mutation = useMutation({
@@ -90,6 +101,8 @@ const MyAssignedTours = () => {
 
   if (isLoading) return <Loading></Loading>;
   if (isError) return <p className="text-red-500">Failed to load tours.</p>;
+  if (!data) return null;
+
 
   return (
     <>

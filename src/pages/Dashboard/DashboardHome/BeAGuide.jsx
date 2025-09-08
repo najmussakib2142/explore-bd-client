@@ -60,50 +60,6 @@ const BeAGuide = () => {
     }
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (!profilePic) {
-  //     Swal.fire("Warning", "Please upload a photo first.", "warning");
-  //     return;
-  //   }
-
-  //   try {
-  //     setSubmitting(true); // start loading
-
-  //     Swal.fire({
-  //       title: "Are you sure?",
-  //       text: "Do you want to submit your application as a Tour Guide?",
-  //       icon: "question",
-  //       showCancelButton: true,
-  //       confirmButtonColor: "#3085d6",
-  //       cancelButtonColor: "#d33",
-  //       confirmButtonText: "Yes, submit",
-  //     }).then(async (result) => {
-  //       if (result.isConfirmed) {
-  //         const payload = { ...formData, userId: user?.uid, photoURL: profilePic };
-  //         const res = await axiosSecure.post("/guides", payload);
-
-  //         if (res?.data?.insertedId) {
-  //           Swal.fire({
-  //             icon: "success",
-  //             title: "Application Submitted",
-  //             text: "Your application is pending. Admin will review it soon.",
-  //             confirmButtonText: "OK",
-  //           }).then(() => navigate("/dashboard"));
-  //         }
-  //       }
-  //     });
-  //   } catch (err) {
-  //     console.error(err);
-  //     Swal.fire("Error", err.message || "Failed to submit application", "error");
-  //   }
-  //   finally {
-  //     setSubmitting(false); // stop loading
-  //   }
-  // };
-
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 

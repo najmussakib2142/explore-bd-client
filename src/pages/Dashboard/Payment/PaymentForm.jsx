@@ -86,7 +86,7 @@ const PaymentForm = () => {
                     html: `
                         <div class="text-left text-base space-y-2">
                             <p><strong>Package:</strong> ${bookingInfo.packageName}</p>
-                            <p><strong>Amount Paid:</strong> $${amount}</p>
+                            <p><strong>Amount Paid:</strong> ৳${amount}</p>
                             <p><strong>Transaction ID:</strong> ${transactionId}</p>
                         </div>
                     `,
@@ -109,7 +109,7 @@ const PaymentForm = () => {
             title: '💳 Confirm Your Payment',
             html: `
     <div style="font-size:16px; margin-top:10px;">
-      You are about to pay <b style="color:#1E88E5;">$${amount}</b><br/>
+      You are about to pay <b style="color:#1E88E5;">৳${amount}</b><br/>
       for the package <b>"${bookingInfo.packageName}"</b>.
     </div>
   `,
@@ -149,7 +149,7 @@ const PaymentForm = () => {
                     <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">📦 Package:</span> {bookingInfo.packageName}</p>
                     <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">👥 Total Members:</span> {bookingInfo.members}</p>
                     <p className="text-gray-700 dark:text-gray-200 mb-2"><span className="font-semibold">📅 Tour Dates:</span> {bookingInfo?.tourDate?.start} → {bookingInfo?.tourDate?.end}</p>
-                    <p className="text-lg font-bold text-indigo-600 dark:text-pink-400">💰 Price: ${bookingInfo.price}</p>
+                    <p className="text-lg font-bold text-indigo-600 dark:text-pink-400">💰 Price: ৳{bookingInfo.price}</p>
                 </motion.div>
 
                 <motion.div className="p-4 mb-6 border border-gray-300 dark:border-gray-600 rounded-lg bg-gray-50 dark:bg-gray-800 shadow-sm"
@@ -170,7 +170,7 @@ const PaymentForm = () => {
                 <motion.button onClick={handleConfirmClick} disabled={!stripe}
                     className="w-full py-3 text-lg font-semibold rounded-xl bg-gradient-to-r from-indigo-600 to-pink-500 text-white shadow-lg hover:shadow-xl hover:scale-[1.02] transform transition-all duration-300 disabled:opacity-50"
                     whileTap={{ scale: 0.97 }} whileHover={{ scale: 1.02 }}>
-                    Confirm & Pay ${amount}
+                    Confirm & Pay ৳{amount}
                 </motion.button>
 
                 {error && <motion.p className="text-red-500 mt-4 text-center font-medium" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>{error}</motion.p>}

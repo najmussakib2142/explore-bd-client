@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import useAuth from "../../../hooks/useAuth";
 import useAxios from "../../../hooks/useAxios";
@@ -54,6 +54,14 @@ const EditProfileModal = ({ user, onClose }) => {
             Swal.fire("Error!", err.message || "Failed to update profile.", "error");
         }
     };
+
+    useEffect(() => {
+        reset({
+            displayName: user?.displayName || "",
+            email: user?.email || "",
+            role: user?.role || "User",
+        });
+    }, [user, reset])
 
     return (
         <div className="fixed inset-0 bg-transparent bg-opacity-40 backdrop-blur-lg flex items-center justify-center z-50">
