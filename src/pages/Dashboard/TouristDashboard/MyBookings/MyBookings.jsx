@@ -67,8 +67,8 @@ const MyBookings = () => {
             timer: 2000,
             showConfirmButton: false,
           });
-        } catch (error) {
-          console.error("Cancel failed:", error);
+        } catch  {
+          // console.error("Cancel failed:", error);
           Swal.fire({
             title: "Error!",
             text: "Something went wrong while cancelling.",
@@ -87,7 +87,7 @@ const MyBookings = () => {
     }
   }, [bookings]);
 
-  console.log("Bookings length:", bookings.length);
+  // console.log("Bookings length:", bookings.length);
 
 
   // ✅ Handle pay

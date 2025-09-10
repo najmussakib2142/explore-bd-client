@@ -76,12 +76,12 @@ const PendingGuides = () => {
 
             const status = action === "approve" ? "active" : "rejected";
             await axiosSecure.patch(`/guides/${id}/status`, { status, email });
-           
+
             refetch();
-            
+
             Swal.fire("Success", `Guide ${action}d successfully`, "success");
-        } catch (err) {
-            console.log(err);
+        } catch {
+            // console.log(err);
             Swal.fire("Error", "Could not update guide status", "error");
         }
     };

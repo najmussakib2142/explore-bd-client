@@ -6,6 +6,7 @@ import TouristStorySection from '../TouristStorySection/TouristStorySection';
 import Testimonials from '../Testimonials/Testimonials';
 import MostBookedPackages from '../MostBookedPackages/MostBookedPackages';
 import useAuth from '../../../hooks/useAuth';
+import { Helmet } from 'react-helmet-async';
 
 const Home = () => {
     const [showBanner, setShowBanner] = useState(false);
@@ -39,9 +40,22 @@ const Home = () => {
 
     return (
         <div className='max-w-screen-xl mx-auto'>
+            <Helmet>
+                <title>ExploreBD | Discover Bangladesh</title>
+                <meta
+                    name="description"
+                    content="ExploreBD helps you discover the Sundarbans, Cox’s Bazar, and more travel destinations in Bangladesh."
+                />
+                <meta property="og:title" content="ExploreBD | Discover Bangladesh" />
+                <meta
+                    property="og:description"
+                    content="Plan your trips and adventures with ExploreBD."
+                />
+                <meta property="og:image" content="https://i.ibb.co/example.jpg" />
+            </Helmet>
             {showBanner && (
-                <div className="bg-indigo-500 text-white px-6 py-3 rounded-b shadow-md flex justify-between items-center">
-                    <p className="text-sm">
+                <div className="bg-indigo-600 text-white px-6 py-1  shadow-md flex justify-between items-center">
+                    <p className="text-xs">
                         {user
                             ? "Welcome to ExploreBD! Click your avatar at the top-right to access your Dashboard and account options."
                             : "Welcome to ExploreBD! Please log in to access your Dashboard and account options."}

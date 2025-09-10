@@ -10,7 +10,7 @@ import Loading from '../pages/shared/Loading/Loading';
 const DashBoardLayout = () => {
 
     const { role, roleLoading } = useUserRole();
-    console.log(role, roleLoading);
+    // console.log(role, roleLoading);
     const { state } = useNavigation()
 
     // if (roleLoading) {
@@ -49,9 +49,11 @@ const DashBoardLayout = () => {
                         <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
                         <ul className="menu bg-base-100 text-base-content min-h-full w-80 p-4 space-y-2">
                             {/* <ProFastLog /> */}
-                            <Logo></Logo>
+                           <div className='border-b pb-3'>
+                             <Logo></Logo>
+                           </div>
 
-                            <li>
+                            <li className='pt-1'>
                                 <NavLink to="/dashboard"
                                     end
                                     className={({ isActive }) =>

@@ -96,7 +96,7 @@ const AddPackage = () => {
                 })
                 uploadedUrls.push(res.data?.data?.url);
             } catch (err) {
-                console.error("Image upload failed:", err);
+                // console.error("Image upload failed:", err);
                 Swal.fire("Upload failed", err?.message || "Please try again", "error");
             }
         }
@@ -170,15 +170,15 @@ const AddPackage = () => {
                 // setDuration("");
             }
         } catch (err) {
-            console.error(err);
+            // console.error(err);
             Swal.fire("Error!", err?.message || "Something went wrong", "error");
         } finally {
             setSubmitting(false);
         }
     };
 
-    const totalDays = fields.length;
-    console.log("Total days:", totalDays);
+    // const totalDays = fields.length;
+    // console.log("Total days:", totalDays);
 
 
     return (

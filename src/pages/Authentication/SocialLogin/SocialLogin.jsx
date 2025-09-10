@@ -2,6 +2,7 @@ import React from 'react';
 import useAuth from '../../../hooks/useAuth';
 import { useLocation, useNavigate } from 'react-router';
 import useAxios from '../../../hooks/useAxios';
+import Swal from 'sweetalert2';
 // import useAxios from '../../../hooks/useAxios';
 
 const SocialLogin = () => {
@@ -17,7 +18,7 @@ const SocialLogin = () => {
         signInWithGoogle()
             .then(async (result) => {
                 const user = result.user;
-                console.log(result.user);
+                // console.log(result.user);
 
                 // update userinfo in database
                 const userinfo = {
@@ -26,15 +27,16 @@ const SocialLogin = () => {
                     created_at: new Date().toISOString(),
                     last_log_in: new Date().toISOString(),
                 }
+                await axiosInstance.post('/users', userinfo);
 
-                const res = await axiosInstance.post('/users', userinfo)
-                console.log("user update info", res.data);
-                console.log(userinfo);
+                // const res = await axiosInstance.post('/users', userinfo)
+                // console.log("user update info", res.data);
+                // console.log(userinfo);
 
                 navigate(from)
             })
-            .catch(error => {
-                console.error(error);
+            .catch(() => {
+                Swal.fire('Error', 'Google Sign-In failed', 'error');
             })
     }
 

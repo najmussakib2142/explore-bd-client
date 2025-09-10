@@ -15,13 +15,13 @@ The ExploreBD website provides:
 ---
 
 ## 🔑 Admin Credentials
-- **Admin Email:** admin@example.com  
-- **Admin Password:** Admin@123  
+- **Admin Email:** demo@demo.com  
+- **Admin Password:** Demo@123  
 
-**Live Site Link:** [Frontend Live Site](#)  
+**Live Site Link:** [https://explore-bd-admin.web.app/](#)  
 
-**Client Side Github Repository:** [ExploreBD Client](#)  
-**Server Side Github Repository:** [ExploreBD Server](#)  
+**Client Side Github Repository:** [https://github.com/najmussakib2142/explore-bd-client](#)  
+**Server Side Github Repository:** [https://github.com/najmussakib2142/explore-bd-server](#)  
 
 ---
 
@@ -60,6 +60,4 @@ The ExploreBD website provides:
 - Pagination for tables (10 items per page)  
 - Optional features: Swiper, Axios interceptor, Offer Announcements notifications  
 
----
 
-## 📁 Folder Structure (Frontend)

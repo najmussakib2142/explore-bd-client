@@ -12,15 +12,29 @@ const PaymentHistory = () => {
     const axiosSecure = useAxiosSecure()
 
     const { isPending, data: payments = [] } = useQuery({
-        queryKey: ['payments', user.email],
+        queryKey: ['payments', user?.email],
         queryFn: async () => {
             const res = await axiosSecure.get(`/payments?email=${user.email}`)
             return res.data
-        }
+        },
+        enabled: !!user?.email,
     })
 
     if (isPending) {
         return <Loading></Loading>
+    }
+
+    if (payments.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center py-10 bg-base-100 rounded-xl shadow-md">
+                <p className="text-lg font-semibold text-gray-600 dark:text-gray-300">
+                    No payment history found 💳
+                </p>
+                <p className="text-sm text-gray-500 mt-2">
+                    Once you make a payment, it will appear here.
+                </p>
+            </div>
+        );
     }
 
 
@@ -46,8 +60,8 @@ const PaymentHistory = () => {
                                     {p.packageId}...
                                 </td> */}
                                 <td className="truncate" title={p.packageName}>
-  {p.packageName}
-</td>
+                                    {p.packageName}
+                                </td>
                                 <td>৳{p.amount}</td>
                                 <td className="font-mono text-sm">
                                     <span title={p.transactionId}>

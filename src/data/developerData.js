@@ -16,8 +16,8 @@ export const projects = [
     {
         name: "ExploreBD",
         description: "A tour discovery platform built with React, Firebase, and Tailwind CSS. Users can browse and book trips across Bangladesh.",
-        github: "https://github.com/your-username/ExploreBD",
-        live: "/" // or your deployed URL
+        github: "https://github.com/najmussakib2142/explore-bd-client",
+        live: "https://explore-bd-admin.web.app/" // or your deployed URL
     },
     {
         name: "EduCircle",

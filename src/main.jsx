@@ -15,6 +15,7 @@ import {
 // AOS imports
 import AOS from 'aos';
 import 'aos/dist/aos.css';
+import { HelmetProvider } from 'react-helmet-async';
 
 const queryClient = new QueryClient()
 
@@ -31,15 +32,17 @@ AOS.init({
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    {/* <div className='font-roboto max-w-7xl mx-auto'> */}
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider>
-        <AuthProvider>
-          <RouterProvider router={router} />
-          <Toaster position="top-right" autoClose={3000} />
-        </AuthProvider>
-      </ThemeProvider>
-    </QueryClientProvider>
-    {/* </div> */}
+    <HelmetProvider>
+      {/* <div className='font-roboto max-w-7xl mx-auto'> */}
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider>
+          <AuthProvider>
+            <RouterProvider router={router} />
+            <Toaster position="top-right" autoClose={3000} />
+          </AuthProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
+      {/* </div> */}
+    </HelmetProvider>
   </StrictMode>,
 )

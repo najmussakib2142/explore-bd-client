@@ -84,8 +84,8 @@ const FAQ = () => {
                     setSubmitted(true);
                     setFormData({ name: "", email: "", question: "" });
                 },
-                (error) => {
-                    console.error("Failed to send email:", error);
+                () => {
+                    // console.error("Failed to send email:", error);
                     Swal.fire({
                         icon: "error",
                         title: "Oops...",

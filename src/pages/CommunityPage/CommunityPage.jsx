@@ -6,6 +6,7 @@ import { useNavigate } from "react-router";
 import useAuth from "../../hooks/useAuth";
 import useAxios from "../../hooks/useAxios";
 import Loading from "../shared/Loading/Loading";
+import { Helmet } from "react-helmet-async";
 
 // import LightGallery from 'lightgallery/react';
 // import lgThumbnail from 'lightgallery/plugins/thumbnail';
@@ -98,12 +99,25 @@ export default function CommunityStories() {
 
     if (isLoading) return <Loading />;
 
-    console.log(selectedStory);
+    // console.log(selectedStory);
 
 
 
     return (
         <section className="max-w-7xl mx-auto py-10 px-7">
+            <Helmet>
+                <title>Community Stories | ExploreBD</title>
+                <meta
+                    name="description"
+                    content="Read real travel stories and experiences shared by the ExploreBD community."
+                />
+                <meta property="og:title" content="Community Stories | ExploreBD" />
+                <meta
+                    property="og:description"
+                    content="Discover adventures and travel experiences from real visitors."
+                />
+                <meta property="og:image" content="https://i.ibb.co/community.jpg" />
+            </Helmet>
             <h2 className="text-3xl font-bold mb-3" data-aos="fade-down">Community Stories</h2>
             <p className=" text-gray-600 dark:text-gray-400 mb-8" data-aos="fade-down">
                 Discover stories, tips, and memories from our community of explorers.
@@ -266,13 +280,13 @@ export default function CommunityStories() {
                             //     speed={500}
                             //     plugins={[lgThumbnail, lgZoom]}
                             // >
-                                <div className="flex flex-wrap gap-3 mb-4">
-                                    {selectedStory.images.filter(Boolean).map((img, idx) => (
-                                        <a key={idx} href={img} data-src={img}>
-                                            <img src={img} alt={`story-${idx}`} className="w-32 h-32 object-cover rounded cursor-pointer" />
-                                        </a>
-                                    ))}
-                                </div>
+                            <div className="flex flex-wrap gap-3 mb-4">
+                                {selectedStory.images.filter(Boolean).map((img, idx) => (
+                                    <a key={idx} href={img} data-src={img}>
+                                        <img src={img} alt={`story-${idx}`} className="w-32 h-32 object-cover rounded cursor-pointer" />
+                                    </a>
+                                ))}
+                            </div>
                             // </LightGallery>
                         )}
 

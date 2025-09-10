@@ -7,6 +7,7 @@ import Loading from '../../shared/Loading/Loading';
 import { useQuery } from '@tanstack/react-query';
 import GuideDashboard from '../GuideDashboard/GuideDashboard';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
+import { Helmet } from 'react-helmet-async';
 
 const DashboardHome = () => {
     const axiosSecure = useAxiosSecure()
@@ -29,6 +30,13 @@ const DashboardHome = () => {
     }
     return (
         <div>
+            <Helmet>
+                <title>Dashboard | ExploreBD</title>
+                <meta
+                    name="description"
+                    content="Admin Dashboard for ExploreBD – manage packages, bookings, and guides."
+                />
+            </Helmet>
             {userInfo?.role === 'user' && (
                 <UserDashboard></UserDashboard>
             )}

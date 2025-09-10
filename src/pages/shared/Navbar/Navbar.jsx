@@ -89,7 +89,7 @@ const Navbar = () => {
             {/* <div className={`fixed dark:bg-[#0f172a] max-w-7xl mx-auto  top-0 w-full bg-white z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} shadow`}>
                 <div className="navbar   py-0  z-50 md:pr-7 bg-base-100/80 dark:bg-[#0f172a]  backdrop-blur transition-all duration-300 shadow-md"> */}
             <div className={`fixed bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md shadow-md top-0  w-full z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
-                <div className="navbar h-14 px-4 md:px-7 flex justify-between transition-all  items-center 
+                <div className="navbar h-14  px-4 md:px-7 flex justify-between transition-all  items-center 
                   ">
                     <div className="navbar-start flex items-center">
                         <div className="dropdown relative">

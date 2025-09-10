@@ -7,6 +7,7 @@ import useAxios from '../../../hooks/useAxios';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Helmet } from 'react-helmet-async';
 
 const Register = () => {
     const { createUser, updateUserProfile } = useAuth();
@@ -33,8 +34,7 @@ const Register = () => {
             const uploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`;
             const res = await axios.post(uploadUrl, formData);
             setProfilePic(res.data.data.url);
-        } catch (err) {
-            console.error(err);
+        } catch {
             Swal.fire('Error', 'Failed to upload image', 'error');
         }
     };
@@ -56,7 +56,7 @@ const Register = () => {
             if (!result.isConfirmed) return;
 
             createUser(data.email, data.password)
-                .then(async (result) => {
+                .then(async () => {
                     const userInfo = {
                         email: data.email,
                         displayName: data.name,
@@ -92,6 +92,9 @@ const Register = () => {
 
     return (
         <div className="flex justify-center items-center min-h-screen  p-4">
+            <Helmet>
+                <title>Register | ExploreBD</title>
+            </Helmet>
             <div className="card bg-base-100 w-full max-w-md shadow-2xl rounded-2xl">
                 <div className="card-body">
                     <h1 className="text-4xl font-bold text-center mb-6">Create An Account</h1>

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import Swal from "sweetalert2";
 import { FaSpinner, FaTimes } from "react-icons/fa";
-import useAxios from "../../../hooks/useAxios";
+// import useAxios from "../../../hooks/useAxios";
 import useAuth from "../../../hooks/useAuth";
 import Loading from "../../shared/Loading/Loading";
 import axios from "axios";
@@ -13,7 +13,7 @@ import useAxiosSecure from "../../../hooks/useAxiosSecure";
 const AddStory = () => {
     const { register, handleSubmit, reset } = useForm();
     const navigate = useNavigate();
-    const axiosInstance = useAxios()
+    // const axiosInstance = useAxios()
     const axiosSecure = useAxiosSecure()
     const { user } = useAuth();
     const [pictures, setPictures] = useState([]); // uploaded image URLs
@@ -67,11 +67,11 @@ const AddStory = () => {
             const uploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`
             try {
                 const res = await axios.post(uploadUrl, formData);
-                console.log(res);
+                // console.log(res);
                 uploadedUrls.push(res.data?.data?.url);
                 // if (url) uploadedUrls.push(url);
             } catch (err) {
-                console.error("Image upload failed:", err);
+                // console.error("Image upload failed:", err);
                 Swal.fire(
                     "Upload failed",
                     err?.message || "Please try again",

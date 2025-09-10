@@ -18,6 +18,8 @@ import lgZoom from "lightgallery/plugins/zoom";
 import "lightgallery/css/lightgallery.css";
 import "lightgallery/css/lg-zoom.css";
 import "lightgallery/css/lg-thumbnail.css";
+import { Helmet } from "react-helmet-async";
+import ErrorPage from "../shared/ErrorPage/ErrorPage";
 
 // import PhotoAlbum from "react-photo-album";
 // import Lightbox from "yet-another-react-lightbox";
@@ -70,12 +72,22 @@ const PackageDetailsPage = () => {
     }, []);
 
     if (packageLoading) return <Loading />;
-    if (packageError) return <p className="text-red-500 text-center py-7">Error loading package!</p>;
+    if (packageError) return <ErrorPage></ErrorPage>;
 
 
     return (
         <div className="max-w-6xl mx-auto my-12 px-4 pt-4 space-y-10">
             {/* Gallery */}
+            <Helmet>
+                <title>{packageData?.title ? `${packageData.title} | ExploreBD` : "Loading..."} </title>
+                <meta
+                    name="description"
+                    content={packageData?.text || "Discover this amazing travel package with ExploreBD."}
+                />
+                <meta property="og:title" content={packageData?.title || "ExploreBD"} />
+                <meta property="og:description" content={packageData?.text || ""} />
+                <meta property="og:image" content={packageData?.images?.[0] || "https://i.ibb.co/default-package.jpg"} />
+            </Helmet>
             <div className="columns-2 sm:columns-2 md:columns-3 gap-2 md:gap-3 p-2">
                 {packageData.images.map((img, idx) => (
                     <LightGallery key={idx} speed={500} plugins={[lgThumbnail, lgZoom]}>
@@ -90,7 +102,7 @@ const PackageDetailsPage = () => {
                     </LightGallery>
                 ))}
             </div>
-            
+
 
 
             {/* About & Info */}

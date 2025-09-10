@@ -65,8 +65,7 @@ const ActiveGuides = () => {
 
             refetch();
 
-        } catch (err) {
-            console.error(err);
+        } catch {
             Swal.fire("Error", "Failed to deactivate guide", "error");
         }
     };

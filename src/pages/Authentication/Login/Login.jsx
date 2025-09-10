@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
 import SocialLogin from '../SocialLogin/SocialLogin';
 import useAuth from '../../../hooks/useAuth';
+import { Helmet } from 'react-helmet-async';
 
 const Login = () => {
     const { signIn, resetPassword } = useAuth();
@@ -43,7 +44,7 @@ const Login = () => {
 
             navigate(from, { replace: true });
         } catch (err) {
-            console.log(err);
+            // console.log(err);
             let message = "";
             switch (err.code) {
                 case "auth/user-not-found":
@@ -88,6 +89,9 @@ const Login = () => {
 
     return (
         <div className="flex justify-center items-center min-h-[80vh] px-4">
+            <Helmet>
+                <title>Login | ExploreBD</title>
+            </Helmet>
             <div className="card bg-base-100 w-full max-w-md shadow-xl rounded-2xl p-6">
                 <h1 className="text-3xl font-bold text-primary text-center mb-6">
                     Login to Your Account

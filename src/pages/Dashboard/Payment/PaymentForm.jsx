@@ -95,8 +95,8 @@ const PaymentForm = () => {
                     confirmButtonColor: '#16a34a',
                 }).then(() => navigate('/dashboard/myBookings'));
             }
-        } catch (err) {
-            console.error(err);
+        } catch  {
+            // console.error(err);
             setError('Payment failed. Please try again.');
         } finally {
             setLoading(false); // stop spinner

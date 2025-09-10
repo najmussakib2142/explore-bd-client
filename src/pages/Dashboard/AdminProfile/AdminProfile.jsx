@@ -122,6 +122,49 @@ const AdminProfile = () => {
         setPhotoFile(e.target.files[0]);
     };
 
+    // const handleUpdate = async () => {
+    //     try {
+    //         let uploadedPhotoUrl = formData.photo;
+
+    //         // Upload photo if selected
+    //         if (photoFile) {
+    //             const imgData = new FormData();
+    //             imgData.append("image", photoFile);
+    //             const res = await fetch(imageUploadUrl, { method: "POST", body: imgData });
+    //             const data = await res.json();
+    //             if (data.success) uploadedPhotoUrl = data.data.display_url;
+    //         }
+
+    //         // Update Firebase Auth profile
+    //         if (updateUserProfile) {
+    //             await updateUserProfile({
+    //                 displayName: formData.name || adminInfo.name,
+    //                 photoURL: uploadedPhotoUrl,
+    //             });
+    //         }
+
+    //         // Update backend
+    //         const updatedFields = {};
+
+    //         // Check each field, add only if not empty
+    //         if (formData.name) updatedFields.name = formData.name;
+    //         if (formData.phone) updatedFields.phone = formData.phone;
+    //         if (formData.age) updatedFields.age = formData.age;
+    //         if (formData.bio) updatedFields.bio = formData.bio;
+    //         if (photoFile) updatedFields.photo = uploadedPhotoUrl;
+
+    //         // Then send only updatedFields
+    //         await axiosInstance.patch(`/users/${user.email}`, updatedFields);
+
+    //         setEditMode(false);
+    //         Swal.fire("Success!", "Profile updated successfully", "success");
+    //         queryClient.invalidateQueries(["adminInfo", user.email]);
+    //     } catch {
+    //         Swal.fire("Error!", "Failed to update profile", "error");
+    //     }
+
+    // };
+
     const handleUpdate = async () => {
         try {
             let uploadedPhotoUrl = formData.photo;
@@ -135,35 +178,41 @@ const AdminProfile = () => {
                 if (data.success) uploadedPhotoUrl = data.data.display_url;
             }
 
-            // Update Firebase Auth profile
+            // Update Firebase Auth profile if needed
             if (updateUserProfile) {
                 await updateUserProfile({
-                    displayName: formData.name,
+                    displayName: formData.name || adminInfo.name,
                     photoURL: uploadedPhotoUrl,
                 });
             }
 
-            // Update backend
+            // Build updated fields object
             const updatedFields = {};
 
-            // Check each field, add only if not empty
-            if (formData.name) updatedFields.name = formData.name;
-            if (formData.phone) updatedFields.phone = formData.phone;
-            if (formData.age) updatedFields.age = formData.age;
-            if (formData.bio) updatedFields.bio = formData.bio;
+            ["name", "phone", "age", "bio"].forEach((field) => {
+                if (formData[field] !== adminInfo[field]) {
+                    updatedFields[field] = formData[field];
+                }
+            });
+
             if (photoFile) updatedFields.photo = uploadedPhotoUrl;
 
-            // Then send only updatedFields
-            await axiosInstance.patch(`/users/${user.email}`, updatedFields);
+            // Only send update if there are changes
+            if (Object.keys(updatedFields).length > 0) {
+                await axiosInstance.patch(`/users/${user.email}`, updatedFields);
+                Swal.fire("Success!", "Profile updated successfully", "success");
+                queryClient.invalidateQueries(["adminInfo", user.email]);
+            } else {
+                Swal.fire("Info", "No changes to update", "info");
+            }
 
             setEditMode(false);
-            Swal.fire("Success!", "Profile updated successfully", "success");
-            queryClient.invalidateQueries(["adminInfo", user.email]);
-        } catch (err) {
-            console.error(err);
+        } catch (error) {
+            console.error(error);
             Swal.fire("Error!", "Failed to update profile", "error");
         }
     };
+
 
     if (statsLoading || adminLoading || packageLoading)
         return <Loading></Loading>;

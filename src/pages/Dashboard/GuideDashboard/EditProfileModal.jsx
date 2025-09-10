@@ -24,7 +24,7 @@ const EditProfileModal = ({ user, onClose, guideInfo }) => {
             phone: guideInfo?.phone || "",
         },
     });
-    console.log(guideInfo);
+    // console.log(guideInfo);
 
     // Handle image upload
     const handleImageUpload = async (e) => {
@@ -38,7 +38,7 @@ const EditProfileModal = ({ user, onClose, guideInfo }) => {
         try {
             const res = await axiosInstance.post(imageUploadUrl, formData);
             setProfilePic(res.data.data.url);
-        } catch (err) {
+        } catch {
             Swal.fire("Error", "Failed to upload image", "error");
         } finally {
             setUploading(false);
@@ -162,7 +162,7 @@ const EditProfileModal = ({ user, onClose, guideInfo }) => {
                         <input
                             type="text"
                             {...register("role")}
-                            
+
                             readOnly
                             className="input cursor-not-allowed input-bordered w-full bg-gray-100 dark:bg-gray-800"
                         />

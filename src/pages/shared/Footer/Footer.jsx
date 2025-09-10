@@ -109,7 +109,7 @@ const Footer = () => {
     ];
 
     return (
-        <footer className="bg-base-100  border-t border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 px-6 md:px-20 py-12">
+<footer className="bg-white/70 dark:bg-gray-900/70 backdrop-blur border-t border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100 px-6 md:px-20 py-12">
             <div className="max-w-7xl mx-auto">
                 <div className="md:pl-5 pl-2 grid grid-cols-1 md:grid-cols-3  gap-10">
 

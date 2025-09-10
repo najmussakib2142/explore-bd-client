@@ -170,7 +170,7 @@ const BookingForm = ({ packageData, guides }) => {
                         }).then(() => navigate("/dashboard/myBookings"));
                     }
                 } catch (err) {
-                    console.log(err);
+                    // console.log(err);
                     Swal.fire("Error!", err.message || "Something went wrong", "error");
                 }
             }

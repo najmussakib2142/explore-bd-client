@@ -1,11 +1,24 @@
 import React from "react";
 import { developer, projects } from "../../data/developerData"; // your JSON data
 import { FaGithub, FaLinkedin, FaWhatsapp, FaYoutube } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
 
 const About = () => {
     return (
         <div className="px-6 md:px-20 py-10 max-w-7xl mx-auto space-y-16">
-
+            <Helmet>
+                <title>About ExploreBD | Discover Bangladesh</title>
+                <meta
+                    name="description"
+                    content="Learn about ExploreBD, your ultimate travel guide to Bangladesh's top destinations."
+                />
+                <meta property="og:title" content="About ExploreBD | Discover Bangladesh" />
+                <meta
+                    property="og:description"
+                    content="Discover our mission, team, and commitment to helping you explore Bangladesh."
+                />
+                <meta property="og:image" content="https://i.ibb.co/about-banner.jpg" />
+            </Helmet>
             {/* Hero Section */}
             <section className="text-center space-y-4">
                 <h1 className="text-4xl md:text-5xl font-bold text-primary">About the Developer</h1>

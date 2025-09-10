@@ -64,8 +64,8 @@ const MakeAdmin = () => {
 
             await updateRole({ id, role: newRole });
             Swal.fire("Success", `${action} successful`, "success");
-        } catch (error) {
-            console.log(error);
+        } catch  {
+            // console.log(error);
             Swal.fire("Error", "Failed to update user role", "error");
         }
     };

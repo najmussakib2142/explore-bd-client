@@ -26,6 +26,7 @@ const BeAGuide = () => {
     bio: "",
     cv: "",
     district: "",
+    nid: "",
     created_at: new Date().toISOString(),
   });
 
@@ -52,8 +53,8 @@ const BeAGuide = () => {
       setProfilePic(res.data.data.url);
       Swal.fire("Success!", "Photo uploaded successfully.", "success");
       setPhotoFile(null);
-    } catch (err) {
-      console.error(err);
+    } catch {
+      // console.error(err);
       Swal.fire("Error!", "Failed to upload photo.", "error");
     } finally {
       setUploading(false);
@@ -109,7 +110,7 @@ const BeAGuide = () => {
       }
     } catch (err) {
       Swal.close();
-      console.error(err);
+      // console.error(err);
       Swal.fire("Error", err.message || "Failed to submit application", "error");
     } finally {
       setSubmitting(false); // stop loading here, after submission

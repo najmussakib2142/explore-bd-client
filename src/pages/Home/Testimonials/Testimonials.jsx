@@ -92,6 +92,8 @@ const Testimonials = () => {
                 pagination={{ clickable: true }}
                 modules={[Navigation, Pagination]}
                 className="testimonialSwiper"
+                grabCursor={true}          // show grab cursor on desktop
+                simulateTouch={true}
                 breakpoints={{
                     320: { slidesPerView: 1, spaceBetween: 20 },
                     640: { slidesPerView: 1, spaceBetween: 20 },
@@ -108,10 +110,10 @@ const Testimonials = () => {
                                     ...style,
                                     transform: style.y.to((y) => `translateY(${y}px)`),
                                 }}
-                                className="dark:bg-base-100 bg-[#f0fdf4] p-6 md:p-8 rounded-xl shadow-md"
+                                className="dark:bg-base-100 bg-[#f0fdf4] p-6 md:p-8 rounded-xl shadow-md h-[300px] md:h-[350px] flex flex-col justify-between"
                             >
-                                <img src={reviewQuote} alt="" className="mb-4 w-10 h-10" />
-                                <p className="mb-4 border-b border-dotted border-gray-300 dark:border-gray-600 pb-2 text-gray-800 dark:text-gray-200 text-lg">
+                                <img src={reviewQuote} alt="" className=" w-10 h-10" />
+                                <p className="mb-2 border-b border-dotted border-gray-300 dark:border-gray-600 pb-2 text-gray-800 dark:text-gray-200 text-lg">
                                     "{review.review}"
                                 </p>
                                 <div className="flex items-center gap-4">
@@ -126,6 +128,7 @@ const Testimonials = () => {
                                     </div>
                                 </div>
                             </animated.div>
+
                         </SwiperSlide>
                     );
                 })}

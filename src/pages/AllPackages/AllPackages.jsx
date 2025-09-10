@@ -4,6 +4,7 @@ import { useNavigate } from "react-router";
 import { animated } from "@react-spring/web";
 import Loading from "../shared/Loading/Loading";
 import useAxios from "../../hooks/useAxios";
+import { Helmet } from "react-helmet-async";
 
 const AllPackages = () => {
   const axiosInstance = useAxios();
@@ -52,6 +53,19 @@ const AllPackages = () => {
 
   return (
     <div className="p-6 md:px-20">
+      <Helmet>
+        <title>Explore Trips in Bangladesh | ExploreBD</title>
+        <meta
+          name="description"
+          content="Browse all travel packages in Bangladesh with ExploreBD, from Sundarbans to Cox’s Bazar."
+        />
+        <meta property="og:title" content="Explore Trips in Bangladesh | ExploreBD" />
+        <meta
+          property="og:description"
+          content="Find your next adventure and book top travel packages across Bangladesh."
+        />
+        <meta property="og:image" content="https://i.ibb.co/all-packages.jpg" />
+      </Helmet>
       {/* Page Title */}
       <div className="text-center mb-10">
         <h1 className="text-4xl font-bold text-primary mb-2">Explore All Packages</h1>

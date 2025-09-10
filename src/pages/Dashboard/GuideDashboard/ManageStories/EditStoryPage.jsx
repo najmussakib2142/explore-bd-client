@@ -81,7 +81,7 @@ const EditStoryPage = () => {
             description,
             addImages: newImages, // ✅ already hosted image URLs
         };
-        console.log("🔍 Sending payload to backend:", payload);
+        // console.log("🔍 Sending payload to backend:", payload);
         updateMutation.mutate(payload);
     };
 
@@ -94,9 +94,9 @@ const EditStoryPage = () => {
             await axiosSecure.patch(`/stories/${id}`, { removeImages: [img] });
             setImages((prev) => prev.filter((i) => i !== img));
             setRemovingImage(null);
-        } catch (err) {
-            console.error(err);
+        } catch {
             setRemovingImage(null);
+            Swal.fire("Error!", "Failed to remove image", "error");
         }
     };
 

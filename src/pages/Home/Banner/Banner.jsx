@@ -5,19 +5,27 @@ import Srimangal from '../../../assets/Srimangal.jpg';
 import Coxs from '../../../assets/coxs.jpg';
 import { useNavigate } from "react-router";
 
+const useCDN = true;
+
 const slides = [
     {
-        image: Sundarbans,
+        image: useCDN
+            ? "https://i.ibb.co.com/FbrvgGJN/beautiful-axis-deer-from-sundarbans-tiger-reserve-india.jpg"
+            : Sundarbans,
         title: "Explore the Sundarbans",
         text: "Discover the world's largest mangrove forest with ExploreBD.",
     },
     {
-        image: Coxs,
+        image: useCDN
+            ? "https://i.ibb.co.com/G3fk0D2Y/198.jpg"
+            : Coxs,
         title: "Relax at Cox’s Bazar",
         text: "Walk along the world’s longest unbroken sandy beach.",
     },
     {
-        image: Srimangal,
+        image: useCDN
+            ? "https://i.ibb.co.com/Y7N11HXG/762.jpg"
+            : Srimangal,
         title: "Tea Gardens of Srimangal",
         text: "Breathe in the freshness of endless green tea estates.",
     },
