@@ -59,7 +59,7 @@ const Testimonials = () => {
     });
 
     return (
-        <section className="py-10 px-5 md:px-20">
+        <section className="py-10 mb-5 px-5 md:px-20">
             {/* Decorative Top Image */}
             <div className="text-center mb-8">
                 <img src={reviewImg} alt="Travel decoration" className="mx-auto max-h-44 mb-3" />

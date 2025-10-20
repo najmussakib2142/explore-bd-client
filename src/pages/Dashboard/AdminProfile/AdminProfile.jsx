@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import useAxiosSecure from "../../../hooks/useAxiosSecure";
@@ -16,10 +16,11 @@ const COLORS = [
     "#EF4444", // red - alerts or attention
     "#6366F1", // indigo - premium/contrast
 ];
+
 const AdminProfile = () => {
     const { user, updateUserProfile } = useAuth();
     const axiosSecure = useAxiosSecure();
-    const axiosInstance = useAxios()
+    const axiosInstance = useAxios();
     const queryClient = useQueryClient();
 
     const [editMode, setEditMode] = useState(false);
@@ -34,31 +35,6 @@ const AdminProfile = () => {
         role: user?.role || "User",
     });
 
-    const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`;
-
-
-    const CustomTooltip = ({ active, payload, label }) => {
-        if (active && payload && payload.length) {
-            const data = payload[0].payload;
-            return (
-                <div className="bg-base-100 dark:bg-gray-800 p-3 rounded-lg shadow-lg border">
-                    <p className="font-semibold text-gray-900 dark:text-gray-100">
-                        {data.name}
-                    </p>
-                    <p className="text-sm text-indigo-600 dark:text-pink-400">
-                        Revenue: ৳{data.totalRevenue.toLocaleString()}
-                    </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">
-                        Bookings: {data.bookingsCount}
-                    </p>
-                </div>
-            );
-        }
-        return null;
-    };
-
-
-
     // Fetch overall stats
     const { data: stats, isLoading: statsLoading } = useQuery({
         queryKey: ["stats"],
@@ -68,6 +44,50 @@ const AdminProfile = () => {
         },
     });
 
+    // Define statItems after stats is loaded
+    const statItems = stats
+        ? [
+            { label: "Total Payment", value: stats.totalPayment, icon: <FaMoneyBillWave /> },
+            { label: "Total Guides", value: stats.totalGuides, icon: <FaUserTie /> },
+            { label: "Total Packages", value: stats.totalPackages, icon: <FaBoxOpen /> },
+            { label: "Total Clients", value: stats.totalClients, icon: <FaUsers /> },
+            { label: "Total Stories", value: stats.totalStories, icon: <FaBook /> },
+        ]
+        : [];
+
+    const [animatedStats, setAnimatedStats] = useState(statItems.map(() => 0));
+
+    // Animate stats when stats data is available
+    useEffect(() => {
+        if (!stats) return;
+
+        const timers = statItems.map((stat, idx) => {
+            let start = 0;
+            const end = stat.value;
+            const duration = 2000;
+            const increment = end / (duration / 50);
+
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= end) {
+                    start = end;
+                    clearInterval(timer);
+                }
+
+                setAnimatedStats(prev => {
+                    const newArr = [...prev];
+                    newArr[idx] = Math.floor(start);
+                    return newArr;
+                });
+            }, 50);
+
+            return timer;
+        });
+
+        // Cleanup timers on unmount
+        return () => timers.forEach(timer => clearInterval(timer));
+    }, [stats]);
+
     // Fetch admin info
     const { data: adminInfo, isLoading: adminLoading } = useQuery({
         queryKey: ["adminInfo", user.email],
@@ -76,7 +96,7 @@ const AdminProfile = () => {
             return res.data;
         },
         enabled: !!user?.email,
-        onSuccess: (data) => {
+        onSuccess: data => {
             setFormData({
                 name: data.name || "",
                 photo: data.photo || "",
@@ -89,7 +109,7 @@ const AdminProfile = () => {
         },
     });
 
-    // Fetch package stats (dynamic)
+    // Fetch package stats
     const { data: packageStats = [], isLoading: packageLoading } = useQuery({
         queryKey: ["packageStats"],
         queryFn: async () => {
@@ -97,6 +117,26 @@ const AdminProfile = () => {
             return res.data;
         },
     });
+
+    const imageUploadUrl = `https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_image_upload_key}`;
+
+    const CustomTooltip = ({ active, payload }) => {
+        if (active && payload && payload.length) {
+            const data = payload[0].payload;
+            return (
+                <div className="bg-base-100 dark:bg-gray-800 p-3 rounded-lg shadow-lg border">
+                    <p className="font-semibold text-gray-900 dark:text-gray-100">{data.name}</p>
+                    <p className="text-sm text-indigo-600 dark:text-pink-400">
+                        Revenue: ৳{data.totalRevenue.toLocaleString()}
+                    </p>
+                    <p className="text-sm text-gray-600 dark:text-gray-300">
+                        Bookings: {data.bookingsCount}
+                    </p>
+                </div>
+            );
+        }
+        return null;
+    };
 
     const handleEditClick = () => {
         setFormData({
@@ -108,68 +148,21 @@ const AdminProfile = () => {
             email: adminInfo.email || "",
             role: adminInfo.role || "admin",
         });
-        setPhotoFile(null); // Reset file
+        setPhotoFile(null);
         setEditMode(true);
     };
 
-
-    const handleChange = (e) => {
+    const handleChange = e => {
         const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: value }));
     };
 
-    const handlePhotoChange = (e) => {
-        setPhotoFile(e.target.files[0]);
-    };
-
-    // const handleUpdate = async () => {
-    //     try {
-    //         let uploadedPhotoUrl = formData.photo;
-
-    //         // Upload photo if selected
-    //         if (photoFile) {
-    //             const imgData = new FormData();
-    //             imgData.append("image", photoFile);
-    //             const res = await fetch(imageUploadUrl, { method: "POST", body: imgData });
-    //             const data = await res.json();
-    //             if (data.success) uploadedPhotoUrl = data.data.display_url;
-    //         }
-
-    //         // Update Firebase Auth profile
-    //         if (updateUserProfile) {
-    //             await updateUserProfile({
-    //                 displayName: formData.name || adminInfo.name,
-    //                 photoURL: uploadedPhotoUrl,
-    //             });
-    //         }
-
-    //         // Update backend
-    //         const updatedFields = {};
-
-    //         // Check each field, add only if not empty
-    //         if (formData.name) updatedFields.name = formData.name;
-    //         if (formData.phone) updatedFields.phone = formData.phone;
-    //         if (formData.age) updatedFields.age = formData.age;
-    //         if (formData.bio) updatedFields.bio = formData.bio;
-    //         if (photoFile) updatedFields.photo = uploadedPhotoUrl;
-
-    //         // Then send only updatedFields
-    //         await axiosInstance.patch(`/users/${user.email}`, updatedFields);
-
-    //         setEditMode(false);
-    //         Swal.fire("Success!", "Profile updated successfully", "success");
-    //         queryClient.invalidateQueries(["adminInfo", user.email]);
-    //     } catch {
-    //         Swal.fire("Error!", "Failed to update profile", "error");
-    //     }
-
-    // };
+    const handlePhotoChange = e => setPhotoFile(e.target.files[0]);
 
     const handleUpdate = async () => {
         try {
             let uploadedPhotoUrl = formData.photo;
 
-            // Upload photo if selected
             if (photoFile) {
                 const imgData = new FormData();
                 imgData.append("image", photoFile);
@@ -178,7 +171,6 @@ const AdminProfile = () => {
                 if (data.success) uploadedPhotoUrl = data.data.display_url;
             }
 
-            // Update Firebase Auth profile if needed
             if (updateUserProfile) {
                 await updateUserProfile({
                     displayName: formData.name || adminInfo.name,
@@ -186,18 +178,12 @@ const AdminProfile = () => {
                 });
             }
 
-            // Build updated fields object
             const updatedFields = {};
-
-            ["name", "phone", "age", "bio"].forEach((field) => {
-                if (formData[field] !== adminInfo[field]) {
-                    updatedFields[field] = formData[field];
-                }
+            ["name", "phone", "age", "bio"].forEach(field => {
+                if (formData[field] !== adminInfo[field]) updatedFields[field] = formData[field];
             });
-
             if (photoFile) updatedFields.photo = uploadedPhotoUrl;
 
-            // Only send update if there are changes
             if (Object.keys(updatedFields).length > 0) {
                 await axiosInstance.patch(`/users/${user.email}`, updatedFields);
                 Swal.fire("Success!", "Profile updated successfully", "success");
@@ -213,17 +199,7 @@ const AdminProfile = () => {
         }
     };
 
-
-    if (statsLoading || adminLoading || packageLoading)
-        return <Loading></Loading>;
-
-    const statItems = [
-        { label: "Total Payment", value: `৳${stats.totalPayment}`, icon: <FaMoneyBillWave /> },
-        { label: "Total Guides", value: stats.totalGuides, icon: <FaUserTie /> },
-        { label: "Total Packages", value: stats.totalPackages, icon: <FaBoxOpen /> },
-        { label: "Total Clients", value: stats.totalClients, icon: <FaUsers /> },
-        { label: "Total Stories", value: stats.totalStories, icon: <FaBook /> },
-    ];
+    if (statsLoading || adminLoading || packageLoading) return <Loading />;
 
     return (
         <div className="md:p-6 p-2 max-w-7xl mx-auto">
@@ -237,26 +213,6 @@ const AdminProfile = () => {
             </motion.h1>
 
             {/* Stats Cards */}
-            {/* <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-                {[
-                    { label: "Total Payment", value: `$${stats.totalPayment}` },
-                    { label: "Total Guides", value: stats.totalGuides },
-                    { label: "Total Packages", value: stats.totalPackages },
-                    { label: "Total Clients", value: stats.totalClients },
-                    { label: "Total Stories", value: stats.totalStories },
-                ].map((stat, idx) => (
-                    <motion.div
-                        key={idx}
-                        className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg text-center"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: idx * 0.1 }}
-                    >
-                        <p className="text-gray-500 dark:text-gray-300">{stat.label}</p>
-                        <p className="text-2xl font-bold text-indigo-600 dark:text-pink-400">{stat.value}</p>
-                    </motion.div>
-                ))}
-            </div> */}
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
                 {statItems.map((stat, idx) => (
                     <motion.div
@@ -266,51 +222,26 @@ const AdminProfile = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
                     >
-                        {/* Icon */}
                         <div className="flex justify-center mb-2 text-indigo-600 dark:text-pink-400 text-3xl">
                             {stat.icon}
                         </div>
-
-                        {/* Label */}
                         <p className="text-gray-500 dark:text-gray-300 font-medium">{stat.label}</p>
-
-                        {/* Value */}
-                        <p className="text-2xl font-bold text-indigo-700 dark:text-pink-300 mt-1">{stat.value}</p>
+                        <p className="text-2xl font-bold text-indigo-700 dark:text-pink-300 mt-1">
+                            {animatedStats[idx].toLocaleString()}
+                        </p>
                     </motion.div>
                 ))}
             </div>
 
             {/* Popular/Earning Packages */}
-            <div
-                className="bg-base-100 dark:bg-base-100 rounded-xl shadow-lg p-4 mb-8 overflow-x-auto"
-                data-aos="fade-up"
-            >
+            <div className="bg-base-100 dark:bg-base-100 rounded-xl shadow-lg p-4 mb-8 overflow-x-auto" data-aos="fade-up">
                 <h2 className="text-xl font-semibold mb-4">Top Packages (by Revenue)</h2>
-
                 <div className="min-w-[500px] sm:min-w-[600px] md:min-w-full">
-                    <ResponsiveContainer
-                        width="100%"
-                        height={window.innerWidth < 640 ? 300 : 500} // adaptive height for mobile
-                    >
-                        <BarChart
-                            data={packageStats}
-                            layout="vertical"
-                            margin={{ top: 20, right: 40, bottom: 20, left: 100 }}
-                        >
+                    <ResponsiveContainer width="100%" height={window.innerWidth < 640 ? 300 : 500}>
+                        <BarChart data={packageStats} layout="vertical" margin={{ top: 20, right: 40, bottom: 20, left: 100 }}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis
-                                type="number"
-                                domain={[0, "dataMax"]}
-                                tickFormatter={(value) => `৳${value.toLocaleString()}`}
-                            />
-                            <YAxis
-                                dataKey="name"
-                                type="category"
-                                width={150}
-                                tickFormatter={(value) =>
-                                    value.length > 20 ? value.substring(0, 20) + "…" : value
-                                }
-                            />
+                            <XAxis type="number" domain={[0, "dataMax"]} tickFormatter={v => `৳${v.toLocaleString()}`} />
+                            <YAxis dataKey="name" type="category" width={150} tickFormatter={v => (v.length > 20 ? v.substring(0, 20) + "…" : v)} />
                             <Tooltip content={<CustomTooltip />} />
                             <Bar dataKey="totalRevenue" radius={[0, 8, 8, 0]}>
                                 {packageStats.map((entry, index) => (
@@ -322,14 +253,12 @@ const AdminProfile = () => {
                 </div>
             </div>
 
-
             {/* Admin Info Card */}
             <motion.div
                 className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center gap-6"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
             >
-                {/* Avatar */}
                 <div className="w-32 h-32 rounded-full border-4 border-primary flex items-center justify-center bg-gray-300 dark:bg-gray-700 text-3xl font-bold text-white overflow-hidden">
                     {user.photoURL ? (
                         <img src={user.photoURL} alt={user.photoURL} className="w-full h-full object-cover" />
@@ -337,7 +266,7 @@ const AdminProfile = () => {
                         <span>{user.displayName?.charAt(0).toUpperCase()}</span>
                     )}
                 </div>
-                <div className="flex-1">
+                <div className="flex-1 ">
                     <p className="text-xl text-primary font-semibold">{adminInfo.name || user.displayName}</p>
                     <p className="text-gray-500 dark:text-gray-300 capitalize">{adminInfo.role}</p>
                     <p className="text-gray-500 dark:text-gray-300">{adminInfo.email}</p>
@@ -360,72 +289,22 @@ const AdminProfile = () => {
                         className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-2xl w-full max-w-md"
                     >
                         <h3 className="text-xl font-bold mb-4">Edit Profile</h3>
-
                         <div className="flex flex-col gap-3">
-                            <input
-                                type="text"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                placeholder="Name"
-                                className="input input-bordered w-full"
-                            />
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handlePhotoChange}
-                                className="file-input file-input-bordered w-full"
-                            />
-                            <input
-                                type="text"
-                                name="phone"
-                                value={formData.phone}
-                                onChange={handleChange}
-                                placeholder="Phone"
-                                className="input input-bordered w-full"
-                            />
-                            <input
-                                type="number"
-                                name="age"
-                                value={formData.age}
-                                onChange={handleChange}
-                                placeholder="Age"
-                                className="input input-bordered w-full"
-                            />
-                            <textarea
-                                name="bio"
-                                value={formData.bio}
-                                onChange={handleChange}
-                                placeholder="Bio"
-                                className="textarea textarea-bordered w-full"
-                            />
-                            <input
-                                type="email"
-                                value={adminInfo.email}
-                                readOnly
-                                className="input input-bordered w-full bg-base-100 cursor-not-allowed"
-                            />
-                            <input
-                                type="text"
-                                value={adminInfo.role}
-                                readOnly
-                                className="input input-bordered w-full bg-base-100 cursor-not-allowed"
-                            />
+                            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Name" className="input input-bordered w-full" />
+                            <input type="file" accept="image/*" onChange={handlePhotoChange} className="file-input file-input-bordered w-full" />
+                            <input type="text" name="phone" value={formData.phone} onChange={handleChange} placeholder="Phone" className="input input-bordered w-full" />
+                            <input type="number" name="age" value={formData.age} onChange={handleChange} placeholder="Age" className="input input-bordered w-full" />
+                            <textarea name="bio" value={formData.bio} onChange={handleChange} placeholder="Bio" className="textarea textarea-bordered w-full" />
+                            <input type="email" value={adminInfo.email} readOnly className="input input-bordered w-full bg-base-100 cursor-not-allowed" />
+                            <input type="text" value={adminInfo.role} readOnly className="input input-bordered w-full bg-base-100 cursor-not-allowed" />
                         </div>
-
                         <div className="mt-4 flex justify-end gap-3">
-                            <button onClick={() => setEditMode(false)} className="btn btn-outline">
-                                Cancel
-                            </button>
-                            <button onClick={handleUpdate} className="btn btn-primary">
-                                Save
-                            </button>
+                            <button onClick={() => setEditMode(false)} className="btn btn-outline">Cancel</button>
+                            <button onClick={handleUpdate} className="btn btn-primary">Save</button>
                         </div>
                     </motion.div>
                 </div>
             )}
-
-
         </div>
     );
 };

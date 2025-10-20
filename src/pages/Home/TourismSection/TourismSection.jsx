@@ -7,8 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import useAxios from "../../../hooks/useAxios";
 
 const TourismSection = () => {
-  const [packages, setPackages] = useState(null); // null = loading
-  const [guides, setGuides] = useState(null); // null = loading
+  const [packages, setPackages] = useState(null);
+  const [guides, setGuides] = useState(null);
   const [selectedTab, setSelectedTab] = useState(0);
   const navigate = useNavigate();
   const axiosInstance = useAxios();
@@ -20,7 +20,7 @@ const TourismSection = () => {
       setPackages(Array.isArray(res.data) ? res.data : []);
     } catch {
       if (retry < 2) setTimeout(() => fetchRandomPackages(retry + 1), 500);
-      else setPackages([]); // only set empty array after 2 retries
+      else setPackages([]); 
     }
   };
 

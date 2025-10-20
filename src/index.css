@@ -64,16 +64,7 @@ body {
   /* Error red */
 }
 
-[data-theme="dark"] body {
-  background: linear-gradient(to bottom right,
-      #0f172a,
-      /* dark navy */
-      #1e293b,
-      /* slate */
-      #065f46
-      /* deep green accent */
-    );
-}
+
 
 /* 🌍 Global Font */
 body {
