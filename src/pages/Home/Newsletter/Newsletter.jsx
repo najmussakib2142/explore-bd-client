@@ -1,19 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
-import { FaPaperPlane } from "react-icons/fa";
+import { FaPlaneDeparture } from "react-icons/fa";
+import { Link } from "react-router";
 
-const Newsletter = () => {
-  const [email, setEmail] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!email) return;
-    setSubmitted(true);
-    setEmail("");
-    // 🔗 Integrate EmailJS / Firebase / API here if needed
-  };
-
+const CallToAction = () => {
   return (
     <section className="relative py-20 bg-gradient-to-br from-primary to-secondary text-white overflow-hidden">
       {/* Decorative glowing circle */}
@@ -28,56 +18,35 @@ const Newsletter = () => {
           {/* Icon */}
           <div className="flex justify-center mb-6">
             <div className="bg-white/20 p-4 rounded-full shadow-inner">
-              <FaPaperPlane className="text-3xl text-white" />
+              <FaPlaneDeparture className="text-3xl text-white" />
             </div>
           </div>
 
           {/* Heading */}
           <h2 className="text-3xl md:text-4xl font-extrabold mb-3 tracking-wide">
-            Subscribe & Stay Updated
+            Explore the Wonders of Bangladesh
           </h2>
 
           {/* Subtext */}
           <p className="text-base md:text-lg font-light text-gray-100/90 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Join the <span className="font-semibold text-white">ExploreBD</span> community
-            and get exclusive travel updates, deals, and destination stories right in your inbox.
+            Discover breathtaking destinations, hidden gems, and unforgettable experiences.
+            Start your travel journey today with <span className="font-semibold text-white">ExploreBD</span>.
           </p>
 
-          {/* Form or Success Message */}
-          {!submitted ? (
-            <form
-              onSubmit={handleSubmit}
-              className="flex flex-col sm:flex-row justify-center items-center gap-4"
+          {/* CTA Button */}
+          <Link to="/destinations">
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="bg-white text-primary font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-transform transform"
             >
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="w-full sm:w-2/3 px-5 py-3 rounded-lg text-gray-900 font-medium placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white border border-white/40"
-              />
-              <button
-                type="submit"
-                className="bg-white text-primary font-semibold px-8 py-3 rounded-lg shadow-md hover:bg-gray-100 transition-transform transform hover:scale-105"
-              >
-                Subscribe
-              </button>
-            </form>
-          ) : (
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-6 text-lg text-white font-medium"
-            >
-              🎉 You’re all set! Thank you for joining the{" "}
-              <span className="font-semibold text-white">ExploreBD</span> community.
-            </motion.p>
-          )}
+              Start Exploring
+            </motion.button>
+          </Link>
         </motion.div>
       </div>
     </section>
   );
 };
 
-export default Newsletter;
+export default CallToAction;

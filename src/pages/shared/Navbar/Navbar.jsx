@@ -163,7 +163,7 @@ const Navbar = () => {
                                 </div>
                             </div> */}
 
-                            <div className="hidden md:block">
+                            <div className="hidden ">
                                 <div className="flex  items-center space-x-1 md:space-x-2">
                                     <div className="flex items-center bg-gray-300 dark:bg-gray-700 rounded-full md:p-0.5 transition-colors">
                                         <button
@@ -192,7 +192,7 @@ const Navbar = () => {
                             </div>
 
 
-                            <div className="block md:hidden">
+                            <div className="hidden">
                                 <button
                                     onClick={toggleTheme}
                                     aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}

@@ -10,6 +10,7 @@ import { Helmet } from 'react-helmet-async';
 import Newsletter from '../Newsletter/Newsletter';
 // import RegionExplorer from '../RegionExplorer/RegionExplorer';
 import BangladeshMap from '../BangladeshMap/BangladeshMap';
+import HowItWorksSection from '../../HowItWorksSection/HowItWorksSection';
 
 const Home = () => {
     const [showBanner, setShowBanner] = useState(false);
@@ -68,13 +69,14 @@ const Home = () => {
             )}
             <Banner></Banner>
             <Overview></Overview>
+            <HowItWorksSection></HowItWorksSection>
             <TourismSection></TourismSection>
             <MostBookedPackages></MostBookedPackages>
             <BangladeshMap></BangladeshMap> 
             <TouristStorySection className="max-w-3xl mx-auto"></TouristStorySection>
             <Testimonials></Testimonials>
             {/* <RegionExplorer></RegionExplorer> */}
-            <Newsletter></Newsletter>
+            {/* <Newsletter></Newsletter> */}
         </div>
     );
 };
