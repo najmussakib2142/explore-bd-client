@@ -71,7 +71,7 @@ const Banner = () => {
                                     animate={{ opacity: 1, x: 0 }}
                                     exit={{ opacity: 0, x: 50 }}
                                     transition={{ duration: 1 }}
-                                    className="text-4xl md:text-6xl font-bold text-white drop-shadow-lg"
+                                    className="text-4xl  md:text-6xl font-bold leading-tight text-white drop-shadow-lg"
                                 >
                                     {slide.title}
                                 </motion.h1>

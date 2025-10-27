@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap'); */
 @import "tailwindcss";
 @plugin "daisyui";
 
@@ -8,6 +9,14 @@
   font-weight: 400;
   font-style: normal;
 }
+
+/* 
+.montserrat-font {
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-style: normal;
+} */
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -38,14 +47,10 @@ body {
 }
 
 [data-theme="light"] body {
-  background: linear-gradient(to bottom right,
-      #dbeafe,
-      /* light blue */
-      #f0fdf4,
-      /* light green */
-      #fef9c3
-      /* soft yellow */
-    );
+  /* Soft, near-white tint. Evokes a clean paper or map background. */
+  background-color: #F8FAF8; 
+  /* This is bg-gray-50 from Tailwind with a slight green tint for nature */
+  background: none; /* Remove the linear-gradient property */
 }
 
 /* 🌙 Dark Theme */
@@ -118,3 +123,46 @@ body {
 .animate-fadeIn {
   animation: fadeIn 0.7s ease-out forwards;
 }
+
+
+/* Leaflet popup container padding fix */
+.leaflet-popup-content-wrapper.custom-popup,
+.leaflet-popup-content.custom-popup {
+  background: transparent !important;
+  /* transparent area around card */
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0 !important;
+  padding: 6px !important;
+  /* outer padding zone outside the card */
+  background: transparent !important;
+  border-radius: 0px !important;
+}
+
+.custom-popup .leaflet-popup-tip {
+  background: transparent !important;
+  box-shadow: #1F2937 !important;
+}
+
+/* make the built-in close (X) visible */
+.leaflet-popup-close-button {
+  color: #227fe3 !important;
+  font-size: 25px !important;
+  top: 15px !important;
+  right: 15px !important;
+  opacity: 0.9;
+  /* padding: 5px !important; */
+  /* background-color: #1669c1 !important; */
+}
+
+.leaflet-popup-close-button:hover {
+  color: #a10b0b !important;
+  opacity: 1;
+}
+
+
+/* _-------------- */

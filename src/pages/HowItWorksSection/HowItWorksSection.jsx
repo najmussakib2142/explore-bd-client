@@ -1,9 +1,6 @@
 import React from 'react';
-import { useTheme } from '../../provider/ThemeContext';
 
-// --- Inline SVG Icons (Replacing react-icons for single-file compliance) ---
 
-// 1. Package Icon (Suitcase/Briefcase)
 const PackageIcon = ({ className }) => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
         <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
@@ -54,12 +51,16 @@ const stepsData = [
     },
 ];
 
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { motion, AnimatePresence } from "framer-motion";
+
 
 
 const HowItWorksSection = () => {
-    
+
     return (
-        <section className="py-16 sm:py-24 bg-gray-50 dark:bg-gray-900 font-sans  flex items-center">
+        <section className="py-16 sm:py-24  font-sans  flex items-center">
             <div className="max-w-6xl mx-auto px-4 w-full">
 
                 {/* Header */}
@@ -82,14 +83,18 @@ const HowItWorksSection = () => {
                         const isEven = index % 2 === 0;
 
                         return (
-                            <div
+                            <motion.div
+                                initial={{ opacity: 0, y: 40 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.6 }}
+                                viewport={{ once: true }}
                                 key={step.id}
                                 className={`w-full relative flex items-center py-6 sm:py-10 ${isEven ? 'sm:justify-start' : 'sm:justify-end'}`}
                             >
 
                                 {/* Step Card (Main content) */}
                                 <div
-                                    className={`w-full sm:w-1/2 p-6 md:p-8 rounded-xl border-4 border-transparent shadow-xl transition-all duration-300 hover:shadow-2xl hover:border-indigo-400/50 transform hover:-translate-y-1 bg-white dark:bg-gray-800 ${isEven ? 'sm:pr-12' : 'sm:pl-12'}`}
+                                    className={`w-full sm:w-1/2 p-6 pt-9 md:p-8 rounded-xl border-4 border-transparent shadow-xl transition-all duration-300 hover:shadow-2xl hover:border-indigo-400/50 transform hover:-translate-y-1 bg-white dark:bg-gray-800 ${isEven ? 'sm:pr-12' : 'sm:pl-12'}`}
                                 >
                                     <h3 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">
                                         {step.title}
@@ -101,9 +106,18 @@ const HowItWorksSection = () => {
 
                                 {/* Timeline Dot (The main visual node) */}
                                 <div
-                                    className={`absolute z-10 w-14 h-14 rounded-full flex items-center justify-center border-4 border-gray-50 dark:border-gray-900 shadow-xl text-white transition-transform duration-300 group cursor-pointer ${step.color} 
-                                        ${isEven ? 'left-0 sm:left-1/2 sm:-translate-x-1/2' : 'left-0 sm:left-1/2 sm:-translate-x-1/2'}
-                                    `}
+                                    className={`absolute z-10 w-14 h-14 rounded-full flex items-center justify-center 
+  border-4 border-gray-50 dark:border-gray-900 shadow-xl text-white 
+  transition-transform duration-300 group cursor-pointer ${step.color}
+  
+  /* Small screen: position icon on top center of card */
+  -top-2 left-1/2 -translate-x-1/2
+  
+  /* Medium and up: position icon back to timeline center */
+  sm:top-auto sm:left-1/2 sm:-translate-x-1/2
+  ${isEven ? 'sm:left-1/2 sm:-translate-x-1/2' : 'sm:left-1/2 sm:-translate-x-1/2'}
+  `}
+
                                 >
                                     {/* Icon within the dot */}
                                     <div className='transform group-hover:scale-110 transition-transform'>
@@ -117,7 +131,7 @@ const HowItWorksSection = () => {
                                     `}>
                                 </div>
 
-                            </div>
+                            </motion.div>
                         );
                     })}
                 </div>
@@ -126,58 +140,5 @@ const HowItWorksSection = () => {
     );
 };
 
-// Main App component to handle setup and rendering
-const App = () => {
-    // Injecting Tailwind config for dynamic classes like 'shadow-3xl' and custom font
-    const colorConfig = `
-        <script>
-            tailwind.config = {
-                darkMode: 'class',
-                theme: {
-                    extend: {
-                        colors: {
-                            primary: '#3B82F6', 
-                        },
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        </script>
-    `;
 
-    // State for Dark Mode Toggling
-    const [isDarkMode, setIsDarkMode] = React.useState(true);
-const { theme, toggleTheme } = useTheme();
-
-    // Effect to apply dark mode class to the HTML element
-    React.useEffect(() => {
-        if (isDarkMode) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    }, [isDarkMode]);
-
-    return (
-        
-        <>
-            {/* Must use dangerouslySetInnerHTML to load Tailwind config */}
-            <div dangerouslySetInnerHTML={{ __html: colorConfig }} />
-
-            {/* Theme Toggle Button */}
-            <button
-                onClick={() => toggleTheme(!theme)}
-                className="fixed bottom-4 right-4 z-50 p-3 rounded-full bg-gray-800 text-white dark:bg-gray-100 dark:text-gray-900 shadow-xl transition-colors font-semibold text-sm"
-                aria-label="Toggle theme"
-            >
-                {theme ? '🌞 Light Mode' : '🌙 Dark Mode'}
-            </button>
-
-            <HowItWorksSection />
-        </>
-    );
-};
-
-export default App;
+export default HowItWorksSection;

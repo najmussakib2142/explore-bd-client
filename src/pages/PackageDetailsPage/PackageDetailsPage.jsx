@@ -108,7 +108,7 @@ const PackageDetailsPage = () => {
             {/* About & Info */}
             <div className="bg-base-100 p-6 rounded-lg shadow-lg space-y-4" data-aos="fade-up">
                 <h2 className="text-2xl md:text-3xl font-bold mb-2" data-aos="fade-down">{packageData.title}</h2>
-                <p className="text-gray-400 mb-4" data-aos="fade-up">{packageData.about}</p>
+                <p className="text-gray-500 mb-4" data-aos="fade-up">{packageData.about}</p>
 
                 {packageData.highlights?.length > 0 && (
                     <div className="mt-4" data-aos="fade-up">
@@ -142,7 +142,7 @@ const PackageDetailsPage = () => {
                     {packageData.inclusions?.length > 0 && (
                         <div>
                             <h3 className="text-lg font-semibold mb-">Inclusions:</h3>
-                            <ul className="list-disc list-inside space-y-1 text-gray-400">
+                            <ul className="list-disc list-inside space-y-1 text-gray-500">
                                 {packageData.inclusions.map((item, idx) => (
                                     <li key={idx}>{item}</li>
                                 ))}
@@ -153,7 +153,7 @@ const PackageDetailsPage = () => {
                     {packageData.exclusions?.length > 0 && (
                         <div className="mt-2">
                             <h3 className="text-lg font-semibold mb-2">Exclusions:</h3>
-                            <ul className="list-disc list-inside space-y-1 text-gray-400">
+                            <ul className="list-disc list-inside space-y-1 text-gray-500">
                                 {packageData.exclusions.map((item, idx) => (
                                     <li key={idx}>{item}</li>
                                 ))}

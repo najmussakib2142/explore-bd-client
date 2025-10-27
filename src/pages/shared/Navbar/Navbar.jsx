@@ -289,6 +289,14 @@ const Navbar = () => {
                     </div>
                 </div>
             </div>
+
+            <button
+                onClick={() => toggleTheme(!theme)}
+                className="fixed cursor-pointer bottom-4 right-4 z-50 p-3 rounded-full bg-gray-800 text-white dark:bg-gray-100 dark:text-gray-900 shadow-xl transition-colors font-semibold text-sm"
+                aria-label="Toggle theme"
+            >
+                {theme ? '🌞 Light Mode' : '🌙 Dark Mode'}
+            </button>
         </div>
     );
 };
