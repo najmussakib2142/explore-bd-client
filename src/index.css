@@ -164,5 +164,13 @@ body {
   opacity: 1;
 }
 
+.leaflet-control {
+  z-index: 500 !important; 
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  z-index: 500 !important;
+}
 
 /* _-------------- */

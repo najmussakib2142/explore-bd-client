@@ -104,7 +104,8 @@ export default function CommunityStories() {
 
 
     return (
-        <section className="max-w-7xl mx-auto py-10 px-7">
+        <section className="max-w-7xl mx-auto 
+sm:py-12 md:py-16 lg:py-20 px-4 md:px-8 lg:px-16">
             <Helmet>
                 <title>Community Stories | ExploreBD</title>
                 <meta
@@ -118,11 +119,11 @@ export default function CommunityStories() {
                 />
                 <meta property="og:image" content="https://i.ibb.co/community.jpg" />
             </Helmet>
-            <h2 className="text-3xl font-bold mb-3" data-aos="fade-down">Community Stories</h2>
-            <p className=" text-gray-600 dark:text-gray-400 mb-8" data-aos="fade-down">
+            <h2 className="text-3xl md:text-4xl font-bold mb-3" data-aos="fade-down">Community Stories</h2>
+            <p className=" text-gray-600 dark:text-gray-300 mb-8" data-aos="fade-down">
                 Discover stories, tips, and memories from our community of explorers.
             </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                 {stories.map((story, idx) => (
                     <div
                         key={story._id}
@@ -250,7 +251,7 @@ export default function CommunityStories() {
                     data-aos="fade-in"
                 >
                     <div
-                        className="bg-white dark:bg-gray-900 rounded-xl shadow-xl p-6 max-w-3xl w-full overflow-auto"
+                        className="bg-[#F0FDF4] dark:bg-gray-900 rounded-xl shadow-xl p-6 max-w-3xl w-full overflow-auto"
                         onClick={(e) => e.stopPropagation()}
                         data-aos="zoom-in"
                     >
@@ -270,6 +271,8 @@ export default function CommunityStories() {
                             <span className="text-blue-400">Added By:</span>{" "}
                             {selectedStory.createdBy?.name || "Unknown"}
                         </p>
+
+                        {/* <div className="divider"></div> */}
 
                         <p className="text-gray-700 dark:text-gray-300 mb-4">{selectedStory.description}</p>
 

@@ -182,7 +182,7 @@ const AddPackage = () => {
 
 
     return (
-        <div className="max-w-3xl mx-auto my-10 p-6 bg-base-100 shadow-xl rounded-2xl">
+        <div className="max-w-3xl mx-auto md:my-10 p-1 bg-base-100 shadow-xl rounded-2xl">
             <h2 className="text-2xl font-bold text-center mb-6">Add New Package</h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">

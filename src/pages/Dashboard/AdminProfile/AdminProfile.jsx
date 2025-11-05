@@ -10,11 +10,11 @@ import Loading from "../../shared/Loading/Loading";
 import { FaMoneyBillWave, FaUserTie, FaBoxOpen, FaUsers, FaBook } from "react-icons/fa";
 
 const COLORS = [
-    "#1E88E5", // deep blue - reliable/professional
-    "#10B981", // teal green - growth/positive
-    "#F59E0B", // amber - highlights/revenue
-    "#EF4444", // red - alerts or attention
-    "#6366F1", // indigo - premium/contrast
+  "#4B5CF0", // Indigo 500 - Base professional tone
+  "#4352DB", // Indigo 550 - Slightly darker
+  "#3B48C7", // Indigo 600 - Deep gradient transition
+  "#333EB3", // Indigo 650 - Strong, still readable
+  "#2B349F", // Indigo 700 - Bold for emphasis sections
 ];
 
 const AdminProfile = () => {
@@ -127,7 +127,7 @@ const AdminProfile = () => {
                 <div className="bg-base-100 dark:bg-gray-800 p-3 rounded-lg shadow-lg border">
                     <p className="font-semibold text-gray-900 dark:text-gray-100">{data.name}</p>
                     <p className="text-sm text-indigo-600 dark:text-pink-400">
-                        Revenue: ৳{data.totalRevenue.toLocaleString()}
+                        Revenue: ৳{(data?.totalRevenue ?? 0).toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-600 dark:text-gray-300">
                         Bookings: {data.bookingsCount}
@@ -217,7 +217,7 @@ const AdminProfile = () => {
                 {statItems.map((stat, idx) => (
                     <motion.div
                         key={idx}
-                        className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-lg text-center hover:shadow-xl hover:scale-105 transition-transform duration-300"
+                        className="bg-white dark:bg-gray-800/20 p-4 rounded-2xl shadow-lg text-center hover:shadow-xl hover:scale-105 transition-transform duration-300"
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
@@ -234,13 +234,13 @@ const AdminProfile = () => {
             </div>
 
             {/* Popular/Earning Packages */}
-            <div className="bg-base-100 dark:bg-base-100 rounded-xl shadow-lg p-4 mb-8 overflow-x-auto" data-aos="fade-up">
+            <div className="bg-white dark:bg-gray-800/20 rounded-xl shadow-lg p-4 mb-8 w-full overflow-x-auto" data-aos="fade-up">
                 <h2 className="text-xl font-semibold mb-4">Top Packages (by Revenue)</h2>
                 <div className="min-w-[500px] sm:min-w-[600px] md:min-w-full">
                     <ResponsiveContainer width="100%" height={window.innerWidth < 640 ? 300 : 500}>
                         <BarChart data={packageStats} layout="vertical" margin={{ top: 20, right: 40, bottom: 20, left: 100 }}>
                             <CartesianGrid strokeDasharray="3 3" />
-                            <XAxis type="number" domain={[0, "dataMax"]} tickFormatter={v => `৳${v.toLocaleString()}`} />
+                            <XAxis type="number" domain={[0, "dataMax"]} tickFormatter={(v) => `৳${(v ?? 0).toLocaleString()}`} />
                             <YAxis dataKey="name" type="category" width={150} tickFormatter={v => (v.length > 20 ? v.substring(0, 20) + "…" : v)} />
                             <Tooltip content={<CustomTooltip />} />
                             <Bar dataKey="totalRevenue" radius={[0, 8, 8, 0]}>
@@ -255,7 +255,7 @@ const AdminProfile = () => {
 
             {/* Admin Info Card */}
             <motion.div
-                className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-2xl flex flex-col md:flex-row items-center gap-6"
+                className="bg-white dark:bg-gray-800/20 p-6 rounded-2xl shadow-lg flex flex-col md:flex-row items-center gap-6"
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
             >

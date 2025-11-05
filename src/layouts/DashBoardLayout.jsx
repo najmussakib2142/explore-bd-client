@@ -6,25 +6,30 @@ import { FcPackage } from 'react-icons/fc';
 import Footer from '../pages/shared/Footer/Footer';
 import useUserRole from '../hooks/useUserRole';
 import Loading from '../pages/shared/Loading/Loading';
+import { useTheme } from '../provider/ThemeContext';
 
 const DashBoardLayout = () => {
 
     const { role, roleLoading } = useUserRole();
     // console.log(role, roleLoading);
     const { state } = useNavigation()
+        const { theme, toggleTheme } = useTheme();
+    
 
     // if (roleLoading) {
     //     return <Loading></Loading>
     // }
 
     return (
+        
         <div>
+            
             <div className=" flex ">
                 <div className="drawer lg:drawer-open">
                     <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-                    <div className="drawer-content flex flex-col p-4">
+                    <div className="drawer-content  flex flex-col p-4">
                         {/* Navbar for mobile */}
-                        <div className="navbar bg-base-100 shadow-md lg:hidden w-full rounded-xl mb-4">
+                        <div className="navbar md:px-10 fixed z-[999] top-1 rounded-md left-0 bg-slate-200 dark:bg-slate-900 text-base-content shadow-md lg:hidden w-full  mb-4">
                             <div className="flex-none">
                                 <label htmlFor="my-drawer-2" aria-label="open sidebar" className="btn btn-square btn-ghost">
                                     <svg xmlns="http://www.w3.org/2000/svg"
@@ -39,15 +44,15 @@ const DashBoardLayout = () => {
                         </div>
 
                         {/* Page Content */}
-                        <div className="p-4  rounded-xl ">
+                        <div className="p-2 mt-20 md:mt-15 lg:mt-0  rounded-xl ">
                             {state == "loading" ? <Loading></Loading> : <Outlet />}
                         </div>
                     </div>
 
                     {/* Sidebar */}
                     <div className="drawer-side">
-                        <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay"></label>
-                        <ul className="menu bg-base-100 text-base-content min-h-full w-80 p-4 space-y-2">
+                        <label htmlFor="my-drawer-2" aria-label="close sidebar" className="drawer-overlay "></label>
+                        <ul className="menu pt-22 md:pt-20  pr-5 md:pr-0 lg:pt-5 bg-slate-200/80 dark:bg-slate-900/90 md:bg-slate-200 md:dark:bg-slate-900  lg:bg-white/80 lg:dark:bg-slate-800/15 backdrop-blur-sm shadow-md transition-transform duration-300 text-base-content min-h-full w-80 p-4 space-y-2">
                             {/* <ProFastLog /> */}
                            <div className='border-b pb-3'>
                              <Logo></Logo>
@@ -174,6 +179,13 @@ const DashBoardLayout = () => {
                 </div>
 
             </div>
+            <button
+                onClick={toggleTheme}
+                className="fixed cursor-pointer bottom-4 right-4 z-50 p-3 rounded-full bg-gray-800 text-white dark:bg-gray-100 dark:text-gray-900 shadow-xl transition-colors font-semibold text-sm"
+                aria-label="Toggle theme"
+            >
+                {theme === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}
+            </button>
             <Footer></Footer>
         </div>
     );

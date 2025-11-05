@@ -5,7 +5,8 @@ import { Helmet } from "react-helmet-async";
 
 const About = () => {
     return (
-        <div className="px-6 md:px-20 py-10 max-w-7xl mx-auto space-y-16">
+        <div className="px-4 md:px-8 lg:px-16 
+sm:py-12 md:py-16 lg:py-20 max-w-7xl mx-auto space-y-16">
             <Helmet>
                 <title>About ExploreBD | Discover Bangladesh</title>
                 <meta
@@ -22,7 +23,7 @@ const About = () => {
             {/* Hero Section */}
             <section className="text-center space-y-4">
                 <h1 className="text-4xl md:text-5xl font-bold text-primary">About the Developer</h1>
-                <p className="text-gray-600 dark:text-gray-300 text-lg md:text-xl">
+                <p className="text-gray-600 pb-2 dark:text-gray-300 text-lg md:text-xl">
                     Meet the person behind ExploreBD and other amazing projects
                 </p>
                 <img
@@ -61,7 +62,7 @@ const About = () => {
             {/* Projects Section */}
             <section>
                 <h2 className="text-3xl font-bold text-center mb-8 text-primary">Other Projects</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                     {projects.map((project, idx) => (
                         <div key={idx} className="border border-gray-200 dark:border-gray-700 rounded-lg p-5 hover:shadow-lg transition-shadow">
                             <h3 className="text-xl font-semibold mb-2">{project.name}</h3>

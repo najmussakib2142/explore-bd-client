@@ -76,7 +76,7 @@ const PackageDetailsPage = () => {
 
 
     return (
-        <div className="max-w-6xl mx-auto my-12 px-4 pt-4 space-y-10">
+        <div className="max-w-7xl mx-auto my-12 px-4 md:px-8 lg:px-16 pt-4 space-y-10">
             {/* Gallery */}
             <Helmet>
                 <title>{packageData?.title ? `${packageData.title} | ExploreBD` : "Loading..."} </title>
@@ -108,7 +108,7 @@ const PackageDetailsPage = () => {
             {/* About & Info */}
             <div className="bg-base-100 p-6 rounded-lg shadow-lg space-y-4" data-aos="fade-up">
                 <h2 className="text-2xl md:text-3xl font-bold mb-2" data-aos="fade-down">{packageData.title}</h2>
-                <p className="text-gray-500 mb-4" data-aos="fade-up">{packageData.about}</p>
+                <p className="text-gray-600 dark:text-gray-400 mb-4" data-aos="fade-up">{packageData.about}</p>
 
                 {packageData.highlights?.length > 0 && (
                     <div className="mt-4" data-aos="fade-up">
@@ -142,7 +142,7 @@ const PackageDetailsPage = () => {
                     {packageData.inclusions?.length > 0 && (
                         <div>
                             <h3 className="text-lg font-semibold mb-">Inclusions:</h3>
-                            <ul className="list-disc list-inside space-y-1 text-gray-500">
+                            <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400 ">
                                 {packageData.inclusions.map((item, idx) => (
                                     <li key={idx}>{item}</li>
                                 ))}
@@ -153,7 +153,7 @@ const PackageDetailsPage = () => {
                     {packageData.exclusions?.length > 0 && (
                         <div className="mt-2">
                             <h3 className="text-lg font-semibold mb-2">Exclusions:</h3>
-                            <ul className="list-disc list-inside space-y-1 text-gray-500">
+                            <ul className="list-disc list-inside space-y-1 text-gray-600 dark:text-gray-400">
                                 {packageData.exclusions.map((item, idx) => (
                                     <li key={idx}>{item}</li>
                                 ))}

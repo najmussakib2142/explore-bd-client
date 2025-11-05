@@ -75,7 +75,7 @@ const AllPackages = () => {
     );
 
   return (
-    <div className="p-6 md:px-20">
+    <div className="px-4 md:px-8 lg:px-16 sm:py-12 md:py-16 lg:py-20 max-w-7xl mx-auto">
       <Helmet>
         <title>Explore Trips in Bangladesh | ExploreBD</title>
         <meta
@@ -84,23 +84,25 @@ const AllPackages = () => {
         />
       </Helmet>
 
-      {/* Page Title */}
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-primary mb-2">Explore All Packages</h1>
-        <p className="text-gray-600 dark:text-gray-400">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-3">Explore All Packages</h1>
+        <p className="text-lg text-gray-600 dark:text-gray-300">
           Discover the best trips and adventures across Bangladesh. Choose your perfect tour!
         </p>
       </div>
 
-      {/* Sorting Options */}
-      <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-4">
-        <h4 className="text-lg font-medium text-gray-700 dark:text-gray-300">
+      <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-3 md:gap-6">
+        <label
+          htmlFor="sortPackages"
+          className="text-lg font-medium text-gray-700 dark:text-gray-300"
+        >
           Sort Packages:
-        </h4>
+        </label>
         <select
+          id="sortPackages"
           value={sortOption}
           onChange={(e) => setSortOption(e.target.value)}
-          className="appearance-none bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all"
+          className="w-full md:w-auto bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 shadow-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary transition-all hover:border-primary"
         >
           <option value="">Select Option</option>
           <option value="price-asc">Price: Low → High</option>
@@ -111,11 +113,11 @@ const AllPackages = () => {
       </div>
 
 
-      {/* Packages Grid */}
+
       {sortedPackages.length === 0 ? (
         <p className="text-center text-gray-500 py-12">No packages available</p>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
           {sortedPackages.map((pkg) => (
             <animated.div
               key={pkg._id}
@@ -147,7 +149,6 @@ const AllPackages = () => {
         </div>
       )}
 
-      {/* Pagination Controls */}
       <div className="mt-8 flex flex-wrap justify-center items-center gap-2">
         <button
           onClick={handlePrevPage}
@@ -162,8 +163,8 @@ const AllPackages = () => {
             key={page}
             onClick={() => setCurrentPage(page)}
             className={`px-4 cursor-pointer py-2 rounded ${currentPage === page
-                ? "bg-primary text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+              ? "bg-primary text-white"
+              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
               }`}
           >
             {page + 1}

@@ -44,7 +44,7 @@ const Home = () => {
 
     return (
         <div className="animated-bg min-h-screen transition-colors duration-700">
-            <div className="max-w-screen-xl mx-auto">
+            <div className=" mx-auto">
                 <Helmet>
                     <title>ExploreBD | Discover Bangladesh</title>
                     <meta

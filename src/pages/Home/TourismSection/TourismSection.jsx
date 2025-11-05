@@ -2,9 +2,23 @@ import React, { useState, useEffect } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import "react-tabs/style/react-tabs.css";
 import { useNavigate } from "react-router";
-import { FaSpinner } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxios from "../../../hooks/useAxios";
+
+// Skeleton Card for loading state
+const SkeletonCard = () => {
+  return (
+    <div className="animate-pulse dark:bg-gray-800 bg-[#f0fdf4] shadow-lg rounded-xl overflow-hidden">
+      <div className="h-56 w-full bg-gray-300 dark:bg-gray-600" />
+      <div className="p-4 space-y-2">
+        <div className="h-5 w-3/4 bg-gray-300 dark:bg-gray-600 rounded" />
+        <div className="h-4 w-1/2 bg-gray-300 dark:bg-gray-600 rounded" />
+        <div className="h-6 w-full bg-gray-300 dark:bg-gray-600 rounded" />
+        <div className="h-10 w-full bg-gray-300 dark:bg-gray-600 rounded" />
+      </div>
+    </div>
+  );
+};
 
 const TourismSection = () => {
   const [packages, setPackages] = useState(null);
@@ -13,14 +27,13 @@ const TourismSection = () => {
   const navigate = useNavigate();
   const axiosInstance = useAxios();
 
-  // Retry fetch up to 2 times to handle Vercel cold starts
   const fetchRandomPackages = async (retry = 0) => {
     try {
       const res = await axiosInstance.get("/packages/random");
       setPackages(Array.isArray(res.data) ? res.data : []);
     } catch {
       if (retry < 2) setTimeout(() => fetchRandomPackages(retry + 1), 500);
-      else setPackages([]); 
+      else setPackages([]);
     }
   };
 
@@ -42,21 +55,20 @@ const TourismSection = () => {
   const renderPackages = () => {
     if (packages === null) {
       return (
-        <div className="flex justify-center items-center py-12 text-blue-600">
-          <FaSpinner className="animate-spin mr-2" />
-          Loading packages...
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          {[1, 2, 3].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       );
     }
 
     if (packages.length === 0) {
-      return (
-        <p className="text-center text-gray-500 py-12">No packages available</p>
-      );
+      return <p className="text-center text-gray-500 py-12">No packages available</p>;
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
         {packages.map((pkg) => (
           <motion.div
             key={pkg._id}
@@ -64,7 +76,7 @@ const TourismSection = () => {
               scale: 1.03,
               boxShadow: "0px 10px 20px rgba(0,0,0,0.15)",
             }}
-            className="dark:bg-base-100 bg-[#f0fdf4] shadow-lg rounded-xl overflow-hidden cursor-pointer transition-transform duration-300"
+            className="dark:bg-gray-800 bg-[#f0fdf4] shadow-lg rounded-xl overflow-hidden cursor-pointer transition-transform duration-300"
           >
             <div className="relative overflow-hidden">
               <motion.img
@@ -103,21 +115,20 @@ const TourismSection = () => {
   const renderGuides = () => {
     if (guides === null) {
       return (
-        <div className="flex justify-center items-center py-12 text-green-600">
-          <FaSpinner className="animate-spin mr-2" />
-          Loading guides...
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+          {[1, 2, 3].map((i) => (
+            <SkeletonCard key={i} />
+          ))}
         </div>
       );
     }
 
     if (guides.length === 0) {
-      return (
-        <p className="text-center text-gray-500 py-12">No guides available</p>
-      );
+      return <p className="text-center text-gray-500 py-12">No guides available</p>;
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
         {guides.map((guide) => (
           <motion.div
             key={guide._id}
@@ -139,7 +150,7 @@ const TourismSection = () => {
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 District: {guide.district || "N/A"}
               </p>
-              <p className="text-sm line-clamp-2 text-gray-400 mb-3">
+              <p className="text-sm line-clamp-1 text-gray-400 mb-3">
                 Experience: {guide.experience || "N/A"}
               </p>
               <button
@@ -156,17 +167,17 @@ const TourismSection = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto my-12 px-4">
-      <h2 className="text-3xl font-bold mb-2 text-center">
+    <div className="max-w-7xl mx-auto sm:py-12 md:py-16 lg:py-20 px-4 md:px-8 lg:px-16">
+      <h2 className="text-3xl md:text-4xl font-bold mb-3 text-center">
         Tourism & Travel Guide
       </h2>
-      <p className="text-center text-gray-700 dark:text-gray-300 mb-6">
+      <p className="text-center text-lg text-gray-600 dark:text-gray-300 mb-8">
         Discover curated packages and meet expert tour guides for your next
         adventure.
       </p>
 
       <Tabs selectedIndex={selectedTab} onSelect={(index) => setSelectedTab(index)}>
-        <TabList className="flex justify-center gap-5 mb-6 dark:border-b-2 dark:border-white border-b-2 border-primary">
+        <TabList className="flex justify-center gap-4 mb-6 dark:border-b-2 dark:border-white border-b-2 border-primary">
           <Tab
             selectedClassName="bg-primary border-b-none text-white dark:bg-white dark:text-black rounded-t-md"
             className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-blue-600 transition"

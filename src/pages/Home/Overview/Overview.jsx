@@ -7,8 +7,8 @@ import { useNavigate } from "react-router";
 const Overview = () => {
   const navigate = useNavigate()
   return (
-    <section className="py-13 ">
-      <div className="container mx-auto flex flex-col md:flex-row items-center gap-8 px-4">
+    <section className="py-12 md:py-16  bg-gray-50 dark:bg-gray-900">
+      <div className="container max-w-7xl px-4 md:px-8 lg:px-16  mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-10 ">
 
         {/* Video with animation */}
         <motion.div
@@ -29,7 +29,7 @@ const Overview = () => {
 
         {/* Text content with animation */}
         <motion.div
-          className="md:w-1/2 w-full flex flex-col justify-center"
+          className="md:w-1/2  w-full flex flex-col justify-center"
           initial={{ opacity: 0, x: 50 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.3 }}

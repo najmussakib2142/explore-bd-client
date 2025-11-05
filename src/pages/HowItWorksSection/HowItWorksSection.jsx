@@ -60,15 +60,15 @@ import { motion, AnimatePresence } from "framer-motion";
 const HowItWorksSection = () => {
 
     return (
-        <section className="py-16 sm:py-24  font-sans  flex items-center">
-            <div className="max-w-6xl mx-auto px-4 w-full">
+        <section className="sm:py-12 md:py-16 lg:py-20  flex items-center">
+            <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16 w-full">
 
                 {/* Header */}
                 <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white leading-tight mb-3">
+                    <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-3">
                         Your Adventure in 3 Simple Steps
                     </h2>
-                    <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
+                    <p className="mt-3 text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                         Seamlessly plan, book, and enjoy your journey in Bangladesh with ExploreBD's integrated process.
                     </p>
                 </div>
@@ -106,16 +106,14 @@ const HowItWorksSection = () => {
 
                                 {/* Timeline Dot (The main visual node) */}
                                 <div
-                                    className={`absolute z-10 w-14 h-14 rounded-full flex items-center justify-center 
-  border-4 border-gray-50 dark:border-gray-900 shadow-xl text-white 
-  transition-transform duration-300 group cursor-pointer ${step.color}
+                                    className={`absolute z-10 w-14 h-14 rounded-full flex items-center justify-center border-4 border-gray-50 dark:border-gray-900 shadow-xl text-white 
+                                     transition-transform duration-300 group cursor-pointer ${step.color}
   
-  /* Small screen: position icon on top center of card */
-  -top-2 left-1/2 -translate-x-1/2
+                                    /* Small screen: position icon on top center of card */ 
+                                    -top-2 left-1/2 -translate-x-1/2
   
-  /* Medium and up: position icon back to timeline center */
-  sm:top-auto sm:left-1/2 sm:-translate-x-1/2
-  ${isEven ? 'sm:left-1/2 sm:-translate-x-1/2' : 'sm:left-1/2 sm:-translate-x-1/2'}
+                                     /* Medium and up: position icon back to timeline center */
+                                     sm:top-auto sm:left-1/2 sm:-translate-x-1/2 ${isEven ? 'sm:left-1/2 sm:-translate-x-1/2' : 'sm:left-1/2 sm:-translate-x-1/2'}
   `}
 
                                 >

@@ -44,7 +44,7 @@ const Banner = () => {
     }, []);
 
     return (
-        <div className="relative w-full h-[75vh] md:h-[90vh] lg:h-screen overflow-hidden flex items-center justify-center">
+        <div className="relative  w-full h-[75vh] md:h-[90vh] lg:h-screen overflow-hidden flex items-center justify-center">
             <AnimatePresence>
                 {slides.map((slide, index) =>
                     index === current ? (
@@ -54,7 +54,7 @@ const Banner = () => {
                             animate={{ opacity: 1 }}
                             exit={{ opacity: 0 }}
                             transition={{ duration: 1 }}
-                            className="absolute inset-0 w-full h-full"
+                            className="absolute  inset-0 w-full h-full"
                         >
                             <img
                                 src={slide.image}

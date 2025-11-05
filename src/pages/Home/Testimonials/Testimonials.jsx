@@ -59,7 +59,7 @@ const Testimonials = () => {
     });
 
     return (
-        <section className="py-10  px-5 md:px-20">
+        <section className="py-12 max-w-7xl mx-auto md:py-16 px-4 md:px-8 lg:px-16">
             {/* Decorative Top Image */}
             <div className="text-center mb-8">
                 <img src={reviewImg} alt="Travel decoration" className="mx-auto max-h-44 mb-3" />
@@ -78,7 +78,7 @@ const Testimonials = () => {
                         />
                     </span>
                 </h2>
-                <p className="max-w-2xl mx-auto pt-3 text-gray-700 dark:text-gray-300 mb-10">
+                <p className="max-w-3xl mx-auto pt-3 text-gray-700 dark:text-gray-300 mb-8">
                     Hear from our travelers! Explore Bangladesh's hidden gems, breathtaking sights, and unforgettable experiences with ExploreBD.
                 </p>
             </div>

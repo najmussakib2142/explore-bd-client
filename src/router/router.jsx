@@ -39,6 +39,7 @@ import UserRoute from "../routes/UserRoute";
 import GuideRoute from "../routes/GuideRoute";
 import FAQ from "../pages/FAQ/FAQ";
 import Offer from "../pages/Offer/Offer";
+import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
 // import BookingPage from "../pages/Dashboard/BookingPage/BookingPage";
 
 export const router = createBrowserRouter([
@@ -97,6 +98,10 @@ export const router = createBrowserRouter([
             {
                 path: 'forbidden',
                 element: <Forbidden></Forbidden>
+            },
+            {
+                path: "terms",
+                element: <TermsAndConditions></TermsAndConditions>
             }
         ]
     },

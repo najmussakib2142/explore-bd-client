@@ -8,7 +8,7 @@ import Loading from "../../shared/Loading/Loading";
 import { motion } from "framer-motion";
 import { FaMapMarkerAlt } from "react-icons/fa";
 
-// Custom marker icon (same as before)
+// Custom marker icon
 const customIcon = new Icon({
   iconUrl:
     "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png",
@@ -20,9 +20,9 @@ const customIcon = new Icon({
   shadowSize: [41, 41],
 });
 
-// A small placeholder image (data URL or remote image) — replace if you want a custom placeholder
+// Placeholder image
 const PLACEHOLDER =
-  "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D'600'%20height%3D'400'%20xmlns%3D'http%3A//www.w3.org/2000/svg'%3E%3Crect%20fill%3D'%23e5e7eb'%20width%3D'100%25'%20height%3D'100%25'/%3E%3Ctext%20x%3D'50%25'%20y%3D'50%25'%20dominant-baseline%3D'middle'%20text-anchor%3D'middle'%20fill%3D'%23999'%20font-size%3D'20'%3ENo%20Image%3C/text%3E%3C/svg%3E";
+  "data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D'600'%20height%3D'400'%20xmlns%3D'http://www.w3.org/2000/svg'%3E%3Crect%20fill%3D'%23e5e7eb'%20width%3D'100%25'%20height%3D'100%25'/%3E%3Ctext%20x%3D'50%25'%20y%3D'50%25'%20dominant-baseline%3D'middle'%20text-anchor%3D'middle'%20fill%3D'%23999'%20font-size%3D'20'%3ENo%20Image%3C/text%3E%3C/svg%3E";
 
 export default function BangladeshMap() {
   const axiosSecure = useAxios();
@@ -62,7 +62,6 @@ export default function BangladeshMap() {
             continue;
           }
 
-          // polite delay
           await new Promise((resolve) => setTimeout(resolve, 1200));
 
           try {
@@ -84,7 +83,6 @@ export default function BangladeshMap() {
             }
           } catch (err) {
             console.error(`Error geocoding ${district}:`, err);
-            // continue without coords for this package
           }
         }
 
@@ -116,9 +114,7 @@ export default function BangladeshMap() {
     );
   }
 
-  // helper to determine image URL from package object
   const pickImage = (pkg) => {
-    // tries common fields; modify to suit your API
     if (!pkg) return null;
     if (pkg.image) return pkg.image;
     if (pkg.imageUrl) return pkg.imageUrl;
@@ -128,28 +124,30 @@ export default function BangladeshMap() {
   };
 
   return (
-    <section className="py-20 ">
-      <div className="max-w-6xl mx-auto px-4 text-center">
+    <section className="sm:py-12 md:py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
+        {/* Section Heading */}
         <motion.h2
-          className="text-4xl font-sans md:text-5xl  font-extrabold text-gray-900 dark:text-white leading-tight mb-5"
+          className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white leading-tight mb-3 text-center"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
           Explore Bangladesh by Destination
         </motion.h2>
-        <p className="text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto mb-15">
+        <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-12 text-center">
           Discover the top adventures and hidden gems across Bangladesh
         </p>
 
+        {/* Map */}
         {(isLoading || isGeocodingLoading) ? (
-          <Loading />
+           <div className="relative w-full h-[360px] sm:h-[420px] md:h-[500px] lg:h-[520px] rounded-2xl shadow-xl bg-gray-200 dark:bg-gray-700 animate-pulse" />
         ) : (
           <MapContainer
             center={[23.685, 90.3563]}
             zoom={7}
             scrollWheelZoom={false}
-            className="h-[520px] rounded-2xl shadow-xl overflow-hidden"
+            className="relative w-full h-[360px] sm:h-[420px] md:h-[500px] lg:h-[520px] rounded-2xl shadow-xl "
           >
             <TileLayer
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
@@ -160,13 +158,7 @@ export default function BangladeshMap() {
               (location, index) =>
                 location.coords && (
                   <Marker key={index} position={location.coords} icon={customIcon}>
-                    <Popup
-                      className="custom-popup" // custom popup class to control padding & background
-                      closeButton={true}        // ensures Leaflet shows the built-in "X"
-                      closeOnClick={false}      // don't close when user clicks map accidentally
-                      autoPan={true}
-                      offset={[0, -10]}         // small vertical offset so popup floats above marker
-                    >
+                    <Popup className="custom-popup">
                       <motion.div
                         initial={{ opacity: 0, scale: 0.95 }}
                         whileInView={{ opacity: 1, scale: 1 }}
@@ -179,9 +171,7 @@ export default function BangladeshMap() {
                             src={pickImage(location) || PLACEHOLDER}
                             alt={location.title || location.location || "destination image"}
                             loading="lazy"
-                            onError={(e) => {
-                              e.currentTarget.src = PLACEHOLDER;
-                            }}
+                            onError={(e) => { e.currentTarget.src = PLACEHOLDER; }}
                             className="w-full h-full object-cover"
                           />
                         </div>
@@ -197,15 +187,13 @@ export default function BangladeshMap() {
                             {location.title || "Untitled Tour"}
                           </h3>
 
-                          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 ">
-                            {location.about ||
-                              location.description?.slice(0, 120) ||
-                              "No description available."}
+                          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1">
+                            {location.about || location.description?.slice(0, 120) || "No description available."}
                           </p>
 
                           <div className="mt-3 flex items-center justify-between">
                             <div className="text-sm font-semibold text-gray-800 dark:text-gray-200">
-                              ৳ { location.price ?? "—"}
+                              ৳ {location.price ?? "—"}
                             </div>
                             <button
                               className="px-2 pt-1.5 pb-1 cursor-pointer rounded-md bg-primary text-white text-xs font-medium hover:bg-primary/90 transition"
@@ -220,7 +208,6 @@ export default function BangladeshMap() {
                       </motion.div>
                     </Popup>
                   </Marker>
-
                 )
             )}
           </MapContainer>

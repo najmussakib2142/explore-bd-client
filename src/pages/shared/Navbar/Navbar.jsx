@@ -85,18 +85,17 @@ const Navbar = () => {
         <li className='text-gray-800 dark:text-gray-200 dark:hover:text-primary dark:hover:font-semibold hover:text-primary' ><NavLink to="/allTrips">Trips</NavLink></li>
     </>
     return (
-        <div>
+        <div >
             {/* <div className={`fixed dark:bg-[#0f172a] max-w-7xl mx-auto  top-0 w-full bg-white z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'} shadow`}>
                 <div className="navbar   py-0  z-50 md:pr-7 bg-base-100/80 dark:bg-[#0f172a]  backdrop-blur transition-all duration-300 shadow-md"> */}
-            <div className={`fixed bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md shadow-md top-0  w-full z-50 transition-transform duration-300 ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
-                <div className="navbar h-14  px-4 md:px-7 flex justify-between transition-all  items-center 
-                  ">
-                    <div className="navbar-start flex items-center">
+            <div className={`fixed top-0 left-0 w-full z-[999] bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-sm shadow-md transition-transform duration-300  ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}>
+                <div className="navbar max-w-7xl mx-auto h-14 px-4 md:px-8 lg:px-16   flex justify-between transition-all  items-center  ">
+                    <div className="navbar-start lg:-ml-6  flex items-center">
                         <div className="dropdown relative">
                             <div
                                 tabIndex={0}
                                 role="button"
-                                className="btn btn-ghost lg:hidden mr-1" // remove -mr-4, use positive margin
+                                className="btn btn-ghost md:border md:border-gray-700/50 md:dark:border-gray-400/50 lg:hidden -mr-2" 
                             >
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +115,7 @@ const Navbar = () => {
 
                             <ul
                                 tabIndex={0}
-                                className="menu menu-sm left-0 text-[#101828] dropdown-content bg-base-100 z-20 w-[40vw] p-2 shadow"
+                                className={`menu py-4  px-4 -left-4 md:-left-8 md:px-6 text-[#101828] dropdown-content  w-[100vw]  z-[999] bg-white/80 dark:bg-[#0f172a]/90 backdrop-blur-sm shadow-md transition-transform duration-300  ${showNavbar ? 'translate-y-0' : '-translate-y-full'}`}
                             >
                                 {navItems}
                             </ul>
@@ -163,7 +162,7 @@ const Navbar = () => {
                                 </div>
                             </div> */}
 
-                            <div className="hidden ">
+                            {/* <div className="hidden ">
                                 <div className="flex  items-center space-x-1 md:space-x-2">
                                     <div className="flex items-center bg-gray-300 dark:bg-gray-700 rounded-full md:p-0.5 transition-colors">
                                         <button
@@ -189,10 +188,10 @@ const Navbar = () => {
                                         </button>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
 
 
-                            <div className="hidden">
+                            {/* <div className="hidden">
                                 <button
                                     onClick={toggleTheme}
                                     aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
@@ -204,7 +203,7 @@ const Navbar = () => {
                                         <span className="text-lg">🌙</span>
                                     )}
                                 </button>
-                            </div>
+                            </div> */}
 
                         </div>
 
@@ -223,7 +222,7 @@ const Navbar = () => {
                                     <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
                                         {user?.photoURL ? (
                                             <img
-                                                className="w-12 h-12 rounded-full object-cover border border-gray-300 dark:border dark:border-primary"
+                                                className="w-12 h-12 rounded-full object-cover border border-primary dark:border dark:border-primary"
                                                 src={user.photoURL}
                                                 alt="User"
                                             />
@@ -291,11 +290,11 @@ const Navbar = () => {
             </div>
 
             <button
-                onClick={() => toggleTheme(!theme)}
+                onClick={toggleTheme}
                 className="fixed cursor-pointer bottom-4 right-4 z-50 p-3 rounded-full bg-gray-800 text-white dark:bg-gray-100 dark:text-gray-900 shadow-xl transition-colors font-semibold text-sm"
                 aria-label="Toggle theme"
             >
-                {theme ? '🌞 Light Mode' : '🌙 Dark Mode'}
+                {theme === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}
             </button>
         </div>
     );
