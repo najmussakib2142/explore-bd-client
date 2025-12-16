@@ -5,6 +5,8 @@ import { animated } from "@react-spring/web";
 import Loading from "../shared/Loading/Loading";
 import useAxios from "../../hooks/useAxios";
 import { Helmet } from "react-helmet-async";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { MdOutlineAccessTime } from "react-icons/md";
 
 const AllPackages = () => {
   const axiosInstance = useAxios();
@@ -136,8 +138,17 @@ const AllPackages = () => {
               </div>
               <div className="p-4">
                 <h3 className="text-xl line-clamp-1 font-semibold mb-2">{pkg.title}</h3>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+                {/* <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                   📍 {pkg.location} • ⏳ {pkg.totalDays} days
+                </p> */}
+                <p className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                  <FaMapMarkerAlt className="text-red-500" />
+                  <span>{pkg.location}</span>
+
+                  <span className="mx-1">•</span>
+
+                  <MdOutlineAccessTime className="text-blue-500" />
+                  <span>{pkg.totalDays} days</span>
                 </p>
                 <p className="text-lg font-bold text-secondary mb-3">
                   BDT {pkg.price?.$numberInt || pkg.price}

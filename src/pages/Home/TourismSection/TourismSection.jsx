@@ -4,6 +4,8 @@ import "react-tabs/style/react-tabs.css";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxios from "../../../hooks/useAxios";
+import { FaMapMarkerAlt } from "react-icons/fa";
+import { MdOutlineAccessTime } from "react-icons/md";
 
 // Skeleton Card for loading state
 const SkeletonCard = () => {
@@ -92,9 +94,18 @@ const TourismSection = () => {
             </div>
 
             <div className="p-4">
-              <h3 className="text-xl mt-2 font-semibold mb-2">{pkg.title}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+              <h3 className="text-xl line-clamp-1 mt-2 font-semibold mb-2">{pkg.title}</h3>
+              {/* <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
                 📍 {pkg.location} • ⏳ {pkg.totalDays} days
+              </p> */}
+              <p className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-3">
+                <FaMapMarkerAlt className="text-red-500" />
+                <span>{pkg.location}</span>
+
+                <span className="mx-1">•</span>
+
+                <MdOutlineAccessTime className="text-blue-500" />
+                <span>{pkg.totalDays} days</span>
               </p>
               <p className="text-lg font-bold text-secondary mb-3">
                 BDT {pkg.price?.$numberInt || pkg.price}
