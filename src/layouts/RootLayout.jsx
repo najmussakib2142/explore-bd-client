@@ -7,7 +7,7 @@ const RootLayout = () => {
     const { state } = useNavigation()
 
     return (
-        <div className=' mt-[72px] '>
+        <div className=' mt-[65px] md:mt-[72px] '>
             <Navbar></Navbar>
             {state == "loading" ? <Loading></Loading> : <Outlet />}
             <Footer></Footer>

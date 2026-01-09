@@ -1,176 +1,180 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router";
 import Logo from "../Logo/Logo";
+import {
+    FaFacebookF,
+    FaWhatsapp,
+    FaLinkedinIn,
+    FaInstagram,
+    FaEnvelope,
+    FaPhoneAlt,
+    FaMapMarkerAlt
+} from "react-icons/fa";
+import Swal from "sweetalert2";
 
 const Footer = () => {
     const currentYear = new Date().getFullYear();
+    const [email, setEmail] = useState("");
+
+    const handleSubscribe = (e) => {
+        e.preventDefault();
+        if (email) {
+            Swal.fire({
+                title: "Subscription Pending!",
+                text: "Thank you for your interest! Our newsletter is launching soon, and we've added you to the waitlist.",
+                icon: "success",
+                iconColor: "#10b981", // Matches a green primary color
+                confirmButtonText: "Awesome",
+                confirmButtonColor: "#10b981",
+                background: document.documentElement.classList.contains('dark') ? '#111827' : '#fff',
+                color: document.documentElement.classList.contains('dark') ? '#fff' : '#111827',
+                customClass: {
+                    popup: 'rounded-2xl border border-gray-200 dark:border-gray-800 shadow-xl',
+                    confirmButton: 'px-8 py-2 rounded-lg font-semibold'
+                }
+            }); setEmail("");
+        }
+    };
 
     const navLinks = [
         { name: "Home", path: "/" },
         { name: "About Us", path: "/about" },
         { name: "Trips", path: "/allTrips" },
         { name: "Community", path: "/communityPage" },
-        // { name: "Contact", path: "/contact" },
         { name: "FAQ", path: "/faq" },
     ];
 
     const socialLinks = [
-        {
-            name: "GitHub",
-            href: "https://github.com/najmussakib2142?tab=repositories",
-            icon: (
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    className="fill-current"
-                >
-                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 
-          5.303 3.438 9.8 8.205 11.387.6.113.82-.258.82-.577
-          0-.285-.01-1.04-.015-2.04-3.338.726-4.042-1.61-4.042-1.61
-          -.546-1.387-1.333-1.757-1.333-1.757-1.089-.744.083-.729.083-.729
-          1.205.084 1.84 1.237 1.84 1.237 1.07 1.835 2.809 1.304
-          3.495.997.108-.776.418-1.305.762-1.605-2.665-.305-5.466-1.334-5.466-5.93
-          0-1.31.468-2.38 1.236-3.22-.124-.303-.536-1.524.117-3.176
-          0 0 1.008-.322 3.3 1.23a11.52 11.52 0 0 1 3-.404c1.02.005 2.045.138
-          3 .404 2.29-1.552 3.296-1.23 3.296-1.23.655 1.653.243 2.874.12 3.176
-          .77.84 1.236 1.91 1.236 3.22 0 4.61-2.804 5.624-5.475
-          5.92.43.37.823 1.102.823 2.222 0 1.606-.015 2.896-.015 
-          3.286 0 .317.216.687.825.57C20.565 22.092 24 
-          17.592 24 12.297c0-6.627-5.373-12-12-12z" />
-                </svg>
-            ),
-        },
-        {
-            name: "WhatsApp",
-            href: "https://api.whatsapp.com/send/?phone=8801736007474&text=Hello,+I+want+to+know+more+about+ExploreBD+packages&type=phone_number&app_absent=0",
-            icon: (
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    className="fill-current"
-                >
-                    <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 
-          5.338-11.891 11.893-11.891 3.181.001 6.167 
-          1.24 8.413 3.488 2.245 2.248 3.481 
-          5.236 3.48 8.414-.003 6.557-5.338 
-          11.893-11.893 11.893-1.99-.001-3.951-.5-5.688-1.448l-6.305 
-          1.653zm6.597-3.807c1.676.995 3.276 1.591 5.392 
-          1.592 5.448 0 9.886-4.434 
-          9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 
-          0-9.887 4.434-9.889 9.884-.001 2.225.651 
-          3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.668.149-.198.297-.767.967-.94 
-          1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.521.149-.174.198-.298.298-.497.099-.198.05-.372-.025-.521-.074-.149-.668-1.611-.916-2.206-.242-.579-.487-.5-.668-.51l-.57-.01c-.198 
-          0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 
-          3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.262.489 
-          1.694.626.712.227 1.36.195 1.872.118.571-.085 1.758-.719 
-          2.006-1.413.248-.694.248-1.289.173-1.413z" />
-                </svg>
-            ),
-        },
-        {
-            name: "Facebook",
-            href: "https://www.facebook.com/NajmusSinatra/",
-            icon: (
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    className="fill-current"
-                >
-                    <path d="M9 8H6v4h3v12h5V12h3.642l.358-4H14V6.333C14 5.378 14.192 
-          5 15.115 5H18V0h-3.808C10.596 0 9 1.583 9 4.615V8z" />
-                </svg>
-            ),
-        },
-        {
-            name: "LinkedIn",
-            href: "https://www.linkedin.com/in/s-m-najmus-sakib-256472248/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
-            icon: (
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="fill-current">
-                    <path d="M20.447 20.452h-3.554v-5.569c0-1.327-.027-3.037-1.852-3.037-1.853 
-                0-2.136 1.445-2.136 2.939v5.667h-3.554v-11.5h3.414v1.569h.049c.477-.9 
-                1.637-1.852 3.369-1.852 3.601 0 4.268 2.37 4.268 
-                5.455v6.328zm-14.693-13.229c-1.144 
-                0-2.068-.926-2.068-2.068 0-1.143.924-2.068 
-                2.068-2.068s2.068.925 
-                2.068 2.068c0 1.142-.924 2.068-2.068 
-                2.068zm1.777 13.229h-3.554v-11.5h3.554v11.5zm16.469-20.452h-22.916c-.828 
-                0-1.5.672-1.5 1.5v21c0 
-                .828.672 1.5 1.5 1.5h22.916c.828 
-                0 1.5-.672 1.5-1.5v-21c0-.828-.672-1.5-1.5-1.5z"/>
-                </svg>
-            )
-        },
+        { name: "Facebook", href: "https://www.facebook.com/NajmusSinatra/", icon: <FaFacebookF /> },
+        { name: "WhatsApp", href: "https://wa.me/8801736007474", icon: <FaWhatsapp /> },
+        { name: "LinkedIn", href: "https://www.linkedin.com/in/s-m-najmus-sakib-256472248/", icon: <FaLinkedinIn /> },
+        { name: "Instagram", href: "#", icon: <FaInstagram /> },
     ];
 
     return (
-<footer className="bg-white/70 dark:bg-gray-900/70 backdrop-blur border-t border-gray-300 dark:border-gray-700 text-gray-800 dark:text-gray-100   py-12">
-            <div className="max-w-7xl mx-auto px-6 md:px-8 lg:px-16">
-                <div className=" grid grid-cols-1 md:grid-cols-3  gap-10">
+        <footer className="bg-[#f8fafc] dark:bg-gray-950 border-t border-gray-200 dark:border-gray-800 transition-colors duration-300">
+            <div className="max-w-7xl mx-auto px-6  pt-12 pb-12 lg:px-16">
 
-                    {/* Logo + Description */}
-                    <div className="flex flex-col gap-3">
-                        <div className="md:-ml-5 -mb-1">
-                            <Logo />
-                        </div>
-                        <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                            Plan your adventure with ExploreBD — discover the best trips,
-                            communities, and experiences across Bangladesh.
+                {/* Main Content Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+                    {/* Column 1: Brand & Identity */}
+                    <div className="space-y-6">
+                        <Logo />
+                        <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                            ExploreBD is your premier gateway to discovering the hidden gems of Bangladesh.
+                            From the mangroves of Sundarbans to the peaks of Sajek.
                         </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-400">
-                            © {currentYear} ExploreBD. All rights reserved.
-                        </p>
-                    </div>
-
-                    {/* Quick Links */}
-                    <div className="md:pl-9">
-                        <h3 className="font-bold  mb-3">Quick Links</h3>
-                        <ul className="flex flex-col gap-2">
-                            {navLinks.map((link) => (
-                                <li
-                                    key={link.name}
-                                    className="hover:text-primary dark:hover:text-primary transition-colors"
-                                >
-                                    <NavLink to={link.path}>{link.name}</NavLink>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* Social */}
-                    <div>
-                        <h3 className="font-bold pt-2 mb-3">Connect with Us</h3>
-                        <div className="flex gap-4">
+                        <div className="flex gap-3">
                             {socialLinks.map((link) => (
                                 <a
                                     key={link.name}
                                     href={link.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="hover:text-primary dark:hover:text-primary transition-colors"
+                                    className="w-9 h-9 flex items-center justify-center rounded-full bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 shadow-sm"
+                                    aria-label={link.name}
                                 >
                                     {link.icon}
                                 </a>
                             ))}
                         </div>
-                        <div className="pt-6">
-                            <h3 className="font-semibold mb-2 text-lg">Contact</h3>
-                            <p className="text-sm text-gray-700 dark:text-gray-300">
-                                📍 Dhaka, Bangladesh
-                            </p>
-                            <p className="text-sm text-gray-700 dark:text-gray-300">
-                                📞 +880 1736 007474
-                            </p>
-                            <p className="text-sm text-gray-700 dark:text-gray-300">
-                                ✉️ najmussakib2142@gmail.com
-                            </p>
+                    </div>
+
+                    {/* Column 2: Quick Navigation */}
+                    <div className="lg:pl-8">
+                        <h3 className="text-xs font-bold uppercase tracking-[0.15em] mb-7 text-gray-900 dark:text-gray-100">
+                            Quick Links
+                        </h3>
+                        <ul className="space-y-4">
+                            {navLinks.map((link) => (
+                                <li key={link.name}>
+                                    <NavLink
+                                        to={link.path}
+                                        className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium"
+                                    >
+                                        {link.name}
+                                    </NavLink>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    {/* Column 3: Contact Details */}
+                    <div>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.15em] mb-7 text-gray-900 dark:text-gray-100">
+                            Get in Touch
+                        </h3>
+                        <ul className="space-y-4">
+                            <li className="flex items-start gap-3 text-sm text-gray-600 dark:text-gray-400">
+                                <FaMapMarkerAlt className="mt-1 text-primary shrink-0" />
+                                <span>Dhaka, Bangladesh</span>
+                            </li>
+                            <li>
+                                <a href="tel:+8801736007474" className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                                    <FaPhoneAlt className="text-primary shrink-0" />
+                                    <span>+880 1736 007474</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="mailto:najmussakib2142@gmail.com" className="flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
+                                    <FaEnvelope className="text-primary shrink-0" />
+                                    <span>najmussakib2142@gmail.com</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Column 4: Newsletter */}
+                    <div>
+                        <h3 className="text-xs font-bold uppercase tracking-[0.15em] mb-7 text-gray-900 dark:text-gray-100">
+                            Stay Updated
+                        </h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
+                            Subscribe for exclusive trip offers and travel guides.
+                        </p>
+                        <form onSubmit={handleSubscribe} className="flex flex-col gap-2">
+                            <input
+                                type="email"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Email address"
+                                className="px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm outline-none"
+                            />
+                            <button className="bg-gray-900 dark:bg-primary hover:bg-black dark:hover:bg-primary/90 text-white font-semibold py-2.5 rounded-lg transition-all text-sm shadow-md active:scale-[0.98]">
+                                Subscribe Now
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                {/* Bottom Bar: Trust & Legal */}
+                <div className="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-8">
+
+                    <div className="order-2 md:order-1 text-center md:text-left">
+                        <p className="text-xs text-gray-500 mb-1">
+                            © {currentYear} ExploreBD. All rights reserved.
+                        </p>
+                        {/* <div className="flex gap-4 text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
+                            <a href="#" className="hover:text-primary transition-colors">Privacy Policy</a>
+                            <span>•</span>
+                            <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
+                        </div> */}
+                    </div>
+
+                    {/* Trusted Payment Partners */}
+                    <div className="order-1  md:order-2 flex flex-col items-center justify-between md:items-end gap-2 md:gap-3">
+                        <div className="flex items-center justify-between gap-5 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">Payment Partners:</span>
+
+                            <span className="font-bold italic text-sm text-blue-800">VISA</span>
+                            <span className="font-bold italic text-sm text-orange-600">mastercard</span>
+                            <span className="font-bold italic text-sm text-pink-600">Amex</span>
+                            {/* <span className="font-bold italic text-sm text-red-600">Nagad</span> */}
                         </div>
                     </div>
+
                 </div>
             </div>
         </footer>
