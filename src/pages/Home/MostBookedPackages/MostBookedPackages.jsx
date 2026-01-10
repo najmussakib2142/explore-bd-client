@@ -97,13 +97,13 @@ const MostBookedPackages = () => {
                   <span>
                     {pkg.totalDays} {pkg.totalDays > 1 ? "days" : "day"}
                   </span>
-                  <span className="font-semibold text-secondary">
+                  <span className="font-semibold text-primary text-lg">
                     ৳ {pkg.price?.$numberInt || pkg.price}
                   </span>
                 </div>
                 <button
                   onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}
-                  className="bg-secondary cursor-pointer hover:bg-secondary-dark text-white font-semibold px-4 py-2 rounded-lg w-full"
+                  className="bg-primary cursor-pointer hover:bg-primary-dark text-white font-semibold px-4 py-2 rounded-lg w-full"
                 >
                   Book Now
                 </button>

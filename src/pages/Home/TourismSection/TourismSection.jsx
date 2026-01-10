@@ -4,19 +4,49 @@ import "react-tabs/style/react-tabs.css";
 import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "framer-motion";
 import useAxios from "../../../hooks/useAxios";
-import { FaMapMarkerAlt } from "react-icons/fa";
-import { MdOutlineAccessTime } from "react-icons/md";
+import { FaMapMarkerAlt, FaRegHeart, FaGraduationCap, FaEnvelope, FaBriefcase, FaUserClock } from "react-icons/fa";
+import { MdOutlineAccessTime, MdArrowForward, MdVerified } from "react-icons/md";
+import { HiOutlineIdentification } from "react-icons/hi";
 
 // Skeleton Card for loading state
 const SkeletonCard = () => {
   return (
-    <div className="animate-pulse dark:bg-gray-800 bg-[#f0fdf4] shadow-lg rounded-xl overflow-hidden">
-      <div className="h-56 w-full bg-gray-300 dark:bg-gray-600" />
-      <div className="p-4 space-y-2">
-        <div className="h-5 w-3/4 bg-gray-300 dark:bg-gray-600 rounded" />
-        <div className="h-4 w-1/2 bg-gray-300 dark:bg-gray-600 rounded" />
-        <div className="h-6 w-full bg-gray-300 dark:bg-gray-600 rounded" />
-        <div className="h-10 w-full bg-gray-300 dark:bg-gray-600 rounded" />
+    <div className="animate-pulse bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl overflow-hidden shadow-sm">
+      {/* Image Area Skeleton */}
+      <div className="relative h-64 bg-gray-200 dark:bg-gray-800">
+        {/* Tour Type Badge Skeleton */}
+        <div className="absolute top-4 left-4 h-6 w-20 bg-gray-300 dark:bg-gray-700 rounded-lg" />
+        {/* Price Tag Skeleton */}
+        <div className="absolute bottom-4 left-4 h-8 w-24 bg-gray-300 dark:bg-gray-700 rounded-lg" />
+      </div>
+
+      {/* Content Area Skeleton */}
+      <div className="p-5 space-y-4">
+        {/* Location Skeleton */}
+        <div className="flex items-center gap-2">
+          <div className="h-4 w-4 bg-gray-200 dark:bg-gray-800 rounded-full" />
+          <div className="h-3 w-24 bg-gray-200 dark:bg-gray-800 rounded" />
+        </div>
+
+        {/* Title Skeleton */}
+        <div className="h-7 w-5/6 bg-gray-200 dark:bg-gray-800 rounded-md" />
+
+        {/* About/Description Lines */}
+        <div className="space-y-2">
+          <div className="h-3 w-full bg-gray-100 dark:bg-gray-800/50 rounded" />
+          <div className="h-3 w-4/5 bg-gray-100 dark:bg-gray-800/50 rounded" />
+        </div>
+
+        {/* Footer Skeleton */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
+          {/* Days Skeleton */}
+          <div className="flex items-center gap-2">
+            <div className="h-5 w-5 bg-gray-200 dark:bg-gray-800 rounded-full" />
+            <div className="h-4 w-12 bg-gray-200 dark:bg-gray-800 rounded" />
+          </div>
+          {/* Button Link Skeleton */}
+          <div className="h-4 w-16 bg-gray-200 dark:bg-gray-800 rounded" />
+        </div>
       </div>
     </div>
   );
@@ -70,52 +100,69 @@ const TourismSection = () => {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
         {packages.map((pkg) => (
           <motion.div
             key={pkg._id}
-            whileHover={{
-              scale: 1.03,
-              boxShadow: "0px 10px 20px rgba(0,0,0,0.15)",
-            }}
-            className="dark:bg-gray-800 bg-[#f0fdf4] shadow-lg rounded-xl overflow-hidden cursor-pointer transition-transform duration-300"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            whileHover={{ y: -8 }}
+            className="group relative bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300"
           >
-            <div className="relative overflow-hidden">
+            {/* Image Container */}
+            <div className="relative h-64 overflow-hidden">
               <motion.img
-                src={pkg.images?.[0] || "https://via.placeholder.com/300"}
+                src={pkg.images?.[0] || "https://via.placeholder.com/400x300"}
                 alt={pkg.title}
-                className="w-full h-56 object-cover"
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.4 }}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
-              <p className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                {pkg.tourType}
-              </p>
+
+              {/* Badges */}
+              <div className="absolute top-4 right-4 flex flex-col gap-2">
+                <span className="bg-white/90 backdrop-blur-md text-gray-800 text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                  {pkg.tourType}
+                </span>
+              </div>
+
+              {/* Favorite Button */}
+              {/* <button className="absolute top-4 right-4 p-2.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-red-500 hover:text-white transition-colors duration-300">
+                <FaRegHeart className="text-lg" />
+              </button> */}
+
+              {/* Price Tag Overlay */}
+              <div className="absolute bottom-4 left-4 bg-primary px-3 py-1 rounded-lg text-white font-bold shadow-lg">
+                BDT {pkg.price?.$numberInt || pkg.price}
+              </div>
             </div>
 
-            <div className="p-4">
-              <h3 className="text-xl line-clamp-1 mt-2 font-semibold mb-2">{pkg.title}</h3>
-              {/* <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                📍 {pkg.location} • ⏳ {pkg.totalDays} days
-              </p> */}
-              <p className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                <FaMapMarkerAlt className="text-red-500" />
-                <span>{pkg.location}</span>
+            {/* Content */}
+            <div className="p-5">
+              <div className="flex items-center gap-1 text-xs font-medium text-primary mb-2 uppercase tracking-wider">
+                <FaMapMarkerAlt />
+                {pkg.location}
+              </div>
 
-                <span className="mx-1">•</span>
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 line-clamp-1 group-hover:text-primary transition-colors">
+                {pkg.title}
+              </h3>
 
-                <MdOutlineAccessTime className="text-blue-500" />
-                <span>{pkg.totalDays} days</span>
+              <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4 leading-relaxed">
+                {pkg.about}
               </p>
-              <p className="text-lg font-bold text-secondary mb-3">
-                BDT {pkg.price?.$numberInt || pkg.price}
-              </p>
-              <button
-                onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}
-                className="btn cursor-pointer btn-primary w-full"
-              >
-                View Package
-              </button>
+
+              <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                  <MdOutlineAccessTime className="text-xl text-primary" />
+                  <span className="text-sm font-semibold">{pkg.totalDays} Days</span>
+                </div>
+
+                <button
+                  onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}
+                  className="flex items-center gap-2 text-sm font-bold text-primary hover:gap-3 transition-all underline-offset-4 hover:underline"
+                >
+                  DETAILS <MdArrowForward />
+                </button>
+              </div>
             </div>
           </motion.div>
         ))}
@@ -135,40 +182,72 @@ const TourismSection = () => {
     }
 
     if (guides.length === 0) {
-      return <p className="text-center text-gray-500 py-12">No guides available</p>;
+      return (
+        <div className="flex flex-col items-center py-20 text-center w-full">
+          <div className="bg-gray-100 p-6 rounded-full mb-4 text-4xl text-gray-300">👤</div>
+          <p className="text-xl font-medium text-gray-500">No guides found in this category.</p>
+        </div>
+      );
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {guides.map((guide) => (
           <motion.div
             key={guide._id}
-            whileHover={{
-              scale: 1.03,
-              boxShadow: "0px 10px 20px rgba(0,0,0,0.15)",
-            }}
-            className="bg-base-100 shadow-lg rounded-xl overflow-hidden cursor-pointer transition-transform duration-300"
+            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-sm flex flex-col"
           >
-            <motion.img
-              src={guide.photoURL || "https://via.placeholder.com/300"}
-              alt={guide.name}
-              className="w-full h-56 object-cover"
-              whileHover={{ y: -5 }}
-              transition={{ duration: 0.3 }}
-            />
-            <div className="p-4">
-              <h3 className="text-xl font-semibold mb-1">{guide.name}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
-                District: {guide.district || "N/A"}
+            {/* Top Section: Photo & Quick Stats */}
+            <div className="flex p-5 gap-4">
+              <img
+                src={guide.photoURL || "https://via.placeholder.com/150"}
+                alt={guide.name}
+                className="w-24 h-24 rounded-lg object-cover ring-2 ring-gray-100 dark:ring-gray-800"
+              />
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight">
+                  {guide.name}
+                </h3>
+                <div className="flex items-center gap-1 text-primary font-medium text-sm mt-1">
+                  <FaMapMarkerAlt className="text-xs" />
+                  {guide.district}
+                </div>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  <span className="bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase">
+                    {guide.experience} Exp
+                  </span>
+                  <span className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase">
+                    Age: {guide.age}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Middle Section: Bio (Informative) */}
+            <div className="px-5 pb-4 flex-grow">
+              <p className="text-sm text-gray-600 dark:text-gray-400 line-clamp-3 bg-gray-50 dark:bg-gray-800/50 p-3 rounded-lg border-l-4 border-primary">
+                {guide.bio || "No bio provided."}
               </p>
-              <p className="text-sm line-clamp-1 text-gray-400 mb-3">
-                Experience: {guide.experience || "N/A"}
-              </p>
+            </div>
+
+            {/* Bottom Section: Real Data Points */}
+            <div className="px-5 pb-5 mt-auto">
+              <div className="grid grid-cols-2 gap-3 mb-4">
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <FaBriefcase className="text-gray-400" />
+                  <span className="truncate">Active Guide</span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <HiOutlineIdentification className="text-gray-400" />
+                  <span className="truncate">Verified NID</span>
+                </div>
+              </div>
+
               <button
                 onClick={() => navigate(`/guides/${guide._id}`)}
-                className="btn btn-secondary w-full"
+                className="w-full py-2.5 bg-primary text-white rounded-lg font-semibold text-sm hover:bg-primary transition-colors duration-300"
               >
-                Details
+                See Full Profile
               </button>
             </div>
           </motion.div>
@@ -191,13 +270,13 @@ const TourismSection = () => {
         <TabList className="flex justify-center gap-4 mb-6 dark:border-b-2 dark:border-white border-b-2 border-primary">
           <Tab
             selectedClassName="bg-primary border-b-none text-white dark:bg-white dark:text-black rounded-t-md"
-            className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-blue-600 transition"
+            className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-primary transition"
           >
             Our Packages
           </Tab>
           <Tab
             selectedClassName="bg-primary border-b-none text-white dark:bg-white dark:text-black rounded-t-md"
-            className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-secondary transition"
+            className="cursor-pointer py-2 px-4 text-lg font-semibold hover:text-primary transition"
           >
             Meet Our Tour Guides
           </Tab>

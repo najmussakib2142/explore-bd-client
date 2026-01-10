@@ -121,8 +121,8 @@ const Banner = () => {
 
                                     className="mt-6 flex gap-4"
                                 >
-                                    <button onClick={() => navigate("/allTrips")} className="btn border-none hover:scale-105  btn-primary">Explore More</button>
-                                    <button onClick={() => navigate("/allTrips")} className="btn border-none hover:scale-105  btn-secondary">Plan Trip</button>
+                                    <button onClick={() => navigate("/allTrips")} className="btn border-none hover:scale-105  bg-primary">Explore More</button>
+                                    <button onClick={() => navigate("/allTrips")} className="btn border border-primary text-primary bg-transparent hover:bg-primary hover:text-white">Plan Trip</button>
                                 </motion.div>
                             </div>
                         </motion.div>

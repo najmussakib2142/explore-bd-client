@@ -85,7 +85,7 @@ const GuideProfilePage = () => {
 
     return (
         <div className="max-w-5xl mx-auto my-12 p-4">
-            <button className="btn btn-outline mb-6" onClick={() => navigate(-1)} data-aos="fade-right">
+            <button className="inline-flex items-center cursor-pointer transition-all underline-offset-4 hover:underline gap-2 mb-6" onClick={() => navigate(-1)} data-aos="fade-right">
                 <FaArrowLeft className="mr-2" /> Back
             </button>
 
@@ -137,7 +137,7 @@ const GuideProfilePage = () => {
                             <div
                                 key={story._id}
                                 onClick={() => setSelectedStory(story)}
-                                className="bg-white dark:bg-gray-900 border dark:border-gray-700 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
+                                className="bg-white dark:bg-gray-900 dark:border dark:border-gray-700 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition cursor-pointer"
                                 data-aos="fade-up"
                                 data-aos-delay={idx * 100}
                             >

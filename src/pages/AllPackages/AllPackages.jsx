@@ -2,11 +2,12 @@ import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { animated } from "@react-spring/web";
+import { motion } from "framer-motion";
 import Loading from "../shared/Loading/Loading";
 import useAxios from "../../hooks/useAxios";
 import { Helmet } from "react-helmet-async";
 import { FaMapMarkerAlt } from "react-icons/fa";
-import { MdOutlineAccessTime } from "react-icons/md";
+import { MdArrowForward, MdOutlineAccessTime } from "react-icons/md";
 
 const AllPackages = () => {
   const axiosInstance = useAxios();
@@ -123,37 +124,65 @@ const AllPackages = () => {
           {sortedPackages.map((pkg) => (
             <animated.div
               key={pkg._id}
-              className="bg-white dark:bg-gray-800 shadow-lg rounded-xl overflow-hidden cursor-pointer hover:scale-105 transform transition-transform duration-300"
-              onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              whileHover={{ y: -8 }}
+              className="group relative bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300"
             >
-              <div className="relative overflow-hidden">
-                <img
-                  src={pkg.images?.[0] || "https://via.placeholder.com/300"}
+              {/* Image Container */}
+              <div className="relative h-64 overflow-hidden">
+                <motion.img
+                  src={pkg.images?.[0] || "https://via.placeholder.com/400x300"}
                   alt={pkg.title}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
-                <p className="absolute top-3 left-3 bg-primary text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                  {pkg.tourType}
-                </p>
-              </div>
-              <div className="p-4">
-                <h3 className="text-xl line-clamp-1 font-semibold mb-2">{pkg.title}</h3>
-                {/* <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
-                  📍 {pkg.location} • ⏳ {pkg.totalDays} days
-                </p> */}
-                <p className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-3">
-                  <FaMapMarkerAlt className="text-red-500" />
-                  <span>{pkg.location}</span>
 
-                  <span className="mx-1">•</span>
+                {/* Badges */}
+                <div className="absolute top-4 right-4 flex flex-col gap-2">
+                  <span className="bg-white/90 backdrop-blur-md text-gray-800 text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                    {pkg.tourType}
+                  </span>
+                </div>
 
-                  <MdOutlineAccessTime className="text-blue-500" />
-                  <span>{pkg.totalDays} days</span>
-                </p>
-                <p className="text-lg font-bold text-secondary mb-3">
+                {/* Favorite Button */}
+                {/* <button className="absolute top-4 right-4 p-2.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-red-500 hover:text-white transition-colors duration-300">
+                            <FaRegHeart className="text-lg" />
+                          </button> */}
+
+                {/* Price Tag Overlay */}
+                <div className="absolute bottom-4 left-4 bg-primary px-3 py-1 rounded-lg text-white font-bold shadow-lg">
                   BDT {pkg.price?.$numberInt || pkg.price}
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="p-5">
+                <div className="flex items-center gap-1 text-xs font-medium text-primary mb-2 uppercase tracking-wider">
+                  <FaMapMarkerAlt />
+                  {pkg.location}
+                </div>
+
+                <h3 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-3 line-clamp-1 group-hover:text-primary transition-colors">
+                  {pkg.title}
+                </h3>
+
+                <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 mb-4 leading-relaxed">
+                  {pkg.about}
                 </p>
-                <button className="btn btn-primary w-full">View Package</button>
+
+                <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
+                  <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                    <MdOutlineAccessTime className="text-xl text-primary" />
+                    <span className="text-sm font-semibold">{pkg.totalDays} Days</span>
+                  </div>
+
+                  <button
+                    onClick={() => navigate(`/packageDetailsPage/${pkg._id}`)}
+                    className="flex items-center gap-2 text-sm font-bold text-primary hover:gap-3 transition-all underline-offset-4 hover:underline"
+                  >
+                    DETAILS <MdArrowForward />
+                  </button>
+                </div>
               </div>
             </animated.div>
           ))}

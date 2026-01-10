@@ -66,7 +66,7 @@ const Testimonials = () => {
 
                 <h2 className="text-3xl md:text-4xl font-bold text-center">
                     What our travelers{" "}
-                    <span className="text-secondary">
+                    <span className="text-primary">
                         <Typewriter
                             words={["say", "share", "recommend", "love"]}
                             loop={0}   // 0 = infinite loop
@@ -123,7 +123,7 @@ const Testimonials = () => {
                                         alt={review.name}
                                     />
                                     <div>
-                                        <h4 className="font-bold text-secondary">{review.name}</h4>
+                                        <h4 className="font-bold text-primary">{review.name}</h4>
                                         <p className="text-sm text-gray-500 dark:text-gray-400">{review.designation}</p>
                                     </div>
                                 </div>

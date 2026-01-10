@@ -92,7 +92,7 @@ export default function TouristStorySection() {
                 <h2 className="text-3xl md:text-4xl font-bold">Tourist Stories</h2>
                 <button
                     onClick={() => navigate("/communityPage")}
-                    className="px-4 text-lg cursor-pointer py-2 flex items-center gap-0.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                    className="px-4 text-lg cursor-pointer py-2 flex items-center gap-0.5 bg-primary font-semibold text-white rounded-lg hover:bg-indigo-700 transition"
                 >
                     All Stories<GoArrowRight />
                 </button>
