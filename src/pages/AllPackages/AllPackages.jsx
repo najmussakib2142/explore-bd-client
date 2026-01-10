@@ -1,7 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
-import { animated } from "@react-spring/web";
 import { motion } from "framer-motion";
 import Loading from "../shared/Loading/Loading";
 import useAxios from "../../hooks/useAxios";
@@ -15,7 +14,7 @@ const AllPackages = () => {
 
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(6);
-  const [sortOption, setSortOption] = useState(""); // "" | "price-asc" | "price-desc" | "days-asc" | "days-desc"
+  const [sortOption, setSortOption] = useState("");
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["all-packages", currentPage, itemsPerPage],
@@ -28,22 +27,25 @@ const AllPackages = () => {
     keepPreviousData: true,
   });
 
-  const packages = data?.packages || [];
   const count = data?.count || 0;
   const numberOfPages = Math.ceil(count / itemsPerPage);
   const pages = [...Array(numberOfPages).keys()];
 
-  // Handle sorting
   const sortedPackages = useMemo(() => {
+    const packages = data?.packages || [];
     if (!sortOption) return packages;
 
     const sorted = [...packages];
     switch (sortOption) {
       case "price-asc":
-        sorted.sort((a, b) => (a.price?.$numberInt || a.price) - (b.price?.$numberInt || b.price));
+        sorted.sort(
+          (a, b) => (a.price?.$numberInt || a.price) - (b.price?.$numberInt || b.price)
+        );
         break;
       case "price-desc":
-        sorted.sort((a, b) => (b.price?.$numberInt || b.price) - (a.price?.$numberInt || a.price));
+        sorted.sort(
+          (a, b) => (b.price?.$numberInt || b.price) - (a.price?.$numberInt || a.price)
+        );
         break;
       case "days-asc":
         sorted.sort((a, b) => a.totalDays - b.totalDays);
@@ -55,7 +57,7 @@ const AllPackages = () => {
         break;
     }
     return sorted;
-  }, [packages, sortOption]);
+  }, [data?.packages, sortOption]);
 
   const handleItemsPerPage = (e) => {
     const value = parseInt(e.target.value);
@@ -88,12 +90,15 @@ const AllPackages = () => {
       </Helmet>
 
       <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-3">Explore All Packages</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-primary mb-3">
+          Explore All Packages
+        </h1>
         <p className="text-lg text-gray-600 dark:text-gray-300">
           Discover the best trips and adventures across Bangladesh. Choose your perfect tour!
         </p>
       </div>
 
+      {/* Sort */}
       <div className="flex flex-col md:flex-row md:justify-between items-start md:items-center mb-6 gap-3 md:gap-6">
         <label
           htmlFor="sortPackages"
@@ -115,21 +120,20 @@ const AllPackages = () => {
         </select>
       </div>
 
-
-
+      {/* Packages */}
       {sortedPackages.length === 0 ? (
         <p className="text-center text-gray-500 py-12">No packages available</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-5">
           {sortedPackages.map((pkg) => (
-            <animated.div
+            <motion.div
               key={pkg._id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               whileHover={{ y: -8 }}
+              transition={{ type: "spring", stiffness: 200, damping: 18 }}
               className="group relative bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-xl transition-all duration-300"
             >
-              {/* Image Container */}
               <div className="relative h-64 overflow-hidden">
                 <motion.img
                   src={pkg.images?.[0] || "https://via.placeholder.com/400x300"}
@@ -137,25 +141,17 @@ const AllPackages = () => {
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                 />
 
-                {/* Badges */}
                 <div className="absolute top-4 right-4 flex flex-col gap-2">
                   <span className="bg-white/90 backdrop-blur-md text-gray-800 text-[10px] uppercase tracking-widest font-bold px-3 py-1.5 rounded-lg shadow-sm">
                     {pkg.tourType}
                   </span>
                 </div>
 
-                {/* Favorite Button */}
-                {/* <button className="absolute top-4 right-4 p-2.5 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-red-500 hover:text-white transition-colors duration-300">
-                            <FaRegHeart className="text-lg" />
-                          </button> */}
-
-                {/* Price Tag Overlay */}
                 <div className="absolute bottom-4 left-4 bg-primary px-3 py-1 rounded-lg text-white font-bold shadow-lg">
                   BDT {pkg.price?.$numberInt || pkg.price}
                 </div>
               </div>
 
-              {/* Content */}
               <div className="p-5">
                 <div className="flex items-center gap-1 text-xs font-medium text-primary mb-2 uppercase tracking-wider">
                   <FaMapMarkerAlt />
@@ -184,11 +180,12 @@ const AllPackages = () => {
                   </button>
                 </div>
               </div>
-            </animated.div>
+            </motion.div>
           ))}
         </div>
       )}
 
+      {/* Pagination */}
       <div className="mt-8 flex flex-wrap justify-center items-center gap-2">
         <button
           onClick={handlePrevPage}
@@ -202,10 +199,11 @@ const AllPackages = () => {
           <button
             key={page}
             onClick={() => setCurrentPage(page)}
-            className={`px-4 cursor-pointer py-2 rounded ${currentPage === page
-              ? "bg-primary text-white"
-              : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
-              }`}
+            className={`px-4 cursor-pointer py-2 rounded ${
+              currentPage === page
+                ? "bg-primary text-white"
+                : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
+            }`}
           >
             {page + 1}
           </button>

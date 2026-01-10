@@ -1,7 +1,7 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination } from 'swiper/modules';
-import { useTrail, animated } from '@react-spring/web';
+import { motion } from "framer-motion";
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -50,13 +50,6 @@ const reviews = [
 ];
 
 const Testimonials = () => {
-    // Trail animation for all cards
-    const trail = useTrail(reviews.length, {
-        from: { opacity: 0, y: 40 },
-        to: { opacity: 1, y: 0 },
-        config: { tension: 170, friction: 20 },
-        delay: 200,
-    });
 
     return (
         <section className="py-12 max-w-7xl mx-auto md:py-16 px-4 md:px-8 lg:px-16">
@@ -92,7 +85,7 @@ const Testimonials = () => {
                 pagination={{ clickable: true }}
                 modules={[Navigation, Pagination]}
                 className="testimonialSwiper mb-10"
-                grabCursor={true}         
+                grabCursor={true}
                 simulateTouch={true}
                 breakpoints={{
                     320: { slidesPerView: 1, spaceBetween: 20 },
@@ -101,37 +94,39 @@ const Testimonials = () => {
                     1024: { slidesPerView: 3, spaceBetween: 30 },
                 }}
             >
-                {trail.map((style, index) => {
-                    const review = reviews[index];
-                    return (
-                        <SwiperSlide key={review.id}>
-                            <animated.div
-                                style={{
-                                    ...style,
-                                    transform: style.y.to((y) => `translateY(${y}px)`),
-                                }}
-                                className="dark:bg-base-100 bg-[#f0fdf4] p-6 md:p-8 rounded-xl shadow-md h-[300px] md:h-[350px] flex flex-col justify-between"
-                            >
-                                <img src={reviewQuote} alt="" className=" w-10 h-10" />
-                                <p className="mb-2 border-b border-dotted border-gray-300 dark:border-gray-600 pb-2 text-gray-800 dark:text-gray-200 text-lg">
-                                    "{review.review}"
-                                </p>
-                                <div className="flex items-center gap-4">
-                                    <img
-                                        className="w-14 h-14 rounded-full object-cover"
-                                        src={review.customerImg}
-                                        alt={review.name}
-                                    />
-                                    <div>
-                                        <h4 className="font-bold text-primary">{review.name}</h4>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">{review.designation}</p>
-                                    </div>
+                {reviews.map((review, index) => (
+                    <SwiperSlide key={review.id}>
+                        <motion.div
+                            initial={{ opacity: 0, y: 40 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                type: "spring",
+                                stiffness: 120,
+                                damping: 18,
+                                delay: index * 0.15,
+                            }}
+                            whileHover={{ y: -6 }}
+                            className="dark:bg-base-100 bg-[#f0fdf4] p-6 md:p-8 rounded-xl shadow-md h-[300px] md:h-[350px] flex flex-col justify-between"
+                        >
+                            <img src={reviewQuote} alt="" className=" w-10 h-10" />
+                            <p className="mb-2 border-b border-dotted border-gray-300 dark:border-gray-600 pb-2 text-gray-800 dark:text-gray-200 text-lg">
+                                "{review.review}"
+                            </p>
+                            <div className="flex items-center gap-4">
+                                <img
+                                    className="w-14 h-14 rounded-full object-cover"
+                                    src={review.customerImg}
+                                    alt={review.name}
+                                />
+                                <div>
+                                    <h4 className="font-bold text-primary">{review.name}</h4>
+                                    <p className="text-sm text-gray-500 dark:text-gray-400">{review.designation}</p>
                                 </div>
-                            </animated.div>
+                            </div>
+                        </motion.div>
 
-                        </SwiperSlide>
-                    );
-                })}
+                    </SwiperSlide>
+                ))}
             </Swiper>
         </section>
     );
