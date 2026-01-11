@@ -14,27 +14,27 @@ const Navbar = () => {
     const { theme, toggleTheme } = useTheme();
     const { user, logOut } = useAuth()
     const [showNavbar, setShowNavbar] = useState(true);
-    const [lastScrollY, setLastScrollY] = useState(0);
+    // const [lastScrollY, setLastScrollY] = useState(0);
 
-    useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
+    // useEffect(() => {
+    //     const handleScroll = () => {
+    //         const currentScrollY = window.scrollY;
 
-            if (currentScrollY > lastScrollY && currentScrollY > 100) {
-                // Scrolling Down
-                setShowNavbar(false);
-            } else {
-                // Scrolling Up
-                setShowNavbar(true);
-            }
+    //         if (currentScrollY > lastScrollY && currentScrollY > 100) {
+    //             // Scrolling Down
+    //             setShowNavbar(false);
+    //         } else {
+    //             // Scrolling Up
+    //             setShowNavbar(true);
+    //         }
 
-            setLastScrollY(currentScrollY);
-        };
+    //         setLastScrollY(currentScrollY);
+    //     };
 
-        window.addEventListener('scroll', handleScroll);
+    //     window.addEventListener('scroll', handleScroll);
 
-        return () => window.removeEventListener('scroll', handleScroll);
-    }, [lastScrollY]);
+    //     return () => window.removeEventListener('scroll', handleScroll);
+    // }, [lastScrollY]);
 
     // if (loading) {
     //     return <Loading></Loading>
@@ -291,7 +291,7 @@ const Navbar = () => {
 
             <button
                 onClick={toggleTheme}
-                className="fixed cursor-pointer bottom-4 right-4 z-50 p-3 rounded-full bg-gray-800 text-white dark:bg-gray-100 dark:text-gray-900 shadow-xl transition-colors font-semibold text-sm"
+                className="fixed cursor-pointer bottom-4 right-4 z-50 p-3 rounded-full bg-gray-800/60 text-white dark:bg-gray-100/70 dark:text-gray-900 shadow-xl transition-colors font-semibold text-sm"
                 aria-label="Toggle theme"
             >
                 {theme === "dark" ? "🌞 Light Mode" : "🌙 Dark Mode"}

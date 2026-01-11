@@ -124,7 +124,7 @@ export default function BangladeshMap() {
   };
 
   return (
-    <section className="sm:py-12 md:py-16 lg:py-20">
+    <section className="sm:py-12 mb-12 md:py-16 lg:py-20">
       <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-16">
         {/* Section Heading */}
         <motion.h2

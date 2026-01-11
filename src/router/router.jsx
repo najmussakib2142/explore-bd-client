@@ -40,6 +40,7 @@ import GuideRoute from "../routes/GuideRoute";
 import FAQ from "../pages/FAQ/FAQ";
 import Offer from "../pages/Offer/Offer";
 import TermsAndConditions from "../pages/TermsAndConditions/TermsAndConditions";
+import StoryPage from "../pages/shared/StoryPage/StoryPage";
 // import BookingPage from "../pages/Dashboard/BookingPage/BookingPage";
 
 export const router = createBrowserRouter([
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
             {
                 path: 'communityPage',
                 Component: CommunityPage,
+            },
+            {
+                path: "/story/:id",
+                element: <StoryPage />
             },
             {
                 path: 'about',

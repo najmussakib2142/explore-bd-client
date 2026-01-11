@@ -56,11 +56,13 @@ const Footer = () => {
             <div className="max-w-7xl mx-auto px-6  pt-12 pb-12 lg:px-16">
 
                 {/* Main Content Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6  md:gap-12 mb-8">
 
                     {/* Column 1: Brand & Identity */}
-                    <div className="space-y-6">
-                        <Logo />
+                    <div className="space-y-6 lg:col-span-2">
+                        <div className="md:-ml-6">
+                            <Logo />
+                        </div>
                         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
                             ExploreBD is your premier gateway to discovering the hidden gems of Bangladesh.
                             From the mangroves of Sundarbans to the peaks of Sajek.
@@ -82,7 +84,7 @@ const Footer = () => {
                     </div>
 
                     {/* Column 2: Quick Navigation */}
-                    <div className="lg:pl-8">
+                    {/* <div className="col-span-1">
                         <h3 className="text-xs font-bold uppercase tracking-[0.15em] mb-7 text-gray-900 dark:text-gray-100">
                             Quick Links
                         </h3>
@@ -98,10 +100,10 @@ const Footer = () => {
                                 </li>
                             ))}
                         </ul>
-                    </div>
+                    </div> */}
 
                     {/* Column 3: Contact Details */}
-                    <div>
+                    <div className="col-span-2">
                         <h3 className="text-xs font-bold uppercase tracking-[0.15em] mb-7 text-gray-900 dark:text-gray-100">
                             Get in Touch
                         </h3>
@@ -126,7 +128,7 @@ const Footer = () => {
                     </div>
 
                     {/* Column 4: Newsletter */}
-                    <div>
+                    <div className="col-span-2">
                         <h3 className="text-xs font-bold uppercase tracking-[0.15em] mb-7 text-gray-900 dark:text-gray-100">
                             Stay Updated
                         </h3>
@@ -142,7 +144,7 @@ const Footer = () => {
                                 placeholder="Email address"
                                 className="px-4 py-2.5 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all text-sm outline-none"
                             />
-                            <button className="bg-gray-900 dark:bg-primary hover:bg-black dark:hover:bg-primary/90 text-white font-semibold py-2.5 rounded-lg transition-all text-sm shadow-md active:scale-[0.98]">
+                            <button className="bg-primary bg-primary/90 text-white font-semibold py-2.5 rounded-lg transition-all text-sm shadow-md active:scale-[0.98]">
                                 Subscribe Now
                             </button>
                         </form>
@@ -150,9 +152,9 @@ const Footer = () => {
                 </div>
 
                 {/* Bottom Bar: Trust & Legal */}
-                <div className="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-8">
+                <div className="pt-6 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-6">
 
-                    <div className="order-2 md:order-1 text-center md:text-left">
+                    <div className="order-3 md:order-1 text-center md:text-left">
                         <p className="text-xs text-gray-500 mb-1">
                             © {currentYear} ExploreBD. All rights reserved.
                         </p>
@@ -161,6 +163,19 @@ const Footer = () => {
                             <span>•</span>
                             <a href="#" className="hover:text-primary transition-colors">Terms of Service</a>
                         </div> */}
+                    </div>
+
+                    <div className="order-2 flex justify-between gap-8">
+                        {navLinks.map((link) => (
+                        <div key={link.name}>
+                            <NavLink
+                                to={link.path}
+                                className="text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary transition-colors text-sm font-medium"
+                            >
+                                {link.name}
+                            </NavLink>
+                        </div>
+                    ))}
                     </div>
 
                     {/* Trusted Payment Partners */}

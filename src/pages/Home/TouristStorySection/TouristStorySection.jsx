@@ -44,8 +44,13 @@ export default function TouristStorySection() {
         if (!user) navigate("/login");
     };
 
+    const handleStoryDetail = (id) => {
+        navigate(`/story/${id}`);
+    }
+
     return (
-        <section className="max-w-7xl mx-auto sm:py-12 md:py-16 lg:py-20 px-4 md:px-8 lg:px-16">
+        <section className="max-w-7xl   mx-auto sm:py-12 md:py-16 lg:py-20 px-4 md:px-8 lg:px-16">
+
             <div
                 className="flex items-center justify-between mb-8"
                 data-aos="fade-down"
@@ -53,15 +58,16 @@ export default function TouristStorySection() {
                 <h2 className="text-3xl md:text-4xl font-bold">Tourist Stories</h2>
                 <button
                     onClick={() => navigate("/communityPage")}
-                    className="px-4 py-2 flex items-center gap-1 bg-primary text-white rounded-lg hover:bg-indigo-700 transition"
+                    className="px-2.5 md:px-4 py-1.5 md:py-2 flex items-center gap-1 bg-primary text-white rounded-lg  transition"
                 >
                     All Stories <GoArrowRight />
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
                 {stories.map((story, index) => (
                     <motion.div
+                        onClick={() => handleStoryDetail(story._id)}
                         key={story._id}
                         whileHover={{
                             scale: 1.03,
@@ -80,11 +86,11 @@ export default function TouristStorySection() {
                             transition={{ type: "spring", stiffness: 200 }}
                         />
 
-                        <div className="p-4 space-y-3">
-                            <h3 className="text-lg font-semibold line-clamp-1">
+                        <div className="p-2.5 md:p-4 space-y-2 md:space-y-3">
+                            <h3 className="text-md md:text-lg font-semibold line-clamp-1">
                                 {story.title}
                             </h3>
-                            <p className="text-gray-600 dark:text-gray-300 text-sm line-clamp-3">
+                            <p className="text-gray-600 dark:text-gray-300 text-xs md:text-sm line-clamp-3">
                                 {story.description}
                             </p>
 
@@ -94,38 +100,49 @@ export default function TouristStorySection() {
                                         <img
                                             src={story.createdBy.photo}
                                             alt={story.createdBy?.name || "User"}
-                                            className="w-8 h-8 rounded-full border"
+                                            className="sm:w-6 sm:h-6 w-8 h-8 rounded-full border"
                                         />
                                     ) : (
-                                        <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                                        <div className="sm:w-6 sm:h-6 w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
                                             {story.createdBy?.name?.[0] || "?"}
                                         </div>
                                     )}
                                     <span className="text-sm text-gray-700 dark:text-gray-400">
-                                        {story.createdBy?.name || "Unknown"}
+                                        {/* First word – visible on sm only */}
+                                        <span className="md:hidden">
+                                            {story.createdBy?.name?.split(" ")[0] || "Unknown"}
+                                        </span>
+
+                                        {/* Full name – visible from md and up */}
+                                        <span className="hidden md:inline">
+                                            {story.createdBy?.name || "Unknown"}
+                                        </span>
                                     </span>
                                 </div>
 
-                                {user ? (
-                                    <FacebookShareButton
-                                        url={window.location.origin + "/story/" + story._id}
-                                        quote={story.title}
-                                        hashtag="#TravelStory"
-                                    >
-                                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 hover:border-primary transition">
+                                <div className="hidden md:block">
+                                    
+                                    {user ? (
+                                        <FacebookShareButton
+                                            url={window.location.origin + "/story/" + story._id}
+                                            quote={story.title}
+                                            hashtag="#TravelStory"
+                                        >
+                                            <div className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 hover:border-primary transition">
+                                                <FacebookIcon size={22} round />
+                                                <span >Share</span>
+                                            </div>
+                                        </FacebookShareButton>
+                                    ) : (
+                                        <button
+                                            onClick={handleShare}
+                                            className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 hover:border-primary transition"
+                                        >
                                             <FacebookIcon size={22} round />
                                             <span>Share</span>
-                                        </div>
-                                    </FacebookShareButton>
-                                ) : (
-                                    <button
-                                        onClick={handleShare(story)}
-                                        className="flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 hover:border-primary transition"
-                                    >
-                                        <FacebookIcon size={22} round />
-                                        <span>Share</span>
-                                    </button>
-                                )}
+                                        </button>
+                                    )}
+                                </div>
                             </div>
                         </div>
                     </motion.div>

@@ -99,7 +99,7 @@ export default function CommunityStories() {
 
     if (isLoading) return <Loading />;
 
-    // console.log(selectedStory);
+// console.log(selectedStory);
 
 
 
@@ -183,7 +183,7 @@ sm:py-12 md:py-16 lg:py-20 px-4 md:px-8 lg:px-16">
                                     <div className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm hover:bg-indigo-600 hover:text-white transition-all duration-300 cursor-pointer">
                                         {user ? (
                                             <FacebookShareButton
-                                                url={window.location.origin + "/story/" + story._id}
+                                               url={`${window.location.origin}/story/${story._id}`}
                                                 quote={story.title}
                                                 hashtag="#TravelStory"
                                                 className="flex items-center gap-2"

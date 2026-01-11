@@ -7,7 +7,7 @@ import { useNavigate } from "react-router";
 const Overview = () => {
   const navigate = useNavigate()
   return (
-    <section className="py-12 md:py-16  bg-gray-50 dark:bg-gray-900">
+    <section className="py-12 md:py-16  bg-gray-50 dark:bg-gray-900 overflow-hidden">
       <div className="container max-w-7xl px-4 md:px-8 lg:px-16  mx-auto flex flex-col md:flex-row items-center gap-8 md:gap-10 ">
 
         {/* Video with animation */}
