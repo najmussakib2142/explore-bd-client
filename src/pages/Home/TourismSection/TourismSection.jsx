@@ -257,7 +257,7 @@ const TourismSection = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto sm:py-12 md:py-16 lg:py-20 px-4 md:px-8 lg:px-16">
+    <div className="max-w-7xl mx-auto py-12 md:py-16 lg:py-20 px-4 md:px-8 lg:px-16">
       <h2 className="text-3xl md:text-4xl font-bold mb-3 text-center">
         Tourism & Travel Guide
       </h2>
